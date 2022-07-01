@@ -24,7 +24,14 @@
           <view style="margin-left:20rpx;font-size:8px;">复制</view>
           <image mode="widthFix" :src="imgHOST+'/icon/copy.png'" />
         </view>
-        <view class="status">{{shipping.status}}</view>
+        <view class="status">
+          <block v-if="shipping.status != null">
+            {{shipping.status}}
+          </block>
+          <block v-else>
+            暂无物流信息
+          </block>
+        </view>
         <view v-if="shipping.trace_list" class="trace">
           <block v-for="(item,index) in shipping.trace_list" :key="index">
             <view class="li" :class="{'on':index==0}">

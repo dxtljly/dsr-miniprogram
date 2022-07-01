@@ -1,7 +1,7 @@
 <script>
 import { imgHOST, Host, xhr, allowTypes, local } from "@/common/util";
 export default {
-  onLaunch: function(options) {
+  onLaunch(options) {
     if (
       [1047, 1048, 1049].indexOf(options.scene) >= 0 &&
       options.path == "pages/school/index"
@@ -14,9 +14,10 @@ export default {
 
     uni.hideTabBar();
   },
-  onShow: function() {
+  onShow() {
     console.log("App Show");
     this.login();
+    this.reShowPost();
     uni.setStorageSync("isShowGifModal", true);
     const updateManager = uni.getUpdateManager();
     updateManager.onCheckForUpdate(function(res) {
@@ -30,8 +31,18 @@ export default {
         });
       }
     });
+    // if(uni.canIUse('getUpdateManager')) {
+    //   const updateManager = wx.getUpdateManager();
+    //   if (updateManager) {
+    //     updateManager.onCheckForUpdate(function (res) {
+    //       if (res.hasUpdate) {
+              
+    //       }
+    //     })
+    //   }
+    // }
   },
-  onHide: function() {
+  onHide() {
     console.log("App Hide");
   },
   globalData: {
@@ -75,6 +86,13 @@ export default {
           });
         }
       });
+    },
+    reShowPost() {
+      let initData = local.get("initData") || {};
+      if (initData.post) {
+        delete initData.post;
+      }
+      local.set("initData", initData);
     },
     checkAdLevel(ad_level) {
       //ifdef MP-WEIXIN

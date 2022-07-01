@@ -7,12 +7,26 @@
           <view class="status-list">
             <view
               class="point"
-              :class="{'on':detail.status >=item.status || (detail.status == '3-5' && item.status == 3) || ([4,5].indexOf(detail.status) >= 0 && item.status == '3-5'),'border':index < statusList.length-1}"
+              :class="{'on':detail.status >=item.status || (detail.status == 2 && item.status == 1) || ([3,4].indexOf(detail.status) >= 0 && item.status == 2),'border':index < statusList.length-1}"
             >
-              <image
-                v-if="detail.status >=item.status || (detail.status == '3-5' && item.status == 3) || ([4,5].indexOf(detail.status) >= 0 && item.status == '3-5')"
-                :src="imgHOST+'/icon/checked.png'"
-              />
+              <block v-if="detail.status == 54">
+                <image
+                  v-if="detail.status >=item.status || (detail.status == 2 && item.status == 1) || ([3,4].indexOf(detail.status) >= 0 && item.status == 2)"
+                  :src="imgHOST+'/icon/cancel.png'"
+                />
+              </block>
+              <block v-else-if="detail.status == 53">
+                <image
+                  v-if="detail.status >=item.status || (detail.status == 2 && item.status == 1) || ([3,4].indexOf(detail.status) >= 0 && item.status == 2)"
+                  :src="imgHOST+'/icon/cancel.png'"
+                />
+              </block>
+              <block v-else>
+                <image
+                  v-if="detail.status >=item.status || (detail.status == 2 && item.status == 1) || ([3,4].indexOf(detail.status) >= 0 && item.status == 2)"
+                  :src="imgHOST+'/icon/checked.png'"
+                />
+              </block>
             </view>
             <view class="txt">{{item.name}}</view>
           </view>
@@ -21,21 +35,21 @@
       <view class="content">
         <view class="address">
           <view
-            v-if="detail.deliver_address.wx_account || detail.deliver_address.qq_account"
+            v-if="detail.items[0].deliver_address.wx_account || detail.items[0].deliver_address.qq_account"
             class="contact"
           >
-            <text v-if="detail.deliver_address.wx_account">微信号：{{detail.deliver_address.wx_account}}</text>
-            <text v-if="detail.deliver_address.qq_account">QQ号：{{detail.deliver_address.qq_account}}</text>
+            <text v-if="detail.items[0].deliver_address.wx_account">微信号：{{detail.items[0].deliver_address.wx_account}}</text>
+            <text v-if="detail.items[0].deliver_address.qq_account">QQ号：{{detail.items[0].deliver_address.qq_account}}</text>
           </view>
           <view class="flx fx-middle">
             <image mode="widthFix" :src="imgHOST+'/icon/location.png'" class="shrink0" />
-            <view class="fx1 txt" @click="copyAddress">
+            <view class="fx1 txt">
               <view
                 class="name"
-              >收件人：{{detail.deliver_address.name}} {{detail.deliver_address.telephone}}</view>
-              <view class="info">{{detail.deliver_address.place}} {{detail.deliver_address.detail}}</view>
+              >收件人：{{detail.items[0].deliver_address.name}} {{detail.items[0].deliver_address.telephone}}</view>
+              <view class="info">{{detail.items[0].deliver_address.place}} {{detail.items[0].deliver_address.detail}}</view>
             </view>
-            <view class="shrink0 fcmain" style="font-size:24rpx;padding:0 20rpx;">
+            <view class="shrink0 fcmain" style="font-size:24rpx;padding:0 20rpx;" @click="copyAddress">
               <view>复</view>
               <view>制</view>
             </view>
@@ -47,24 +61,26 @@
             />-->
           </view>
         </view>
-        <navigator
-          hover-class="none"
-          :url="'/pages/goods/detail/detail?id='+detail.id"
-          class="goods flx"
-        >
-          <view class="img">
-            <image mode="aspectFill" :src="detail.pic[0]" />
-          </view>
-          <view class="fx1 flx fx-column fx-justify">
-            <view class="title">{{detail.title}}</view>
-            <view class="number">数量:1</view>
-          </view>
-        </navigator>
+        <block v-for="(item,index) in detail.items" :key="index">
+          <navigator
+            hover-class="none"
+            :url="'/pages/goods/detail/detail?id='+ item.id"
+            class="goods flx"
+          >
+            <view class="img">
+              <image mode="aspectFill" :src="item.pic[0]" />
+            </view>
+            <view class="fx1 flx fx-column">
+              <view class="title">{{item.title}}</view>
+              <view class="number">数量:1</view>
+            </view>
+          </navigator>
+        </block>
         <view class="detail-info">
           <view class="li">
             <block v-if="isOwner">
               <view>买家昵称</view>
-              <view style="max-width:500rpx;">{{detail.buyer.nickName}}</view>
+              <view style="max-width:500rpx;">{{user.nickName}}</view>
             </block>
             <block v-else>
               <view>卖家昵称</view>
@@ -73,37 +89,37 @@
           </view>
           <view class="li">
             <view>交易时间</view>
-            <view>{{$common.util.formatDate(new Date(detail.order_time),true)}}</view>
+            <view>{{$common.util.formatDate(new Date(detail.items[0].order_time),true)}}</view>
           </view>
         </view>
       </view>
       <view style="height:120rpx;"></view>
       <block v-if="isOwner">
-        <view v-if="detail.status == '3-5'" class="bot-btns">
+        <view v-if="detail.status == 2" class="bot-btns">
           <view style="font-size:12px;" class="btn reject" @click.stop="close">取消订单</view>
           <view style="font-size:12px;" class="btn submit" @click.stop="toExpress">
             预约快递
             <text>（快递费已由买家支付）</text>
           </view>
         </view>
-        <view v-if="detail.status == 4" class="bot-btns">
+        <view v-if="detail.status == 3" class="bot-btns">
           <navigator
             hover-class="none"
-            :url="'/pages/order/express?id='+detail.id+'&oid='+detail.order_id"
+            :url="'/pages/order/express?id='+detail.items[0].id+'&oid='+detail.id"
             class="btn accept"
             :data-id="item.id"
           >查看物流</navigator>
         </view>
       </block>
       <block v-else>
-        <view v-if="detail.status == '3-5' || detail.status == 4" class="bot-btns">
-          <block v-if="detail.status == '3-5'">
+        <view v-if="detail.status == 2 || detail.status == 3" class="bot-btns">
+          <block v-if="detail.status == 2">
             <view class="btn reject" style="margin-left:20rpx;" @click.stop="pushdelivery">催发货</view>
           </block>
           <block v-else>
             <navigator
               hover-class="none"
-              :url="'/pages/order/express?id='+detail.id+'&oid='+detail.order_id"
+              :url="'/pages/order/express?id='+detail.items[0].id+'&oid='+detail.id"
               class="btn reject"
             >查看物流</navigator>
           </block>
@@ -130,23 +146,28 @@ export default {
       statusBarHeight: app.globalData.statusBarHeight,
       navigationHeight: app.globalData.navigationHeight,
       statusList: [
-        { name: "待付款", status: 3 },
-        { name: "待发货", status: "3-5" },
-        { name: "已发货", status: 4 },
-        { name: "交易完成", status: 5 }
+        // { name: "待付款", status: 3 },
+        // { name: "待发货", status: "3-5" },
+        // { name: "已发货", status: 4 },
+        // { name: "交易完成", status: 5 }
+        { name: "待付款", status: 1 },
+        { name: "待发货", status: 2 },
+        { name: "已发货", status: 3 },
+        { name: "交易完成", status: 4 }
       ],
       id: null,
       detail: null,
       isOwner: false,
-      test: new Date()
+      test: new Date(),
+      user: local.get("user")
     };
   },
   methods: {
     copyAddress() {
       let data =
-        `收件人： ${this.detail.deliver_address.name}   ${this.detail.deliver_address.telephone}\n` +
-        `地址： ${this.detail.deliver_address.place +
-          this.detail.deliver_address.detail}`;
+        `收件人： ${this.detail.items[0].deliver_address.name}   ${this.detail.items[0].deliver_address.telephone}\n` +
+        `地址： ${this.detail.items[0].deliver_address.place +
+          this.detail.items[0].deliver_address.detail}`;
 
       console.log(data);
       uni.setClipboardData({
@@ -165,8 +186,28 @@ export default {
         this.isOwner = false;
       }
     },
+    // getName() {
+    //   let url = "/item/" + this.id,
+    //     data = {};
+    //   uni.showLoading({
+    //     mask: true
+    //   });
+    //   xhr.get(url, data, res => {
+    //     uni.hideLoading();
+    //     console.log(res);
+    //     if (res.statusCode == 200) {
+    //       this.detail = res.data;
+    //       this.checkOwner();
+    //     } else {
+    //       uni.showToast({
+    //         title: "网络错误",
+    //         icon: "none"
+    //       });
+    //     }
+    //   });
+    // },
     getDetail() {
-      let url = "/item/" + this.id,
+      let url = "/order/order_detail/" + this.id,
         data = {};
       uni.showLoading({
         mask: true
@@ -176,6 +217,7 @@ export default {
         console.log(res);
         if (res.statusCode == 200) {
           this.detail = res.data;
+          console.log(this.detail,'this.detail');
           this.checkOwner();
         } else {
           uni.showToast({
@@ -202,7 +244,7 @@ export default {
             xhr.put(url, data, res => {
               uni.hideLoading();
               if (String(res.statusCode)[0] == 2) {
-                this.detail.status = 5;
+                this.detail.status = 4;
               }
             });
           } else if (res.cancel) {
@@ -218,7 +260,7 @@ export default {
         success: res => {
           if (res.confirm) {
             console.log("用户点击确定");
-            let url = "/order/close/" + this.detail.order_id,
+            let url = "/order/close/" + this.id,
               data = {
                 role: "seller"
               };
@@ -227,7 +269,7 @@ export default {
               console.log(res);
               uni.hideLoading();
               if (String(res.statusCode)[0] == 2) {
-                this.detail.status = "2-2";
+                this.detail.status = 53;
                 uni.showToast({
                   title: "取消成功"
                 });
@@ -262,7 +304,7 @@ export default {
       });
     },
     pushdelivery(e) {
-      let url = "/order/pushdelivery/" + this.detail.order_id,
+      let url = "/order/pushdelivery/" + this.id,
         data = {};
       uni.showLoading();
       xhr.get(url, data, res => {
@@ -276,6 +318,7 @@ export default {
     }
   },
   onLoad(options) {
+    console.log(options,"options")
     if (!options.id) {
       return uni.redirectTo({
         url: "/pages/index/index"
@@ -284,20 +327,22 @@ export default {
     this.id = options.id;
     this.getDetail();
   },
-  onShow() {},
+  onShow() {
+    this.user = local.get("user");
+  },
   onShareAppMessage(res) {
     //res.from
     return {
       title: shareContent.title,
       imageUrl: shareContent.img,
-      path: "/pages/index/index"
+      path: "/pages/order/detail?id=" + this.id
     };
   },
   onShareTimeline(res) {
     return {
       title: shareContent.title,
       imageUrl: shareContent.img,
-      path: "/pages/index/index"
+      path: "/pages/order/detail?id=" + this.id
     };
   }
 };

@@ -47,6 +47,8 @@ export default {
         this.isLoadEnd = true;
         if (res.statusCode == 200) {
           this.list = res.data;
+          console.log(this.list,"1234543234543234");
+          console.log(this.list,"this.list.fav,/user/fav");
           this.isLastPage = true;
         }
       });
