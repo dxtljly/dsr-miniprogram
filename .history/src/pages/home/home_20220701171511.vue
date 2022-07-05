@@ -13,7 +13,7 @@
     </view>
     <!-- <navigator
       hover-class="none"
-      target="miniProgram"
+      target="miniProgram"ee
       open-type="navigate"
       app-id="wxebadf544ddae62cb"
       path="pages/survey/index?sid=6850669&hash=771a"

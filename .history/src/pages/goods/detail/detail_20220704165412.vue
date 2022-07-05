@@ -346,7 +346,7 @@
                   <image :src="imgHOST+'/icon/group.png'" />
                   <view>进群</view>
                 </view> -->
-                <view class="icon-txt" @click="previewWechat(imgHOST+'/duansheli群.jpg')">
+                <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群二维码.jpg')">
                   <image mode="widthFix" :src="imgHOST+'/icon/group.png'" />
                   <view>进群</view>
                 </view>
@@ -400,7 +400,7 @@
                 <image :src="imgHOST+'/icon/group.png'" />
                 <view>进群</view>
               </view> -->
-              <view class="icon-txt" @click="previewWechat(imgHOST+'/duansheli群.jpg')">
+              <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群二维码.jpg')">
                 <image mode="widthFix" :src="imgHOST+'/icon/group.png'" />
                 <view>进群</view>
               </view>
@@ -550,7 +550,7 @@
         @click.stop="copyWechat"
         @longpress.stop="saveWechatGroup"
       />-->
-      <image mode="widthFix" :src="imgHOST+'/duansheli群.jpg'" @longtap.stop="saveGroupQR" />
+      <image mode="widthFix" :src="imgHOST+'/seli群二维码.jpg'" @longtap.stop="saveGroupQR" />
     </view>
 
     <!-- complain modal  -->
@@ -1435,7 +1435,7 @@ export default {
     },
     saveWechatGroup() {
       uni.getImageInfo({
-        src: this.imgHOST + "/duansheli群.png",
+        src: this.imgHOST + "/seli群二维码.png",
         success: res => {
           console.log(res);
           uni.saveImageToPhotosAlbum({
@@ -1491,8 +1491,8 @@ export default {
     // },
     previewWechat() {
       uni.previewImage({
-        current: imgHOST + "/duansheli群.jpg", // 当前显示图片的http链接
-        urls: [imgHOST + "/duansheli群.jpg"] // 需要预览的图片http链接列表
+        current: imgHOST + "/seli群二维码.jpg", // 当前显示图片的http链接
+        urls: [imgHOST + "/seli群二维码.jpg"] // 需要预览的图片http链接列表
       });
     },
     copy(phone) {
@@ -1544,7 +1544,7 @@ export default {
           //res.tapIndex
           if (res.tapIndex === 0) {
             uni.getImageInfo({
-              src: imgHOST + "/duansheli群.jpg",
+              src: imgHOST + "/断舍离群二维码.jpg",
               success: res => {
                 uni.saveImageToPhotosAlbum({
                   filePath: res.path,

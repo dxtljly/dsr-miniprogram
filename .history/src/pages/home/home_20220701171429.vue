@@ -22,7 +22,7 @@
         mode="widthFix"
         :src="imgHOST+'/home/有奖小调查.jpg'"
         style="width:100%;height:0;margin-top:-20rpx;margin-bottom:20rpx;"
-      />
+      />li
     </navigator>-->
     <!-- <block v-if="config &&  config.banner && config.banner.length">
       <swiper

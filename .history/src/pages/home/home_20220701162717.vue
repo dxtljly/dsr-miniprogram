@@ -49,7 +49,7 @@
             <block v-else>
               <image mode="aspectFill" :src="item.img" />
             </block>
-          </swiper-item>  
+          </swiper-item>
         </block>
       </swiper>
     </block> -->

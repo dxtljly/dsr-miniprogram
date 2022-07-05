@@ -49,7 +49,7 @@
             <block v-else>
               <image mode="aspectFill" :src="item.img" />
             </block>
-          </swiper-item>  
+          </swiper-item>
         </block>
       </swiper>
     </block> -->
@@ -57,7 +57,7 @@
       <navigator hover-class="none" url="/pages/clock/clock">
         <image
           mode="widthFix"
-          :src="imgHOST+'/clock/sell-banner.jpg'"
+          :src="imgHOST+'/clock/C.jpg'"
           style="margin-left:15rpx;width:96%;border-radius: 10rpx;"
         />
       </navigator>

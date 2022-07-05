@@ -17,7 +17,7 @@
       open-type="navigate"
       app-id="wxebadf544ddae62cb"
       path="pages/survey/index?sid=6850669&hash=771a"
-    >
+    >rp
       <image
         mode="widthFix"
         :src="imgHOST+'/home/有奖小调查.jpg'"

@@ -10,7 +10,7 @@
         <view class="nickname">{{user.nickName}}</view>
         <view class="info">目前在售商品{{publishNumber>99?'99+':publishNumber}}件</view>
       </view>
-    </view>
+    </view>x
     <!-- <navigator
       hover-class="none"
       target="miniProgram"

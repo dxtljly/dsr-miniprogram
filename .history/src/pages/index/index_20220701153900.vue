@@ -946,7 +946,7 @@ scroll-view.container {
       background-color: #fff;
     }
   }
-  
+  scss
   .tab-li {
     display: flex;
     align-items: center;

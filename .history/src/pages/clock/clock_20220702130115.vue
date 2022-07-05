@@ -721,7 +721,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding: 0 40rpx 50rpx;
-  background: linear-gradient(#3cafff, #3cafff);
+  background: linear-gradient(#dd3e5e, #da3443);
   .card {
     position: relative;
     margin-bottom: 50rpx;

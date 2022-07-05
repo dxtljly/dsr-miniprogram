@@ -190,7 +190,7 @@
         </view>
       </view>
     </block> -->
-    <view class="pay" v-if="s">
+    <view class="pay">
       <view class="content">
         <image mode="widthFix" :src="imgHOST + '/difference/弹窗.png'" />
         <ul class="text">
@@ -946,7 +946,7 @@ scroll-view.container {
       background-color: #fff;
     }
   }
-  
+
   .tab-li {
     display: flex;
     align-items: center;
