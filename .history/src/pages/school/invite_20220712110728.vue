@@ -161,13 +161,13 @@ export default {
             },
             {
               img: imgHOST + "/invite-school/awards/5.png",
-              price: 88,
+              price: 100,
               name: "网易云音乐 黑胶VIP:6个月"
             },
             {
               img: imgHOST + "/invite-school/awards/6.png",
-              price: 78,
-              name: "腾讯视频VIP/爱奇艺黄金VIP/优酷VIP (三选一)"
+              price: 239,
+              name: "腾讯视频VIP/爱奇艺黄金VIP/优酷"
             }
           ]
         }

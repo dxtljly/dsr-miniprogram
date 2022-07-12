@@ -161,13 +161,13 @@ export default {
             },
             {
               img: imgHOST + "/invite-school/awards/5.png",
-              price: 88,
-              name: "网易云音乐 黑胶VIP:6个月"
+              price: 100,
+              name: "泡泡玛特盲盒代金券"
             },
             {
               img: imgHOST + "/invite-school/awards/6.png",
-              price: 78,
-              name: "腾讯视频VIP/爱奇艺黄金VIP/优酷VIP (三选一)"
+              price: 239,
+              name: "玉兰油Olay焕采系列 保湿面膜（补水/美白/紧致）"
             }
           ]
         }
@@ -179,8 +179,6 @@ export default {
   methods: {
     toAdd() {
       console.log("toAdd");
-      console.log(this.user,"this.user");
-      console.log(this.user.is_student,"this.user.is_student");
       if (this.user && this.user.is_student) {
         uni.navigateTo({
            url: "/pages/goods/add/add?school=1"
@@ -188,40 +186,10 @@ export default {
       } else {
         this.checkApply();
       }
+      // uni.navigateTo({
+      //      url: "/pages/goods/add/add?school=1"
+      //  });
     },
-    checkApply() {
-      let url = "/campus_admin/student_application_status",
-        data = {};
-      xhr.get(url, data, res => {
-        if (res.statusCode == 200) {
-          if (res.data.status == 1) {
-            uni.showModal({
-              title: "已提交",
-              content: "已提交！请耐心等待工作人员进行认证！",
-              showCancel: false,
-              confirmText: "好哩",
-              complete: res => {}
-            });
-          } else if (res.data.status == 2) {
-            console.log("res.data.status == 2");
-          } else {
-            uni.showModal({
-              title: "发布需求",
-              content: "为确保交易的真实性，需要您先进行认证哦~",
-              cancelText: "稍后再说",
-              cancelColor: "#bbb",
-              confirmText: "前往认证",
-              complete: res => {
-                if (res.confirm) {
-                  uni.navigateTo({
-                    url: "/pages/spa/index/index"
-                  });
-                }
-              }
-            });
-          }
-        }
-      });
     },
     getUserInfo() {
       let url = "/user/",

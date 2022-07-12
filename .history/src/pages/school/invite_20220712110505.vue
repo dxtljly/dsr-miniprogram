@@ -161,13 +161,13 @@ export default {
             },
             {
               img: imgHOST + "/invite-school/awards/5.png",
-              price: 88,
-              name: "网易云音乐 黑胶VIP:6个月"
+              price: 100,
+              name: "网易云音乐" 黑胶VIP:6个月"
             },
             {
               img: imgHOST + "/invite-school/awards/6.png",
-              price: 78,
-              name: "腾讯视频VIP/爱奇艺黄金VIP/优酷VIP (三选一)"
+              price: 239,
+              name: "玉兰油Olay焕采系列 保湿面膜（补水/美白/紧致）"
             }
           ]
         }
@@ -505,10 +505,12 @@ image.title {
           color: #5670f7;
         }
         .name {
-          width: 100%;
-          white-space: nowrap;
+          width: 200rpx;
+          // white-space: nowrap;
+          word-wrap:break-word;
+          word-break:break-all;
           overflow: hidden;
-          text-overflow: ellipsis;
+          // text-overflow: ellipsis;
           font-size: 10px;
           color: #333;
           margin-bottom: 20rpx;
