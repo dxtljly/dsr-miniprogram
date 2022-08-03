@@ -1,5 +1,5 @@
 <script>
-import { imgHOST, Host, xhr, allowTypes, local } from "@/common/util";
+import { imgHOST,  Host, xhr, allowTypes, local } from "@/common/util";
 export default {
   onLaunch(options) {
     if (

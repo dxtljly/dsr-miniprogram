@@ -286,6 +286,7 @@ export default {
         if (res.statusCode == 200) {
           let list = res.data.list;
           this.bannerList = list;
+          console.log("this.bannerList[0]",this.bannerList[0].url);
         }
       });
     },

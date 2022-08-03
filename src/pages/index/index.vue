@@ -166,6 +166,7 @@
     </scroll-view>-->
     <!-- ===category-container=== -->
     <!-- <message-icon :messageNo="messageNo"></message-icon> -->
+    <!-- 开屏广告 -->
     <sl-ppt></sl-ppt>
     <view v-if="isShowFocusModal" class="focus-modal" @click="toogleFocusModal">
       <image
@@ -212,6 +213,7 @@
       <image mode="widthFix" :src="imgHOST+'/addWX.png'" class="z-index-1 card" @click="copyWX" />
     </view>
     <!-- @touchstart="touchSpread" @longtap="saveSpread" -->
+    <!-- 原 v-if="isShowSpread && config && config.spread" -->
     <view v-if="isShowSpread && config && config.spread" class="spread" @touchstart="touchSpread">
         <view class="content">
           <!-- <view
@@ -322,7 +324,8 @@ export default {
       isShowFocusModal: false,
       isShowGuide:
         !local.get("newJson").guide && local.get("newJson").isFinishCourse,
-      isShowSpread: false,
+        // 原 false
+      isShowSpread: true,
       spreadTime: 5,
       isTouchSpread: false,
       isShowGifModal: false,
@@ -339,7 +342,7 @@ export default {
     },
     tail() {
       uni.navigateTo({
-        url: "/pages/clock/clock"
+        url: "/pages/webviews/webviews?url=https://www.grecycle.com.cn/src/sli/images/school/断舍哩校园推广.jpg"
       });
       let newJson = local.get("newJson");
       newJson.spread = new Date();
@@ -348,10 +351,10 @@ export default {
       local.set("newJson", newJson);
     },
     closeSpread() {
+      this.isShowSpread = false;
       let newJson = local.get("newJson");
       newJson.spread = new Date();
       this.spreadTime = 0;
-      this.isShowSpread = false;
       local.set("newJson", newJson);
     },
     closeGuide() {
@@ -367,6 +370,7 @@ export default {
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.config = res.data;
+          console.log(this.config);
         }
       });
     },
