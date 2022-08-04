@@ -835,11 +835,10 @@ export default {
             icon: "none"
           });
         }
-        console.log("11111111111")
-          let id = this.id,
-          img = this.detail.pic[0],
-          title = this.detail.title,
-          op = this.detail.original_price;
+        let id = this.id,
+        img = this.detail.pic[0],
+        title = this.detail.title,
+        op = this.detail.original_price;
         local.set("orderGoods", this.detail);
         console.log(local.get("orderGoods"));
         uni.navigateTo({
