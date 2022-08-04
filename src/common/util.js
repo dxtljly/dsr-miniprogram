@@ -197,7 +197,7 @@ let navigateToMiniProgramAppIdList = [
   {
     name: "咕哩",
     appId: "wx3d47228a9de3c21a" /* 咕哩闲置母婴  int_id = 1*/,
-    path: "pages/details/details?id=",
+    path: "/page_details/details?id=",
   },
 ];
 

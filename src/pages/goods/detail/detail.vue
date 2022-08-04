@@ -418,6 +418,8 @@
                 >{{detail.only_pickup ? '马上申领' : '马上领'}}</view>
               </block>
               <block v-else>
+                <!-- 之前   path: = "pages/details/details?id=" -->
+                <!-- 修改     path: "/page_details/details?id=", -->
                 <navigator
                   class="btn"
                   :class="[isSchool ? 'school' : '']"
@@ -425,7 +427,7 @@
                   target="miniProgram"
                   :path="navigateToMiniProgramAppIdList[detail.int_id - 1].path + detail.int_item_id"
                   :appId="navigateToMiniProgramAppIdList[detail.int_id - 1].appId"
-                >马上领</navigator> 
+                >马上领</navigator>
               </block>
             </block>
             <block v-else-if="detail.status==6">
@@ -711,7 +713,6 @@ export default {
   },
   methods: {
     checkOwner() {
-      console.log(local.get("user").id);
       console.log(this.detail.seller.id);
       if (local.get("user").id == this.detail.seller.id) {
         this.isOwner = true;
@@ -719,6 +720,7 @@ export default {
         this.isOwner = false;
       }
     },
+    // 商品数据
     getDetail() {
       let url = "/item/unauth/" + this.id,
         data = {};
@@ -726,7 +728,7 @@ export default {
         mask: true
       });
       xhr.get(url, data, res => {
-        console.log(res);
+        console.log(res.data);
         uni.hideLoading();
         if (res.statusCode == 200 && res.data.id) {
           if (typeof res.data.isFav == "undefined") {
@@ -751,12 +753,13 @@ export default {
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.orderList = res.data;
+          console.log("this.orderList",this.orderList);
         }
       });
     },
     previewImgs(e) {
       let index = e.currentTarget.dataset.index;
-      console.log(index);
+      console.log("previewImgs.index",index);
       uni.previewImage({
         current: this.detail.pic[index],
         urls: [...this.detail.pic],
@@ -790,7 +793,6 @@ export default {
           xhr.delete(url, data, res => {
             uni.hideLoading();
             if (String(res.statusCode)[0] == 2) {
-              console.log(res);
               this.detail.status = status;
               this.actionSheetListOn = false;
             }
@@ -881,6 +883,7 @@ export default {
       });
     },
     toBuy() {
+      console.log(1111);
       if (local.get("user").role != "telUser") {
         return uni.showToast({
           title: "请先登录",
@@ -1205,6 +1208,7 @@ export default {
       });
     },
     closeMessage() {
+      console.log(1111);
       this.isShowMessage = false;
     },
     openMessage(e) {
