@@ -125,7 +125,8 @@
               <view id="makereadmsg" class="container" style="height:800rpx;">
                 <view class="message" style="height:100%;">
                   <view class="title">
-                    <block v-if="detail.only_pickup && isOwner">
+      <!-- 领取申请功能未实现，发送申请信息物主未能收到，因此先隐藏，样式问题等功能实现再更改 -->
+                    <!-- <block v-if="detail.only_pickup && isOwner">
                       <view
                         class="tab-li"
                         :class="[currentMessageIndex == 0 ? 'on' : '',isSchool ? 'school':'']"
@@ -142,7 +143,8 @@
                         <view>领取申请</view>
                       </view>
                     </block>
-                    <block v-else>
+                    <block v-else> -->
+                    <block>
                       <view class="label" :class="{'school':isSchool}">全部留言</view>
                     </block>
                   </view>
@@ -728,14 +730,13 @@ export default {
         mask: true
       });
       xhr.get(url, data, res => {
-        console.log(res.data);
         uni.hideLoading();
         if (res.statusCode == 200 && res.data.id) {
           if (typeof res.data.isFav == "undefined") {
             res.data.isFav = false;
           }
           this.detail = res.data;
-          console.log(this.detail,"this.detail");
+          console.log("this.detail",this.detail);
           this.checkOwner();
           if (this.detail.applications) {
             this.pickupList = this.detail.applications;
@@ -1203,7 +1204,7 @@ export default {
         console.log(res);
         if (res.statusCode == 200) {
           this.message = res.data;
-          console.log(this.message,"this.message");
+          // console.log(this.message,"this.message");
         }
       });
     },
@@ -1525,7 +1526,7 @@ export default {
         };
       xhr.get(url, data, res => {
         this.isLoadEnd = true;
-        console.log(res);
+        // console.log(res);
         if (res.statusCode == 200) {
           res.data.items.forEach(v => {
             if (this.itemIdList.indexOf(v.id) < 0) {

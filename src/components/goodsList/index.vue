@@ -250,6 +250,7 @@ export default {
       goodsAddData.category = item.category;
       goodsAddData.place = [...item.place];
       goodsAddData.if_readd = true;
+      // uni.setStorageSync("goodsAddData",goodsAddData)
       local.set("goodsAddData", goodsAddData);
       uni.navigateTo({
         url: "/pages/goods/add/add?if_readd=1"

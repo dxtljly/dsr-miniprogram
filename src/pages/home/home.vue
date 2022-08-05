@@ -252,7 +252,7 @@ export default {
       let url = "/item/mytasks",
         data = {};
       xhr.get(url, data, res => {
-        console.log(res.data,"/item/mytasks");
+        // console.log(res.data,"/item/mytasks");
         if (res.statusCode === 200) {
           if (res.data.unreceived + res.data.unpaid) {
             this.navList1[2].num = res.data.unreceived + res.data.unpaid;

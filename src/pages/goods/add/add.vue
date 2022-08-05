@@ -374,7 +374,11 @@ export default {
       banner: [],
       campus_info: null, // {college_name: "",province: "",city: "",campus: ""},
       getCampusXHR: null,
-      volumeShow: false
+      volumeShow: false,
+      volume:[],
+      volumeOne:"",//长
+      volumeTwo:"",//宽
+      volumeThree:""//高
     };
   },
   methods: {
@@ -714,6 +718,7 @@ export default {
     },
     tooglePickup() {
       this.only_pickup = !this.only_pickup;
+      console.log(this.only_pickup);
     },
     checkPrice(e) {
       if (
@@ -856,12 +861,21 @@ export default {
         local.clear("goodsAddData");
       }
     },
+    // 拿当前details
+    // getThisDetail(){
+    //   let url = "/item/unauth/" + this.id,
+    //   data = {};
+    //   xhr.get(url,data,res =>{
+    //     if(res.sta)
+    //   })
+    // },
     initSaveEdit() {
       if (this.id) {
         return false;
       }
+      console.log("进入beforeMount函数");
       let goodsAddData = local.get("goodsAddData");
-      console.log(goodsAddData);
+      console.log("goodsAddData",goodsAddData);
       if (goodsAddData) {
         this.uploadImgs = goodsAddData.uploadImgs;
         this.title = goodsAddData.title;
@@ -944,10 +958,15 @@ export default {
           icon: "none"
         });
       }
+      
+      // 长宽高
       let volumeOnes = parseInt(this.volumeOne);
+      console.log("this.volumeOne",this.volumeOne);
       let volumeTwos = parseInt(this.volumeTwo);
+      console.log("this.volumeTwo",this.volumeTwo);
       let volumeThrees = parseInt(this.volumeThree);
-      let volume = [volumeOnes,volumeTwos,volumeThrees];
+      console.log("this.volumeThree",this.volumeThree);
+      this.volume = [volumeOnes,volumeTwos,volumeThrees];
       let url = "/item/",
         data = {
           pic: [],
@@ -966,8 +985,8 @@ export default {
         data.weight= this.weight;
       }
       if (this.volumeShow) {
-        console.log(volume,this.volumeShow);
-        data.volume = volume;
+        data.volume = this.volume;
+        console.log("data.volume",data.volume);
       }
       if (this.isSchool) {
         data.only_pickup = true;
@@ -989,8 +1008,6 @@ export default {
           data.pic.push(v.upload);
         }
       });
-      console.log(data);
-      console.log(volumeOnes,volumeTwos,volumeThrees);
       if (!data.title) {
         return uni.showToast({
           title: "缺少好物标题",
@@ -1082,6 +1099,7 @@ export default {
         });
       } else {
         data.id = this.id;
+        console.log("要更新data",data);
         xhr.put(url, data, res => {
           uni.hideLoading();
           if (String(res.statusCode)[0] == 2) {
@@ -1116,7 +1134,6 @@ export default {
         mask: true
       });
       xhr.get(url, data, res => {
-        console.log(res);
         if (res.statusCode == 200) {
           uni.hideLoading();
           let uploadImgs = [];
@@ -1127,28 +1144,28 @@ export default {
               upload: v
             });
           });
+          console.log("获取拿到的res.data",res.data);
           this.uploadImgs = uploadImgs;
           this.title = res.data.title;
-          this.detail = res.data.detail;
-          this.brand_new = res.data.brand_new;
-          this.only_pickup = res.data.only_pickup;
-          this.original_price = Math.round(res.data.original_price / 100);
-          this.weight = res.data.weight;
-          this.weightIndex = res.data.weight - 1;
-          this.category = res.data.category;
-          this.seller_address = res.data.seller_address;
-          this.if_readd = res.data.if_readd;
-
+          this.detail = res.data.detail;      //备注
+          this.brand_new = res.data.brand_new;    // "0"
+          this.only_pickup = res.data.only_pickup;  //false
+          this.original_price = Math.round(res.data.original_price / 100); //原价
+          this.weight = res.data.weight;      //重量
+          this.weightIndex = res.data.weight - 1;   //遍历下标
+          this.category = res.data.category;      //分类
+          this.seller_address = res.data.seller_address;  //用户信息
+          this.if_readd = res.data.if_readd;    //false
           if (typeof res.data.show_price !== "undefined") {
             this.isSchool = true;
             this.show_price = Math.round(res.data.show_price / 100);
           }
-
-          setTimeout(() => {
-            if (!this.typeIndex == -1) {
-              this.typeIndex = this.typeList.indexOf(this.category);
-            }
-          }, 1000);
+          if(this.category === "户外运动" || this.category === "居家日用" || this.category === "家具家电"){
+            this.volumeShow = true
+            this.volumeOne = res.data.volume[0]
+            this.volumeTwo = res.data.volume[1]
+            this.volumeThree = res.data.volume[2]
+          }
         }
       });
     },
@@ -1254,6 +1271,7 @@ export default {
 
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
+          console.log("getConfig数据",res.data);
           this.banner = res.data.banner;
         }
       });
