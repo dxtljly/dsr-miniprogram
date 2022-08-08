@@ -298,6 +298,7 @@ export default {
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.config = res.data;
+          console.log("this.config",this.config,typeof(this.config));
         }
       });
     },

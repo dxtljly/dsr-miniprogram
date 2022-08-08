@@ -959,14 +959,13 @@ export default {
         });
       }
       
-      // 长宽高
-      let volumeOnes = parseInt(this.volumeOne);
-      console.log("this.volumeOne",this.volumeOne);
-      let volumeTwos = parseInt(this.volumeTwo);
-      console.log("this.volumeTwo",this.volumeTwo);
-      let volumeThrees = parseInt(this.volumeThree);
-      console.log("this.volumeThree",this.volumeThree);
-      this.volume = [volumeOnes,volumeTwos,volumeThrees];
+      // 绑定长宽高
+      if(this.volumeShow){
+        let volumeOnes = parseInt(this.volumeOne);
+        let volumeTwos = parseInt(this.volumeTwo);
+        let volumeThrees = parseInt(this.volumeThree);
+        this.volume = [volumeOnes,volumeTwos,volumeThrees];
+      }
       let url = "/item/",
         data = {
           pic: [],
@@ -981,7 +980,6 @@ export default {
           if_readd: this.if_readd,
         };
       if (!this.volumeShow) {
-        console.log(volume,this.volumeShow);
         data.weight= this.weight;
       }
       if (this.volumeShow) {
@@ -1038,19 +1036,19 @@ export default {
           icon: "none"
         });
       }
-      if (volumeOnes < 2 && this.volumeShow || !volumeOnes && this.volumeShow) {
+      if (this.volumeOne < 2 && this.volumeShow || !this.volumeOne && this.volumeShow) {
         return uni.showToast({
           title: "请输入真实长度",
           icon: "none"
         });
       }
-      if (volumeTwos < 2 && this.volumeShow || !volumeTwos && this.volumeShow) {
+      if (this.volumeTwo < 2 && this.volumeShow || !this.volumeTwo && this.volumeShow) {
         return uni.showToast({
           title: "请输入真实宽度",
           icon: "none"
         });
       }
-      if (volumeThrees < 2 && this.volumeShow || !volumeThrees && this.volumeShow) {
+      if (this.volumeThree < 2 && this.volumeShow || !this.volumeThree && this.volumeShow) {
         return uni.showToast({
           title: "请输入真实高度",
           icon: "none"
@@ -1098,25 +1096,27 @@ export default {
           }
         });
       } else {
+        console.log("上传成功");
         data.id = this.id;
         console.log("要更新data",data);
-        xhr.put(url, data, res => {
-          uni.hideLoading();
-          if (String(res.statusCode)[0] == 2) {
-            this.isShowSuccess = true;
-            this.initEdit(true);
-            uni.requestSubscribeMessage({
-              tmplIds: [
-                "dsVZwx5r7s5YbqGXXpGDL5sm5zOWhDIl-5-AOPqMF_k",
-                "_nkzpELZ8sSdLIatERaLUsoDumj2D-smcJ9dPplBAjQ",
-                "VcBdvKNx5vdxvKEiWFC1jolgxUHYT1nVQR8iWDDcxeY"
-              ],
-              success: res => {},
-              fail: err => {},
-              complete() {}
-            });
-          }
-        });
+        return 0;
+        // xhr.put(url, data, res => {
+        //   uni.hideLoading();
+        //   if (String(res.statusCode)[0] == 2) {
+        //     this.isShowSuccess = true;
+        //     this.initEdit(true);
+        //     uni.requestSubscribeMessage({
+        //       tmplIds: [
+        //         "dsVZwx5r7s5YbqGXXpGDL5sm5zOWhDIl-5-AOPqMF_k",
+        //         "_nkzpELZ8sSdLIatERaLUsoDumj2D-smcJ9dPplBAjQ",
+        //         "VcBdvKNx5vdxvKEiWFC1jolgxUHYT1nVQR8iWDDcxeY"
+        //       ],
+        //       success: res => {},
+        //       fail: err => {},
+        //       complete() {}
+        //     });
+        //   }
+        // });
       }
     },
     toShare() {

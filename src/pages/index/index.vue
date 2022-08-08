@@ -84,6 +84,8 @@
             </block>
           </swiper>
         </view>
+
+        <!-- 轮播图下的选择banner -->
         <view class="nav-btn">
           <!-- 打卡 -->
           <!-- <navigator hover-class="none" url="/pages/clock/clock">
@@ -166,9 +168,46 @@
     </scroll-view>-->
     <!-- ===category-container=== -->
     <!-- <message-icon :messageNo="messageNo"></message-icon> -->
-    <!-- 开屏广告 -->
+
+    <!-- 开屏轮播ppt -->
     <sl-ppt></sl-ppt>
-    <view v-if="isShowFocusModal" class="focus-modal" @click="toogleFocusModal">
+
+    <!-- 开屏广告 -->
+    <!-- @touchstart="touchSpread" @longtap="saveSpread" -->
+    <view v-if="isShowSpread && config && config.spread" class="spread" @touchstart="touchSpread">
+        <view class="content">
+          <!-- <view
+            @touchstart="()=>isTouchSpread=true"
+            @longtap="saveImgs(imgHOST + '/上海加油.jpg')"
+          >
+            <image mode="widthFix" :src="imgHOST+'/上海加油.jpg'" />
+          </view> -->
+          <view
+            @touchstart="()=>isTouchSpread=true"
+            @click="tail"
+          >
+            <image mode="widthFix" :src="imgHOST+'/clock/开屏.jpg'" />
+          </view>
+        </view>
+      <view
+        class="content"
+        :class="{'flx fx-middle':config.spread.isFlx}"
+        @touchstart="()=>isTouchSpread=true"
+        @longtap="saveImgs(config.spread.downloadImg)"
+      >
+        <image mode="widthFix" :src="config.spread.img" @click="spreadNav" />
+      </view>
+      <view
+        class="close-btn"
+        :style="'top:'+(statusBarHeight + navigationHeight + 20) +'px;'"
+        @click="closeSpread"
+      >关闭</view>
+      <!-- ({{spreadTime}}s) -->
+      <!-- <view v-if="!isTouchSpread" class="save-tips">长按保存</view> -->
+    </view>
+
+
+    <!-- <view v-if="isShowFocusModal" class="focus-modal" @click="toogleFocusModal">
       <image
         class="z-i"
         mode="widthFix"
@@ -177,7 +216,7 @@
         @longpress.stop="saveImg"
         :style="'top:'+(statusBarHeight+navigationHeight+40)+'px;'"
       />
-    </view>
+    </view> -->
     <!-- <block v-if="isShowGuide">
       <view class="guide-bg" @click="closeGuide">
         <view class="content-1" :style="'top:'+(statusBarHeight + navigationHeight + 20)+'px;'">
@@ -211,39 +250,6 @@
     <view v-if="isShowGifModal" class="gif-modal"> 
       <view class="bg" @click="closeGifModal"></view>
       <image mode="widthFix" :src="imgHOST+'/addWX.png'" class="z-index-1 card" @click="copyWX" />
-    </view>
-    <!-- @touchstart="touchSpread" @longtap="saveSpread" -->
-    <!-- 原 v-if="isShowSpread && config && config.spread" -->
-    <view v-if="isShowSpread && config && config.spread" class="spread" @touchstart="touchSpread">
-        <view class="content">
-          <!-- <view
-            @touchstart="()=>isTouchSpread=true"
-            @longtap="saveImgs(imgHOST + '/上海加油.jpg')"
-          >
-            <image mode="widthFix" :src="imgHOST+'/上海加油.jpg'" />
-          </view> -->
-          <view
-            @touchstart="()=>isTouchSpread=true"
-            @click="tail"
-          >
-            <image mode="widthFix" :src="imgHOST+'/clock/开屏.jpg'" />
-          </view>
-        </view>
-      <view
-        class="content"
-        :class="{'flx fx-middle':config.spread.isFlx}"
-        @touchstart="()=>isTouchSpread=true"
-        @longtap="saveImgs(config.spread.downloadImg)"
-      >
-        <image mode="widthFix" :src="config.spread.img" @click="spreadNav" />
-      </view>
-      <view
-        class="close-btn"
-        :style="'top:'+(statusBarHeight + navigationHeight + 20) +'px;'"
-        @click="closeSpread"
-      >关闭</view>
-      <!-- ({{spreadTime}}s) -->
-      <!-- <view v-if="!isTouchSpread" class="save-tips">长按保存</view> -->
     </view>
     <!-- <view v-if="isShowGifModal" class="gif-modal">
       <view class="bg" @click="closeGifModal"></view>
@@ -325,7 +331,7 @@ export default {
       isShowGuide:
         !local.get("newJson").guide && local.get("newJson").isFinishCourse,
         // 原 false
-      isShowSpread: true,
+      isShowSpread: false,
       spreadTime: 5,
       isTouchSpread: false,
       isShowGifModal: false,
@@ -369,6 +375,7 @@ export default {
         data = {};
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
+          console.log("获取",res.data);
           this.config = res.data;
           console.log(this.config);
         }

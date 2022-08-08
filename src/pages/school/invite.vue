@@ -32,15 +32,17 @@
     </view>
     <view class="invite-btns">
       <button open-type="share" class="btn share z-depth-1">邀请好友上架闲置物品</button>
-      <view
-        @click="toAdd"
-        class="btn add z-depth-1"
-      >去断舍哩上架闲置物品</view>
-      <image
-        mode="widthFix"
-        :src="imgHOST+'/invite-school/content-bg.png'"
-        style="width:100%;height:0;margin-top:-160rpx;"
-      />
+      <block v-if="config.school[0].tobtn">
+        <view
+          @click="toAdd"
+          class="btn add z-depth-1"
+        >去断舍哩上架闲置物品</view>
+        <image
+          mode="widthFix"
+          :src="imgHOST+'/invite-school/content-bg.png'"
+          style="width:100%;height:0;margin-top:-160rpx;"
+        />
+      </block>
     </view>
     <image mode="widthFix" :src="imgHOST+'/invite-school/title-奖品领取.png'" class="title" />
     <view class="award-container">
@@ -173,12 +175,22 @@ export default {
         }
       ],
       isShowWechat: false,
-      user: local.get("user")
+      user: local.get("user"),
+      config:{}
     };
   },
   methods: {
+    getConfig() {
+      let url =
+          "https://www.grecycle.com.cn/src/sli/config/sli-certification-config.json",
+        data = {};
+      xhr.get(url, data, res => {
+        if (res.statusCode == 200) {
+          this.config = res.data;
+        }
+      });
+    },
     toAdd() {
-      console.log("toAdd");
       console.log(this.user,"this.user");
       console.log(this.user.is_student,"this.user.is_student");
       if (this.user && this.user.is_student) {
@@ -327,6 +339,7 @@ export default {
   },
   onShow() {
     this.getInviteNo();
+    this.getConfig();
   },
   onShareAppMessage(res) {
     //res.from
