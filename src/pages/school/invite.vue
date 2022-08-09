@@ -32,6 +32,7 @@
     </view>
     <view class="invite-btns">
       <button open-type="share" class="btn share z-depth-1">邀请好友上架闲置物品</button>
+  <!-- 上线隐藏 -->
       <block v-if="config.school[0].tobtn">
         <view
           @click="toAdd"

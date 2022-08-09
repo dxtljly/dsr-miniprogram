@@ -1099,24 +1099,24 @@ export default {
         console.log("上传成功");
         data.id = this.id;
         console.log("要更新data",data);
-        return 0;
-        // xhr.put(url, data, res => {
-        //   uni.hideLoading();
-        //   if (String(res.statusCode)[0] == 2) {
-        //     this.isShowSuccess = true;
-        //     this.initEdit(true);
-        //     uni.requestSubscribeMessage({
-        //       tmplIds: [
-        //         "dsVZwx5r7s5YbqGXXpGDL5sm5zOWhDIl-5-AOPqMF_k",
-        //         "_nkzpELZ8sSdLIatERaLUsoDumj2D-smcJ9dPplBAjQ",
-        //         "VcBdvKNx5vdxvKEiWFC1jolgxUHYT1nVQR8iWDDcxeY"
-        //       ],
-        //       success: res => {},
-        //       fail: err => {},
-        //       complete() {}
-        //     });
-        //   }
-        // });
+        // return 0;
+        xhr.put(url, data, res => {
+          uni.hideLoading();
+          if (String(res.statusCode)[0] == 2) {
+            this.isShowSuccess = true;
+            this.initEdit(true);
+            uni.requestSubscribeMessage({
+              tmplIds: [
+                "dsVZwx5r7s5YbqGXXpGDL5sm5zOWhDIl-5-AOPqMF_k",
+                "_nkzpELZ8sSdLIatERaLUsoDumj2D-smcJ9dPplBAjQ",
+                "VcBdvKNx5vdxvKEiWFC1jolgxUHYT1nVQR8iWDDcxeY"
+              ],
+              success: res => {},
+              fail: err => {},
+              complete() {}
+            });
+          }
+        });
       }
     },
     toShare() {

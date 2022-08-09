@@ -124,9 +124,9 @@
               </view>
               <view id="makereadmsg" class="container" style="height:800rpx;">
                 <view class="message" style="height:100%;">
-                  <view class="title">
-      <!-- 领取申请功能未实现，发送申请信息物主未能收到，因此先隐藏，样式问题等功能实现再更改 -->
-                    <!-- <block v-if="detail.only_pickup && isOwner">
+                  <view class="title flx">
+            <!-- 判断是否自提 -->
+                    <block v-if="detail.only_pickup && isOwner">
                       <view
                         class="tab-li"
                         :class="[currentMessageIndex == 0 ? 'on' : '',isSchool ? 'school':'']"
@@ -143,16 +143,18 @@
                         <view>领取申请</view>
                       </view>
                     </block>
-                    <block v-else> -->
-                    <block>
+                    <block v-else>
+                    <!-- <block> -->
                       <view class="label" :class="{'school':isSchool}">全部留言</view>
                     </block>
                   </view>
+
                   <swiper
                     style="height:calc(100% - 120rpx);"
                     @change="changeMessageSwiper"
                     :current="currentMessageIndex"
                   >
+            <!-- 留言 -->
                     <swiper-item>
                       <block v-if="!message.length">
                         <view style="text-align: center;margin-right: 80rpx;">
@@ -231,6 +233,7 @@
                       </block>
                     </swiper-item>
                     <!--  -->
+            <!-- 申领 -->
                     <swiper-item v-if="detail.only_pickup && isOwner">
                       <scroll-view scroll-y enable-back-to-top style="height:100%;">
                         <block v-if="!pickupList.length">
@@ -724,7 +727,8 @@ export default {
     },
     // 商品数据
     getDetail() {
-      let url = "/item/unauth/" + this.id,
+      // /item/unauth/
+      let url = "/item/" + this.id,
         data = {};
       uni.showLoading({
         mask: true
@@ -738,8 +742,10 @@ export default {
           this.detail = res.data;
           console.log("this.detail",this.detail);
           this.checkOwner();
+        // 是否存在申领
           if (this.detail.applications) {
             this.pickupList = this.detail.applications;
+            console.log("this.pickupList",this.pickupList);
           }
           this.getList();
         } else {
@@ -884,7 +890,6 @@ export default {
       });
     },
     toBuy() {
-      console.log(1111);
       if (local.get("user").role != "telUser") {
         return uni.showToast({
           title: "请先登录",
@@ -1166,7 +1171,6 @@ export default {
           uni.saveImageToPhotosAlbum({
             filePath: this.saveImgPath,
             success: res => {
-              console.log(res);
               uni.showToast({
                 title: "保存成功"
               });
@@ -1198,18 +1202,17 @@ export default {
       });
     },
     getMessage(e) {
+      console.log("this.id",this.id);
       let url = "/messages/item/" + this.id,
         data = {};
       xhr.get(url, data, res => {
-        console.log(res);
         if (res.statusCode == 200) {
           this.message = res.data;
-          // console.log(this.message,"this.message");
+          console.log(this.message,"this.message");
         }
       });
     },
     closeMessage() {
-      console.log(1111);
       this.isShowMessage = false;
     },
     openMessage(e) {
@@ -1895,6 +1898,7 @@ export default {
       this.isSchool = true;
     }
     this.id = options.id;
+    console.log("this.id",this.id);
     // this.showTips();
     this.getDetail();
     this.getMessage();

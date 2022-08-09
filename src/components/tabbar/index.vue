@@ -62,7 +62,7 @@
             </view>
             <view>
               <block v-for="(item,index) in config.school" :key="index">
-                <view v-if="item.tabbtn" @click="toAdd" class="li">
+                <view v-if="item.tobtn" @click="toAdd" class="li">
                   <image model="widthFix" :src="imgHOST+'/add/校园专区.png'" class="icon"/>
                   <view>
                     <view class="title">校园专区</view>
@@ -138,6 +138,7 @@ export default {
         console.log(res,'res')
         if (res.statusCode == 200) {
           this.config = res.data;
+          console.log("this.config",this.config);
         }
       });
     },
