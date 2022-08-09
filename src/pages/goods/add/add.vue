@@ -1273,6 +1273,7 @@ export default {
         if (res.statusCode == 200) {
           console.log("getConfig数据",res.data);
           this.banner = res.data.banner;
+          console.log("this.banner",this.banner);
         }
       });
     },

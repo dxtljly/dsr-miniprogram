@@ -53,7 +53,7 @@
         </block>
       </swiper>
     </block> -->
-    <block>
+    <!-- <block>
       <navigator hover-class="none" url="/pages/clock/clock">
         <image
           mode="widthFix"
@@ -61,7 +61,7 @@
           style="margin-left:15rpx;width:96%;border-radius: 10rpx;"
         />
       </navigator>
-    </block>
+    </block> -->
     <gl-li :list="navList1"></gl-li>
     <gl-li :list="navList2"></gl-li>
     <view class="spa z-depth-1">

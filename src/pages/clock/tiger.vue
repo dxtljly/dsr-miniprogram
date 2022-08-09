@@ -1,9 +1,9 @@
 <template>
   <view class="height: 70%">
-    <gl-navbar back home text="上海加油"></gl-navbar>
+    <gl-navbar back home text="虎年福利"></gl-navbar>
     <view class="content">
       <view class="bg">
-        <image mode="widthFix" class="bg-img" :src="imgHOST+'/上海加油.jpg'" />
+        <image mode="widthFix" class="bg-img" :src="imgHOST+'/虎年福利.png'" />
       </view>
     </view>
   </view>
@@ -26,14 +26,14 @@ export default {
   onShareAppMessage(res) {
     //res.from
     return {
-      title: "上海加油",
+      title: "虎年福利",
       imageUrl: shareContent.img,
       path: "/pages/clock/tiger"
     };
   },
   onShareTimeline(res) {
     return {
-      title: "上海加油",
+      title: "虎年福利",
       imageUrl: shareContent.img,
       path: "/pages/clock/tiger"
     };
