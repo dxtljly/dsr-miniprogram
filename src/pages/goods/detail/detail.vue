@@ -727,9 +727,11 @@ export default {
     },
     // 商品数据
     getDetail() {
-      // /item/unauth/
-      let url = "/item/" + this.id,
+      // /item/unauth/   无授权获取
+      // /item/     授权获取
+      let url = "/item/unauth/" + this.id,
         data = {};
+      console.log("url",url);
       uni.showLoading({
         mask: true
       });
@@ -1878,7 +1880,11 @@ export default {
     });
   },
   onLoad(options) {
-    console.log(options);
+    wx.showShareMenu({
+        withShareTicket: true,
+        menus: ['shareAppMessage', 'shareTimeline']
+    });
+    
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")
@@ -1914,7 +1920,7 @@ export default {
     }
   },
   onShow() {
-
+    console.log(this.detail);
   },
   onShareAppMessage(res) {
     //res.from
@@ -1929,7 +1935,7 @@ export default {
       title: this.detail.title,
       imageUrl: this.detail.pic[0],
       path: "/pages/goods/detail/detail?id=" + this.id
-    };
+    }
   }
 };
 </script>
