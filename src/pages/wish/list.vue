@@ -103,10 +103,11 @@
         <wish-list :list="list" :isLastPage="isLastPage"></wish-list>
       </view>
     </scroll-view>
-
-    <view class="fixed-add-btn" @click="toAdd">
-      <image mode="widthFix" :src="imgHOST+'/wish/add.png'" />
-    </view>
+    <block v-if="config.school[0].tobtn">
+      <view class="fixed-add-btn" @click="toAdd">
+        <image mode="widthFix" :src="imgHOST+'/wish/add.png'" />
+      </view>
+    </block>
   </view>
 </template>
 
@@ -167,10 +168,21 @@ export default {
       showCategory: false,
       bannerList: [],
       messageNo: 0,
-      schoolJSON: null
+      schoolJSON: null,
+      config:{}
     };
   },
   computed: {
+    getConfig() {
+      let url =
+          "https://www.grecycle.com.cn/src/sli/config/sli-certification-config.json",
+        data = {};
+      xhr.get(url, data, res => {
+        if (res.statusCode == 200) {
+          this.config = res.data;
+        }
+      });
+    },
     schoolList() {
       let list = [];
       if (

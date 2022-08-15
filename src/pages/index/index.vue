@@ -330,7 +330,7 @@ export default {
       isShowFocusModal: false,
       isShowGuide:
         !local.get("newJson").guide && local.get("newJson").isFinishCourse,
-        // 原 false
+      
       isShowSpread: false,
       spreadTime: 5,
       isTouchSpread: false,

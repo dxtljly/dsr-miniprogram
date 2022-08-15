@@ -55,10 +55,12 @@ export default {
       ? 44
       : 48,
     screenWidth: uni.getSystemInfoSync().screenWidth,
-    screenHeight: uni.getSystemInfoSync().screenHeight
+    screenHeight: uni.getSystemInfoSync().screenHeigh,
+    checkAdLevel: true
   },
   methods: {
     login() {
+      this.initItAd();
       uni.getProvider({
         service: "oauth",
         success: res => {
@@ -72,7 +74,7 @@ export default {
                   uni.setStorageSync("access_token", res.data.access_token);
                   local.set("user", res.data.user);
                   this.$mp.app.aldstat.sendOpenid(res.data.user.openId);
-
+                  console.log("res.data.user",res.data.user);
                   if (res.data.user.ad_level > 0) {
                     this.globalData.checkAdLevel = false;
                     this.checkAdLevel(res.data.user.ad_level);
@@ -94,18 +96,51 @@ export default {
       }
       local.set("initData", initData);
     },
+    initItAd(){
+      let initData = local.get("initData") || {};
+      // itAd  new Date()
+      if (initData.itAd) {
+        try {
+          let spreadDate = new Date(initData.itAd);
+          let spreadDateYear = spreadDate.getFullYear(),
+            spreadDateMonth = spreadDate.getMonth() + 1,
+            spreadDateDay = spreadDate.getDate();
+          console.log("spreadDateYear spreadDateMonth spreadDateDay",spreadDateYear,spreadDateMonth,spreadDateDay);
+          let year = new Date().getFullYear(),
+            month = new Date().getMonth() + 1,
+            day = new Date().getDate();
+          console.log("year month day",year,month,day);
+
+          if (
+            spreadDateYear != year ||
+            spreadDateMonth != month ||
+            spreadDateDay != day
+          ) {
+            this.globalData.checkAdLevel = false;
+          }else{
+            this.globalData.checkAdLevel = true;
+          }
+        } catch (err) {
+          this.globalData.checkAdLevel = false;
+        }
+      } else {
+        this.globalData.checkAdLevel = false;
+      }
+    },
     checkAdLevel(ad_level) {
       //ifdef MP-WEIXIN
       // 在页面中定义激励视频广告
       let videoAd = null;
-
+      // 判断激励视频广告当天是否看过
+      this.initItAd();
+      console.log("this.globalData.checkAdLevel",this.globalData.checkAdLevel);
       // 在页面onLoad回调事件中创建激励视频广告实例
       let adUnitIds = [
         "adunit-67e4ed428ea10518", //1
         "adunit-648833bca5563ffc", //2
         "adunit-194d12144ff78aa4" //3
       ];
-      if (wx.createRewardedVideoAd) {
+      if (this.globalData.checkAdLevel == false) {
         videoAd = wx.createRewardedVideoAd({
           adUnitId: ad_level < 3 ? adUnitIds[ad_level - 1] : adUnitIds[2]
         });
@@ -114,18 +149,19 @@ export default {
         videoAd.onClose(res => {
           if (res.isEnded) {
             this.globalData.checkAdLevel = true;
+            let initData = local.get("initData") || {};
+            initData.itAd = new Date();
+            local.set("initData", initData);
           } else {
             uni.showModal({
               title: "提示",
               content: "看完一则广告，即可开启免费领取好物之旅",
               showCancel: false,
               success: res => {
-                if (this.globalData.checkAdLevel == false) {
-                  this.checkAdLevel(ad_level);
-                }
-
                 if (res.confirm) {
-                  console.log("用户点击确定");
+                  if (this.globalData.checkAdLevel == false) {
+                    this.checkAdLevel(ad_level);
+                  }
                 } else if (res.cancel) {
                   console.log("用户点击取消");
                 }
