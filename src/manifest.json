@@ -55,7 +55,8 @@
 		"navigateToMiniProgramAppIdList": [
 			"wx3d47228a9de3c21a", /* 咕哩闲置母婴 */
 			"wx95f56ab0dffe2772" /* 宝盒 */
-		]
+		],
+		"lazyCodeLoading": "requiredComponents"
 	},
 	"mp-alipay": {
 		"usingComponents": true

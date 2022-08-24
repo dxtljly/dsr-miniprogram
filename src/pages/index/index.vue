@@ -77,11 +77,11 @@
                 <image v-else :src="item.img" mode="aspectFill" class="z-depth-1" />
               </swiper-item>
             </block>
-            <block v-else>
+            <!-- <block v-else>
               <swiper-item>
                 <image src mode="aspectFill" class="z-depth-1" />
               </swiper-item>
-            </block>
+            </block> -->
           </swiper>
         </view>
 
@@ -348,7 +348,7 @@ export default {
     },
     tail() {
       uni.navigateTo({
-        url: "/pages/webviews/webviews?url=https://www.grecycle.com.cn/src/sli/images/school/断舍哩校园推广.jpg"
+        url: "/pages/school/extension"
       });
       let newJson = local.get("newJson");
       newJson.spread = new Date();
@@ -375,9 +375,8 @@ export default {
         data = {};
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
-          console.log("获取",res.data);
           this.config = res.data;
-          console.log(this.config);
+          console.log("this.config.list",this.config.list);
         }
       });
     },

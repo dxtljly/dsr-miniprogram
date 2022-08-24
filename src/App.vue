@@ -96,6 +96,7 @@ export default {
       }
       local.set("initData", initData);
     },
+    // 计算本地日期，一天一次 针对广告、开屏
     initItAd(){
       let initData = local.get("initData") || {};
       // itAd  new Date()
@@ -105,12 +106,9 @@ export default {
           let spreadDateYear = spreadDate.getFullYear(),
             spreadDateMonth = spreadDate.getMonth() + 1,
             spreadDateDay = spreadDate.getDate();
-          console.log("spreadDateYear spreadDateMonth spreadDateDay",spreadDateYear,spreadDateMonth,spreadDateDay);
           let year = new Date().getFullYear(),
             month = new Date().getMonth() + 1,
             day = new Date().getDate();
-          console.log("year month day",year,month,day);
-
           if (
             spreadDateYear != year ||
             spreadDateMonth != month ||
@@ -131,27 +129,27 @@ export default {
       //ifdef MP-WEIXIN
       // 在页面中定义激励视频广告
       let videoAd = null;
-      // 判断激励视频广告当天是否看过
-      this.initItAd();
-      console.log("this.globalData.checkAdLevel",this.globalData.checkAdLevel);
       // 在页面onLoad回调事件中创建激励视频广告实例
+
+      //  6-15在ios上无关闭按钮
       let adUnitIds = [
-        "adunit-67e4ed428ea10518", //1
-        "adunit-648833bca5563ffc", //2
+        // "adunit-32950bbef680ebe7", //1      
+        "adunit-648833bca5563ffc", //2   
         "adunit-194d12144ff78aa4" //3
       ];
+
       if (this.globalData.checkAdLevel == false) {
         videoAd = wx.createRewardedVideoAd({
-          adUnitId: ad_level < 3 ? adUnitIds[ad_level - 1] : adUnitIds[2]
+          // adUnitId: ad_level < 3 ? adUnitIds[ad_level - 1] : adUnitIds[2]
+          adUnitId: ad_level < 3 ? adUnitIds[0] : adUnitIds[1]
         });
+        console.log("videoAd=>>>>>",videoAd);
         videoAd.onLoad(() => {});
         videoAd.onError(err => {});
         videoAd.onClose(res => {
+          videoAd.offClose()
           if (res.isEnded) {
-            this.globalData.checkAdLevel = true;
-            let initData = local.get("initData") || {};
-            initData.itAd = new Date();
-            local.set("initData", initData);
+
           } else {
             uni.showModal({
               title: "提示",
@@ -159,9 +157,7 @@ export default {
               showCancel: false,
               success: res => {
                 if (res.confirm) {
-                  if (this.globalData.checkAdLevel == false) {
-                    this.checkAdLevel(ad_level);
-                  }
+                  this.checkAdLevel(ad_level);
                 } else if (res.cancel) {
                   console.log("用户点击取消");
                 }

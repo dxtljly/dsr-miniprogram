@@ -342,7 +342,7 @@
       },
       tail() {
         uni.navigateTo({
-          url: "pages/webviews/webviews/pages/webviews/webviews?url=https://www.grecycle.com.cn/src/sli/images/school/断舍哩校园推广.jpg"
+          url: "/pages/school/extension"
         });
         let newJson = local.get("newJson");
         newJson.spread = new Date();

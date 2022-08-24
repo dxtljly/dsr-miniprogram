@@ -217,7 +217,7 @@ export default {
               complete: res => {
                 if (res.confirm) {
                   uni.navigateTo({
-                    url: "/pages/spa/index/index"
+                    url: "/pages/spa/index/index?=1"
                   });
                 }
               }

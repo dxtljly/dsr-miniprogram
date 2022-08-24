@@ -731,7 +731,6 @@ export default {
       // /item/     授权获取
       let url = "/item/unauth/" + this.id,
         data = {};
-      console.log("url",url);
       uni.showLoading({
         mask: true
       });
@@ -1880,8 +1879,11 @@ export default {
     });
   },
   onLoad(options) {
+    console.log("options",options);
+    this.id = options.id;
+    this.getDetail();
     wx.showShareMenu({
-        withShareTicket: true,
+      withShareTicket: false,
         menus: ['shareAppMessage', 'shareTimeline']
     });
     
@@ -1891,7 +1893,6 @@ export default {
       );
       options = scene;
     }
-
     if (!options.id) {
       return uni.redirectTo({
         url: "/pages/index/index"
@@ -1903,10 +1904,7 @@ export default {
     if (options.school) {
       this.isSchool = true;
     }
-    this.id = options.id;
-    console.log("this.id",this.id);
     // this.showTips();
-    this.getDetail();
     this.getMessage();
     this.orderId();
     if (options.makereadmsg) {
@@ -1920,20 +1918,26 @@ export default {
     }
   },
   onShow() {
-    console.log(this.detail);
   },
   onShareAppMessage(res) {
     //res.from
+    // withShareTicket:false;
+    if(res){
+      console.log(res);
+    }
     return {
       title: this.detail.title,
       imageUrl: this.detail.pic[0],
       path: "/pages/goods/detail/detail?id=" + this.id
     };
   },
-  onShareTimeline(res) {
+  onShareTimeline(res){
+    if(res){
+      console.log(res);
+    }
     return {
-      title: this.detail.title,
-      imageUrl: this.detail.pic[0],
+      title: this.detail.title || shareContent.title,
+      imageUrl : this.detail.pic[0] || shareContent.img,
       path: "/pages/goods/detail/detail?id=" + this.id
     }
   }

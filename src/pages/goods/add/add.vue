@@ -162,12 +162,12 @@
         </block>
         <block v-else>
           <view class="li">
-            <text>预估体积</text>
+            <text>包装体积</text>
             <input
               v-model="volumeOne"
               type="text"
               dir="rtl"
-              placeholder="商品长度"
+              placeholder="长度"
               placeholder-class="place-holder"
               style="width:150rpx;"
             />cm
@@ -175,7 +175,7 @@
               v-model="volumeTwo"
               type="text"
               dir="rtl"
-              placeholder="商品宽度"
+              placeholder="宽度"
               placeholder-class="place-holder"
               style="width:150rpx;"
             />cm
@@ -183,7 +183,7 @@
               v-model="volumeThree"
               type="text"
               dir="rtl"
-              placeholder="商品高度"
+              placeholder="高度"
               placeholder-class="place-holder"
               style="width:150rpx;"
             />cm
@@ -427,7 +427,6 @@ export default {
         data = { url: filename };
 
       xhr.post(url, data, res => {
-        console.log(res);
         if (res.statusCode == 204) {
           this.uploadImgs[i].temp = "";
           this.uploadImgs[i].upload = filename;
@@ -437,11 +436,10 @@ export default {
       });
     },
     chooseImgs(e) {
-      console.log("chooseImg");
       let url = "/tools/uploadtoken",
         data = {};
       xhr.get(url, data, res => {
-        console.log(res);
+        
         if (res.statusCode == 200) {
           let ossJson = res.data;
           ossJson["host"] = ossJson["host"].replace(/^http:/, "https:");
@@ -807,7 +805,6 @@ export default {
         data = {};
 
       xhr.get(url, data, res => {
-        console.log(res.data);
         if (res.statusCode == 200) {
           let typeList = [];
           res.data.map((v, i) => {
@@ -848,7 +845,7 @@ export default {
       goodsAddData.only_pickup = this.only_pickup;
       goodsAddData.original_price = this.original_price;
       goodsAddData.weight = this.weight;
-      goodsAddData.category = this.typeList[this.typeIndex];
+      // goodsAddData.category = this.typeList[this.typeIndex];
       goodsAddData.if_readd = this.if_readd;
 
       if (this.isSchool) {
@@ -873,9 +870,7 @@ export default {
       if (this.id) {
         return false;
       }
-      console.log("进入beforeMount函数");
       let goodsAddData = local.get("goodsAddData");
-      console.log("goodsAddData",goodsAddData);
       if (goodsAddData) {
         this.uploadImgs = goodsAddData.uploadImgs;
         this.title = goodsAddData.title;
@@ -883,8 +878,13 @@ export default {
         this.brand_new = goodsAddData.brand_new;
         this.only_pickup = goodsAddData.only_pickup;
         this.original_price = goodsAddData.original_price;
-        this.weight = goodsAddData.weight;
         this.category = goodsAddData.category;
+        if(this.category === "运动户外" || this.category === "居家日用" || this.category === "家具家电"){
+          this.volumeShow = true
+          this.volume = goodsAddData.volume
+        }else{
+          this.weight = goodsAddData.weight;
+        }
         this.if_readd = goodsAddData.if_readd;
 
         if (typeof goodsAddData.show_price !== "undefined") {
@@ -897,7 +897,6 @@ export default {
             title: "提示",
             content: "您有未编辑完成的内容，是否继续？",
             success: res => {
-              console.log(res);
               if (res.confirm) {
               } else if (res.cancel) {
                 this.initEdit();
@@ -930,6 +929,7 @@ export default {
       this.isShowSuccess = false;
     },
     submit() {
+      
       if (local.get("user").role != "telUser") {
         return uni.showToast({
           title: "请先登录",
@@ -1160,7 +1160,7 @@ export default {
             this.isSchool = true;
             this.show_price = Math.round(res.data.show_price / 100);
           }
-          if(this.category === "户外运动" || this.category === "居家日用" || this.category === "家具家电"){
+          if(this.category === "运动户外" || this.category === "居家日用" || this.category === "家具家电"){
             this.volumeShow = true
             this.volumeOne = res.data.volume[0]
             this.volumeTwo = res.data.volume[1]
@@ -1369,7 +1369,6 @@ export default {
   onShow() {
     this.getSellerAddress();
     this.user = local.get("user") || null;
-
     if (!this.campus_info) {
       this.getCollege();
     }

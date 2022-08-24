@@ -89,6 +89,9 @@
 			"path": "pages/school/book"
 		},
 		{
+			"path": "pages/school/extension"
+		},
+		{
 			"path": "pages/spa/qr/list"
 		},
 		{
@@ -123,6 +126,9 @@
 		},
 		{
 			"path": "pages/wish/detail"
+		},
+		{
+			"path": "pages/donation/index"
 		}
 	],
 	"globalStyle": {

@@ -556,7 +556,7 @@ export default {
               complete: res => {
                 if (res.confirm) {
                   uni.navigateTo({
-                    url: "/pages/spa/index/index"
+                    url: "/pages/spa/index/index?=1"
                   });
                 }
               }
@@ -595,7 +595,6 @@ export default {
        });
     },
     toAdd() {
-      console.log("toAdd");
       if (this.user && this.user.is_student) {
         uni.navigateTo({
            url: "/pages/goods/add/add?school=1"

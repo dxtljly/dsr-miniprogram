@@ -1033,7 +1033,6 @@ export default {
       }
       console.log(data);
       xhr.post(url, data, res => {
-        console.log(res);
         if (String(res.statusCode)[0] == 2) {
           uni.showToast({
             title: "发送成功"
@@ -1582,7 +1581,6 @@ export default {
     });
   },
   onLoad(options) {
-    console.log(options);
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")

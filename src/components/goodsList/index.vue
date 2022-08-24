@@ -230,7 +230,7 @@ export default {
     },
     rePutaway(e) {
       let item = e.currentTarget.dataset.item;
-      console.log(item);
+      console.log("item",item);
       let goodsAddData = {};
       goodsAddData.uploadImgs = [];
       item.pic.map((v, i) => {
@@ -246,8 +246,13 @@ export default {
       goodsAddData.brand_new = item.brand_new;
       goodsAddData.only_pickup = item.only_pickup;
       goodsAddData.original_price = Math.round(item.original_price / 100);
-      goodsAddData.weight = item.weight;
       goodsAddData.category = item.category;
+      if(item.weight){
+        goodsAddData.weight = item.weight;
+      }else{
+        goodsAddData.volumeShow = true
+        goodsAddData.volume = item.volume
+      }
       goodsAddData.place = [...item.place];
       goodsAddData.if_readd = true;
       // uni.setStorageSync("goodsAddData",goodsAddData)

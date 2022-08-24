@@ -158,6 +158,11 @@ export default {
         //   title: "送出足迹",
         //   url: "/pages/my/goods/footprint/footprint"
         // }
+        // {
+        //   icon: imgHOST + "/icon/myFav.png",
+        //   title: "公益捐赠",
+        //   url: "/pages/donation/index"
+        // },
       ],
       navList2: [
         {
