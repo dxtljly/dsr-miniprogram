@@ -37,7 +37,7 @@
         <image mode="widthFix" class="add-img" :src="imgHOST +'/icon/add-b.png'" />
       </view>
       <view
-        style="position:absolute;margin:auto;bottom:4rpx;left:0;right:0;font-size:20rpx;color:#666;text-align:center;"
+        style="position:absolute;margin:auto;bottom:20rpx;left:0;right:0;font-size:22rpx;color:#666;text-align:center;"
       >发布</view>
     </view>
 
@@ -292,14 +292,15 @@ export default {
   height: $tabbar-height;
   background-color: #fff;
   background-clip: content-box;
-  padding-top: 20rpx;
+  padding-top: 10rpx;
+  padding-bottom: 4rpx;
 
   .mid-add {
     position: absolute;
     margin: auto;
     left: 0;
     right: 0;
-    top: -20rpx;
+    top: -30rpx;
     width: 120rpx;
     height: 120rpx;
     border-radius: 50%;
@@ -328,7 +329,7 @@ export default {
       display: block;
       position: relative;
       margin: auto;
-      width: 20px;
+      width: 22px;
       height: 22px;
     }
     .tab {

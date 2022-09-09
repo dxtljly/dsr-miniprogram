@@ -85,9 +85,10 @@
         </view>
       </view>
     </view>
+
     <block v-if="same.length != 0">
       <view class="same-goods">
-        <view class="title">添加该用户在送的其它商品</view>
+        <view class="title">添加我在送的其他商品吧，邮费更划算哩！</view>
         <scroll-view scroll-x>
           <view class="content">
             <view style="width:30rpx;flex-shrink:0;"></view>
@@ -132,6 +133,7 @@
         </scroll-view>
       </view>
     </block>
+    
     <view class="postfee-tip" @click="jumpFAQ">
       <image mode="widthFix" :src="imgHOST+'/order-txt.png'" style="width:100%;height:100%;" />
     </view>
@@ -367,11 +369,11 @@ export default {
                     uni.requestPayment({
                       provider: "weixin",
                       orderInfo: "",
-                      timeStamp: String(orderInfo.time_stamp),
-                      nonceStr: orderInfo.nonce_str,
+                      timeStamp: String(orderInfo.time_stamp),//时间戳
+                      nonceStr: orderInfo.nonce_str,//随机字符串
                       package: "prepay_id=" + orderInfo.prepay_id,
-                      signType: "MD5",
-                      paySign: orderInfo.sign,
+                      signType: "MD5",//默认值
+                      paySign: orderInfo.sign,//签名
                       success(res) {
                         console.log(res);
                         uni.requestSubscribeMessage({
@@ -626,17 +628,20 @@ export default {
 .same-goods {
   background-color: #fff;
   .title {
-    margin: 20rpx 30rpx;
-    padding-top: 10rpx;
-    font-size: 13px;
-    font-weight: 500;
+    margin: 20rpx 30rpx 6rpx;
+    padding-top: 20rpx;
+    font-size: 26rpx;
+    font-weight: 600;
+    color: #666;
+    letter-spacing: 1rpx;
   }
   scroll-view {
-    height: 300rpx;
+    height: 286rpx;
   }
   .content {
     display: flex;
-    margin-bottom: 20rpx;
+    /* margin-bottom: 20rpx; */
+    padding-top: 10rpx;
     .li {
       flex-shrink: 0;
       position: relative;

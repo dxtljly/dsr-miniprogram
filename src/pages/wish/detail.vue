@@ -305,7 +305,7 @@
                   <image :src="imgHOST+'/icon/group.png'" />
                   <view>进群</view>
                 </view> -->
-                <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群_2.jpg')">
+                <view class="icon-txt" @click="previewWechat">
                   <image mode="widthFix" :src="imgHOST+'/icon/group.png'" />
                   <view>进群</view>
                 </view>
@@ -333,7 +333,7 @@
                 <image :src="imgHOST+'/icon/group.png'" />
                 <view>进群</view>
               </view> -->
-              <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群_2.jpg')">
+              <view class="icon-txt" @click="previewWechat">
                 <image mode="widthFix" :src="imgHOST+'/icon/group.png'" />
                 <view>进群</view>
               </view>
@@ -587,7 +587,8 @@ export default {
         content: "",
         uploadImgs: [] //{temp:'',upload:'',flag:true}
       },
-      isShowOlay: false
+      isShowOlay: false,
+      imagesURL: ""
     };
   },
   methods: {
@@ -1211,11 +1212,22 @@ export default {
 				urls: photoList
 			});
     },
+    getWechat(){
+      let url = "/erp/groupqr",
+      data = {};
+      xhr.get(url, data, res => {
+        if(res.statusCode == 200){
+          this.imagesURL = res.data.qr;
+        }
+      })
+    },
     previewWechat() {
-      uni.previewImage({
-        current: imgHOST + "/seli群_2.jpg", // 当前显示图片的http链接
-        urls: [imgHOST + "/seli群_2.jpg"] // 需要预览的图片http链接列表
-      });
+      if(this.imagesURL){
+        uni.previewImage({
+          current: this.imagesURL, // 当前显示图片的http链接
+          urls: [this.imagesURL] // 需要预览的图片http链接列表
+        });
+      }
     },
     copy(phone) {
       uni.setClipboardData({
@@ -1597,6 +1609,7 @@ export default {
     this.id = options.id;
     // this.showTips();
     this.getDetail();
+    this.getWechat()
     /*  this.getMessage();
     if (options.makereadmsg) {
       // this.makereadmsg();

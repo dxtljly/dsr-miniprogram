@@ -114,14 +114,40 @@
                   </view>
                 </view>
               </view>
-              <view>
-                <ad unit-id="adunit-57671a1c530759e8"></ad>
-                <!-- <view
-                  class="fcmain tx-center"
-                  style="font-size:16px;padding:60rpx;"
-                  @click="()=>this.currentIndex=1"
-                >点击查看留言哩~</view> -->
-              </view>
+
+              <block v-if="same.length != 0">
+                <view class="same-goods">
+                  <view class="title">你可以打包我在送的所有商品哩</view>
+                  <scroll-view scroll-x>
+                    <view class="content">
+                      <view style="width:30rpx;flex-shrink:0;"></view>
+                      <block v-for="(item,index) in same" :key="index">
+                        <navigator
+                          open-type="navigate"
+                          hover-class="none"
+                          class="li z-depth-1"
+                          @click="introduce(item.id)"
+                        >
+                          <image mode="aspectFill" :src="item.pic[0]" />
+                        </navigator>
+                      </block>
+                      <view style="width:10rpx;flex-shrink:0;"></view>
+                    </view>
+                  </scroll-view>
+                </view>
+              </block>
+              <block v-else>
+                <view>
+                  <ad unit-id="adunit-57671a1c530759e8"></ad>
+                  <!-- <view
+                    class="fcmain tx-center"
+                    style="font-size:16px;padding:60rpx;"
+                    @click="()=>this.currentIndex=1"
+                  >点击查看留言哩~</view> -->
+                </view>
+              </block>
+
+
               <view id="makereadmsg" class="container" style="height:800rpx;">
                 <view class="message" style="height:100%;">
                   <view class="title flx">
@@ -351,7 +377,8 @@
                   <image :src="imgHOST+'/icon/group.png'" />
                   <view>进群</view>
                 </view> -->
-                <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群_2.jpg')">
+                <view class="icon-txt" @click="previewWechat">
+                <!-- <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群_2.jpg')"> -->
                   <image mode="widthFix" :src="imgHOST+'/icon/group.png'" />
                   <view>进群</view>
                 </view>
@@ -405,7 +432,8 @@
                 <image :src="imgHOST+'/icon/group.png'" />
                 <view>进群</view>
               </view> -->
-              <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群_2.jpg')">
+              <view class="icon-txt" @click="previewWechat">
+              <!-- <view class="icon-txt" @click="previewWechat(imgHOST+'/seli群_2.jpg')"> -->
                 <image mode="widthFix" :src="imgHOST+'/icon/group.png'" />
                 <view>进群</view>
               </view>
@@ -466,8 +494,10 @@
           <view class="send" @click="notification">发送</view>
         </view>
 
+        
         <view
           class="save-container"
+          
           :class="{'on':isShowSaveContainer}"
           :style="'height:calc(100% - ' +(statusBarHeight+navigationHeight)+ 'px);'"
         >
@@ -491,6 +521,8 @@
         <action-sheet :list="actionSheetList" :on="actionSheetListOn"></action-sheet>
         <action-sheet :isSchool="isSchool" share :on="isShowShare"></action-sheet>
       </block>
+
+
       <block v-if="isNull">
         <view
           class="null flx fx-middle fx-center"
@@ -507,6 +539,7 @@
         </view>
       </block>
     </view>
+
     <!-- ---tips--- -->
     <view v-if="isShowTips" class="modal">
       <view class="modal-content">
@@ -665,6 +698,8 @@ export default {
       canvasW: 649 * rpxRatio,
       canvasH: 980 * rpxRatio,
       canvasScale: 3,
+
+      // canvas图片
       loadImgs: {
         bg: imgHOST + "/detail/share-bg.png",
         content: imgHOST + "/detail/share-content-bg.png",
@@ -713,12 +748,35 @@ export default {
       },
       isShowOlay: false,
       detailList: [],
-      orderList: []
+      orderList: [],
+      imagesURL: "",
+      // 卖家其他商品
+      same: []
     };
   },
   methods: {
+    sameAddress() {
+     let url = "/item/items_same_address/" + this.id,
+        data = {};
+      uni.showLoading({
+        mask: true
+      });
+      xhr.get(url, data, res => {
+        uni.hideLoading();
+        console.log(res);
+        if (res.statusCode == 200) {
+          this.same = res.data;
+          console.log(this.same,"this.sameAddress");
+        }
+      });
+    },
+    introduce(id) {
+      uni.navigateTo({
+         url:'/pages/goods/detail/detail?id=' + id
+      });
+    },
     checkOwner() {
-      console.log(this.detail.seller.id);
+      // console.log(this.detail.seller.id);
       if (local.get("user").id == this.detail.seller.id) {
         this.isOwner = true;
       } else {
@@ -729,6 +787,7 @@ export default {
     getDetail() {
       // /item/unauth/   无授权获取
       // /item/     授权获取
+      console.log("getDetail this.id",this.id);
       let url = "/item/unauth/" + this.id,
         data = {};
       uni.showLoading({
@@ -789,6 +848,7 @@ export default {
       ];
       this.actionSheetListOn = true;
       uni.$once("chooseActionSheet", res => {
+        console.log("res.index",res.index);
         if (res.index == -1) {
           this.actionSheetListOn = false;
         } else {
@@ -931,20 +991,27 @@ export default {
         this.buy();
       }
     },
+    
     getSaveImgPath() {
       if (this.isSchool) {
         this.loadImgs.bg = imgHOST + "/detail/share-bg-school.png";
       }
       let _this = this;
       let getQr = new Promise(function(resolve, reject) {
+        console.log("_this.id",_this.id);
         if (_this.detail.qr) {
           _this.loadImgs.qr = _this.detail.qr.replace(/^http:\/\//, "https://");
+          console.log("_this.detail.qr",_this.detail.qr);
+          console.log("_this.loadImgs.qr",_this.loadImgs.qr);
           resolve(_this.detail.qr);
         } else {
           let url = `/item/qr/${_this.id}`,
             data = {};
+          console.log("else data",data);
+          console.log("url",url);
           xhr.get(url, data, res => {
             if (res.statusCode == 200) {
+              console.log("200 res", res);
               _this.loadImgs.qr = res.data.replace(/^http:\/\//, "https://");
               resolve(res.data);
             } else {
@@ -982,8 +1049,8 @@ export default {
           res.map((val, index) => {
             tempImgs[keys[index]] = val;
           });
-
           _this.tempImgs = tempImgs;
+          console.log("_this.tempImgs",_this.tempImgs);
           _this.drawCanvas();
           _this.drawCanvas("save-card", _this.canvasScale);
         });
@@ -1004,6 +1071,7 @@ export default {
       scale = scale ? scale : 1;
       let ctx = uni.createCanvasContext(canvas);
       // bg
+      console.log("this.tempImgs",this.tempImgs);
       ctx.drawImage(
         this.tempImgs.bg.path,
         0,
@@ -1497,11 +1565,22 @@ export default {
     //     }
     //   });
     // },
+    getWechat(){
+      let url = "/erp/groupqr",
+      data = {};
+      xhr.get(url, data, res => {
+        if(res.statusCode == 200){
+          this.imagesURL = res.data.qr;
+        }
+      })
+    },
     previewWechat() {
-      uni.previewImage({
-        current: imgHOST + "/seli群_2.jpg", // 当前显示图片的http链接
-        urls: [imgHOST + "/seli群_2.jpg"] // 需要预览的图片http链接列表
-      });
+      if(this.imagesURL){
+        uni.previewImage({
+          current: this.imagesURL, // 当前显示图片的http链接
+          urls: [this.imagesURL] // 需要预览的图片http链接列表
+        });
+      }
     },
     copy(phone) {
       uni.setClipboardData({
@@ -1880,19 +1959,18 @@ export default {
   },
   onLoad(options) {
     console.log("options",options);
-    this.id = options.id;
-    this.getDetail();
-    wx.showShareMenu({
-      withShareTicket: false,
-        menus: ['shareAppMessage', 'shareTimeline']
-    });
-    
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")
       );
       options = scene;
+      this.id = scene
     }
+    wx.showShareMenu({
+      withShareTicket: false,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+    
     if (!options.id) {
       return uni.redirectTo({
         url: "/pages/index/index"
@@ -1904,9 +1982,15 @@ export default {
     if (options.school) {
       this.isSchool = true;
     }
+    if(options.id){
+      this.id = options.id;
+    }
+    this.getDetail();
     // this.showTips();
     this.getMessage();
     this.orderId();
+    this.getWechat();
+    this.sameAddress();
     if (options.makereadmsg) {
       // this.makereadmsg();
       this.currentMessageIndex = options.makereadmsg - 1;
@@ -2716,6 +2800,47 @@ $tool-bar-height: 112rpx;
       border-radius: 38rpx;
       background: $main-color;
       color: #fff;
+    }
+  } 
+}
+
+.same-goods {
+  background-color: #fff;
+  .title {
+    margin: 24rpx 30rpx 16rpx;
+    padding-top: 10rpx;
+    font-size: 26rpx;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 1rpx;
+  }
+  scroll-view {
+    height: 250rpx;
+  }
+  .content {
+    display: flex;
+    margin-bottom: 10rpx;
+    .li {
+      flex-shrink: 0;
+      position: relative;
+      width: 200rpx;
+      height: 200rpx;
+      border-radius: 12rpx;
+      overflow: hidden;
+      &:not(:last-child) {
+        margin-right: 20rpx;
+      }
+      &.more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #bbb;
+      }
+      image {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }

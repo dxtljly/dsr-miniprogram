@@ -129,6 +129,9 @@
 		},
 		{
 			"path": "pages/donation/index"
+		},
+		{
+			"path": "pages/donation/detail"
 		}
 	],
 	"globalStyle": {

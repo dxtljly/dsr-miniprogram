@@ -12,6 +12,7 @@
         <view>未匹配到数据 ~</view>
       </view>
     </view>
+    
     <view class="list-wrapper" :style="'height:'+wrapperH+'px;'">
       <block v-for="(item,index) in list" :key="index">
         <navigator
@@ -268,7 +269,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .content {
-    //padding: 10rpx 34rpx 10rpx 19rpx;
+    /* padding: 10rpx 34rpx 10rpx 19rpx; */
     transform: translateX(1.6%) translateY(0.7%);
     .null {
       display: flex;
@@ -286,26 +287,31 @@ export default {
       }
     }
     .list-wrapper {
+      box-sizing: border-box;
       display: flex;
       flex-flow: column wrap;
       width: 716rpx;
       column-gap: 10rpx;
       .list {
-        width: calc(100% / 2);
-        border-radius: 12rpx;
+        width: calc(98% / 2);
+        border-radius: 24rpx;
         font-size: 26rpx;
         opacity: 0;
         transition-delay: 0.1s;
+        box-sizing: border-box;
         .cover-img {
           display: block;
           filter: saturate(100%) brightness(100%);
-          border-radius: 25rpx;
-          width: 348rpx;
+          border-radius: 12rpx;
+          border-top-left-radius: 24rpx;
+          border-top-right-radius: 24rpx;
+          width: 100%;
         }
         .txt {
           padding: $content-offset;
           .title {
-            height: 94rpx;
+            max-height: 88rpx;
+            line-height: 44rpx;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -333,18 +339,20 @@ export default {
             }
           }
           .price {
+            line-height: 40rpx;
+            color: #fd3f31;
             font-weight: bold;
             font-size: 36rpx;
-            margin-bottom: 8rpx;
+            margin-top: 8rpx;
             .origin {
-              margin-left: 20rpx;
-              color: #666;
+              margin-left: 10rpx;
+              color: #999999;
               font-size: 24rpx;
               text-decoration: line-through;
             }
           }
           .avatar {
-            color: #bbb;
+            color: #333;
             font-size: 24rpx;
             .img {
               flex-shrink: 0;

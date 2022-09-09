@@ -126,7 +126,7 @@
       </scroll-view>
       <!-- ===tab-list=== -->
       <view v-if="isTabTypeFixed" class="tab-list-on"></view>
-      <view style="min-height:500px;" v-if="list.length">
+      <view style="min-height:500px;padding-right: 24rpx;" v-if="list.length">
         <goods-list :list="list" :isLastPage="isLastPage"></goods-list>
       </view>
       <block v-else>
@@ -230,23 +230,25 @@
         </view>
       </view>
     </block> -->
-    <view class="pay" v-if="s">
-      <view class="content">
+    <view class="pay fx-center" v-if="false">
+      <view class="content flx fx-center">
         <image mode="widthFix" :src="imgHOST + '/difference/弹窗.png'" />
         <ul class="text">
-          <li class="t1">您有欠款9{{}}元</li>
-          <li class="t2">详情如下</li>
-          <li class="t3">订单编号: 1234567890{{}}</li>
-          <li class="t4">预付邮费: 33{{}}元</li>
-          <li class="t5">实际邮费: 24{{}}元</li>
-          <li class="t6">欠款: 9{{}}元</li>
+          <li class="t1">您有<span>12{{}}</span>元欠款</li>
+          <li class="t3">订单编号: <span>1234567890{{}}</span></li>
+          <li class="t4">预付邮费: <span>33{{}}</span>元</li>
+          <li class="t5">实际邮费: <span>21{{}}</span>元</li>
+          <li class="t6">欠款: <span>12{{}}</span>元</li>
         </ul>
         <!-- @click="pay" -->
-        <view class="image">
+        <view class="image flx fx-center">
+          <image class="img fst" @click="toMyOrder" mode="widthFix" :src="imgHOST + '/difference/查看订单.png'"/>
           <image class="img" @click="pay" mode="widthFix" :src="imgHOST + '/difference/去支付.png'"/>
         </view>
       </view>
     </view>
+
+
     <view v-if="isShowGifModal" class="gif-modal"> 
       <view class="bg" @click="closeGifModal"></view>
       <image mode="widthFix" :src="imgHOST+'/addWX.png'" class="z-index-1 card" @click="copyWX" />
@@ -335,7 +337,8 @@ export default {
       spreadTime: 5,
       isTouchSpread: false,
       isShowGifModal: false,
-      user: local.get("user")
+      user: local.get("user"),
+      s: true
     };
   },
   methods: {
@@ -762,6 +765,11 @@ export default {
         url: "/pages/spa/qr/list"
       });
       this.closeGifModal();
+    },
+    toMyOrder(){
+      uni.redirectTo({
+        url: "/pages/my/goods/get/get"
+      });
     }
   },
   mounted() {
@@ -774,6 +782,7 @@ export default {
         decodeURIComponent(options.scene).replace(/^\?/, "")
       );
       options = scene;
+      console.log("index options",options);
     }
     this.animationTab = animationTab;
     if (options.q) {
@@ -1069,50 +1078,68 @@ scroll-view.container {
 .pay {
   display: flex;
   position: fixed;
-  z-index: 999999;
+  z-index: 9996;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0,0,0,0.3);
   .content { 
-    transform: translateX(14%) translateY(30%);
+    position: relative;
+    margin: auto;
+    image{
+      z-index: 9997;
+    }
     .text {
-      transform: translateX(23%) translateY(-225%);
+      position: absolute;
+      top: 12%;
+      z-index: 9998;
+      li{
+        margin: 10rpx 0;
+      }
+      .t3, .t4, .t5, .t6{
+        font-size: 30rpx;
+        margin-left: 10%;
+      }
+      .t3>span, .t4>span, .t5>span, .t6>span{
+        margin-left: 10rpx;
+        margin-right: 2rpx;
+      }
+      .t4>span, .t5>span{
+        font-size: 32rpx;
+      }
       .t1 {
-        transform: translateY(20%);
-        font-size: 52rpx;
+        font-size: 50rpx;
         font-weight: 600;
         letter-spacing: 4rpx;
+        text-align: center;
         color: red;
+        span{
+          margin: 0 2rpx;
+          font-size: 58rpx;
+        }
       }
-      .t2 {
-        font-size: 24rpx;
-        transform: translateX(15%) translateY(80%);
-        //transform: translateY(25%);
-      }
-      .t3 {
-        font-size: 28rpx;
-        transform: translateY(110%);
-      }
-      .t4 {
-        font-size: 28rpx;
-        transform: translateY(130%);
-      }
-      .t5 {
-        font-size: 28rpx;
-        transform: translateY(150%);
+      .t3{
+        margin-top: 20rpx;
       }
       .t6 {
-        font-size: 28rpx;
-        transform: translateY(170%);
+        span{
+          font-size: 38rpx;
+          color: red;
+        }
       }
     }
     .image {
+      z-index: 9998;
+      width: 100%;
+      position: absolute;
+      bottom: 50rpx;
+      .fst{
+        margin-right: 5%;
+      }
       .img {
-        width: 60%;
-        height: 60%;
-        transform: translateX(30%) translateY(-475%);
+        width: 36%;
+        /* height: 90rpx; */
       }
     }
   }

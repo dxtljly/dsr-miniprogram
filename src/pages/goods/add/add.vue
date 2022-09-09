@@ -273,7 +273,7 @@
       </view>
     </view>
 
-    <view v-if="isShowTips" class="modal">
+    <view v-if="isShowTips && config" class="modal">
       <view class="bg" @click="closeModal"></view>
       <view class="modal-content z-depth-1">
         <image mode="widthFix" :src="imgHOST+'/detail/售卖须知.png'" />
@@ -378,11 +378,20 @@ export default {
       volume:[],
       volumeOne:"",//长
       volumeTwo:"",//宽
-      volumeThree:""//高
+      volumeThree:"",//高
+      config: null
     };
   },
   methods: {
-    
+    toGetConfig(){
+      let url = "https://www.grecycle.com.cn/src/sli/config/sli-certification-config.json",
+        data = {};
+       xhr.get(url, data, res => {
+           if (res.statusCode == 200) {
+            this.config = res.data.school[0].tobtn;
+        }
+      });
+    },
     initWeightRange() {
       let weightRange = [];
       for (let i = 1; i < 100; i++) {
@@ -1364,7 +1373,9 @@ export default {
     }
 
     this.getTypeList();
+    this.toGetConfig()
     this.getConfig();
+    
   },
   onShow() {
     this.getSellerAddress();

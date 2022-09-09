@@ -31,8 +31,13 @@
       </view>
     </view>
     <view class="invite-btns">
-      <button open-type="share" class="btn share z-depth-1">邀请好友上架闲置物品</button>
+
+
+      <button @click="showShare" class="btn share z-depth-1">邀请好友上架闲置物品</button>
+      <!-- <button open-type="share" class="btn share z-depth-1">邀请好友上架闲置物品</button> -->
   
+
+
       <block v-if="config.school[0].tobtn">
         <view
           @click="toAdd"
@@ -106,11 +111,38 @@
         @click.stop="copyWechat"
       />
     </view>
+
+    <view
+      class="save-container"
+      :class="{'on':isShowSaveContainer}"
+      :style="'height:calc(100% - ' +(statusBarHeight+navigationHeight)+ 'px);'"
+    >
+      <view
+        class="bg"
+        :style="'background-image:url(' + imgHOST + '/detail/bg-school.png);'"
+        @click="closeSaveContainer"
+      ></view>
+
+      <canvas
+        canvas-id="show-card"
+        class="show-card"
+        :style="'width:'+canvasW+'px;height:'+canvasH+'px;'"
+      ></canvas>
+      <canvas
+        canvas-id="save-card"
+        class="save-card"
+        :style="'width:'+(canvasW*canvasScale)+'px;height:'+(canvasH*canvasScale)+'px;'"
+      ></canvas>
+
+      <view class="btn school" @click="saveImg">保存图片分享</view>
+    </view>
+    <action-sheet :isSchool="isSchool" share :on="isShowShare"></action-sheet>
   </view>
 </template>
 
 <script>
 const app = getApp();
+const rpxRatio = uni.getSystemInfoSync()["screenWidth"] / 750;
 import {
   imgHOST,
   Host,
@@ -177,7 +209,21 @@ export default {
       ],
       isShowWechat: false,
       user: local.get("user"),
-      config:{}
+      config:{},
+      isShowShare: false,
+      isShowSaveContainer: false,
+      canvasW: 649 * rpxRatio,
+      canvasH: 980 * rpxRatio,
+      canvasScale: 3,
+      isSchool: true,
+      finishCanvas: false,
+      loadImgs: {
+        bg: imgHOST + "/detail/share-bg-school.png",
+        content: imgHOST + "/detail/share-content-bg.png",
+        avatarUrl: local.get("user").avatarUrl,
+        qr: imgHOST + "/qr.jpg"
+      },
+      tempImgs: {}
     };
   },
   methods: {
@@ -307,7 +353,222 @@ export default {
           });
         }
       });
-    }
+    },
+    
+    
+    showShare() {
+      this.isShowShare = true;
+      uni.$on("chooseActionSheet", data => {
+        if (data.index == "save") {
+          if (!this.finishCanvas) {
+            this.getSaveImgPath();
+          }
+
+          this.showSaveContainer();
+        }
+        this.isShowShare = false;
+      });
+    },
+    showSaveContainer() {
+      this.isShowSaveContainer = true;
+      if (!this.finishCanvas) {
+        uni.showLoading();
+      } else {
+        uni.hideLoading();
+      }
+    },
+    closeSaveContainer() {
+      this.isShowSaveContainer = false;
+      uni.hideLoading();
+    },
+    getSaveImgPath(){
+      let _this = this;
+      let getQr = new Promise(function(resolve, reject) {
+        let url = Host + "/tools/qrgen",
+          data = {
+            scene: `userId=${_this.user.id}`,
+            page: "pages/index/index"
+          };
+
+        xhr.post(url, data, res => {
+          if (res.statusCode == 200) {
+            let fsm = uni.getFileSystemManager();
+            let filePath = wx.env.USER_DATA_PATH + "/" + Date.now() + ".jpg";
+            fsm.writeFile({
+              filePath,
+              data: res.data,
+              encoding: "base64",
+              success: res => {
+                _this.loadImgs.qr = filePath;
+                resolve(filePath);
+              },
+              fail: err => {
+                console.error(err);
+                reject(res);
+              }
+            });
+          } else {
+            reject(res);
+          }
+        });
+      });
+      this.loadImgs.avatar = local.get("user").avatarUrl
+        ? local.get("user").avatarUrl
+        : imgHOST + "/logo.jpg";
+
+      function getTempImgs() {
+        let tempImgs = {},
+          keys = [],
+          promiseFn = [];
+        console.log("_this.loadImgs",_this.loadImgs);
+        for (let k in _this.loadImgs) {
+          keys.push(k);
+          let fn = new Promise(function(resolve, reject) {
+            uni.getImageInfo({
+              src: _this.loadImgs[k],
+              success(res) {
+                resolve(res);
+              },
+              fail(err) {
+                console.log("_this.loadImgs[k]",_this.loadImgs[k]);
+                reject(err);
+              }
+            });
+          });
+          promiseFn.push(fn);
+        }
+        Promise.all(promiseFn)
+          .then(res => {
+            res.map((val, index) => {
+              tempImgs[keys[index]] = val;
+            });
+
+            _this.tempImgs = tempImgs;
+            _this.drawCanvas();
+            _this.drawCanvas("save-card", _this.canvasScale);
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }
+
+      getQr
+        .then(res => {
+          getTempImgs();
+        })
+        .catch(err => {
+          console.log(err);
+          _this.failLoadQr = true;
+          getTempImgs();
+        });
+    },
+    drawCanvas(canvas, scale) {
+      canvas = canvas ? canvas : "show-card";
+      scale = scale ? scale : 1;
+      console.log("scale",scale);
+      let ctx = uni.createCanvasContext(canvas);
+      // bg
+      ctx.drawImage(
+        this.tempImgs.bg.path,
+        0,
+        0,
+        this.canvasW * scale,
+        this.canvasH * scale
+      );
+
+      //content
+      var x = 56 * rpxRatio * scale,
+        y = 284 * rpxRatio * scale,
+        bot = 56 * rpxRatio * scale;
+      ctx.drawImage(
+        this.tempImgs.content.path,
+        x,
+        y,
+        this.canvasW * scale - x * 2,
+        this.canvasH * scale - y - bot
+      );
+
+      //头像
+      var r = 60 * rpxRatio * scale,
+        R = 4 * rpxRatio * scale + r,
+        y = 284 * rpxRatio * scale;
+
+      ctx.setFillStyle("#fff");
+      ctx.arc((this.canvasW * scale) / 2, y, R, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc((this.canvasW * scale) / 2, y, r, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(
+        this.tempImgs.avatar.path,
+        (this.canvasW * scale) / 2 - r,
+        y - r,
+        r * 2,
+        r * 2
+      );
+      ctx.restore();
+
+      //txt
+
+      var padding = (56 + 80) * rpxRatio * scale,
+        x = padding - 16,
+        y = y + R + 50 * scale;
+
+      var userTxt = this.user.nickName
+      ctx.fillStyle = "#FF5E41"
+      ctx.setFontSize(14 * scale);
+      ctx.setTextAlign("center");
+      ctx.fillText(userTxt, (this.canvasW / 2) * scale, (y - R))
+
+      console.log("padding",padding);
+      console.log("rpxRatio",rpxRatio);
+      console.log("this.canvasW",this.canvasW);
+      
+      // ctx.font = '38px 楷体'
+      // var gradient = ctx.createLinearGradient(0,0,500,0)
+      // gradient.addColorStop("0","#FFCC33")
+      // gradient.addColorStop("0.5","#990099")
+      // gradient.addColorStop("1","#ff0000")
+      // ctx.fillStyle = gradient
+
+      ctx.setTextAlign("left");
+      ctx.setFontSize(14 * scale);
+      ctx.fillStyle 
+      ctx.fillStyle = "black"
+      var txt1 = "我正在参加“断舍哩”邀好友活动",
+        txt1W = ctx.measureText(txt1).width;
+      console.log("txt1W",txt1W);
+      ctx.fillText(txt1, x, y);
+
+      ctx.setTextAlign("center");
+      ctx.fillText(
+        "快来上架闲置物品，帮我赢好礼！",
+        (this.canvasW / 2) * scale,
+        y + 25 * scale
+      );
+
+      //qr
+      var x = padding,
+        y = (374 + 160) * rpxRatio * scale,
+        dW = this.canvasW * scale - padding * 2,
+        dH = 348 * rpxRatio * scale
+
+      ctx.drawImage(this.tempImgs.qr.path, x, y, dW, dH);
+
+
+      ctx.setFillStyle("#333");
+      ctx.setTextAlign("left");
+      ctx.setFontSize(10 * scale);
+
+      ctx.draw(true);
+      if (canvas == "save-card") {
+        this.finishCanvas = true;
+        uni.hideLoading();
+      }
+    },
   },
   computed: {
     invitePercent() {
@@ -328,6 +589,7 @@ export default {
   },
   mounted() {},
   onLoad(options) {
+    console.log("options",options);
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")
@@ -585,6 +847,51 @@ image.title {
     transition-delay: 0s;
     image {
       transform: translateX(0);
+    }
+  }
+}
+
+.save-container {
+  position: fixed;
+  z-index: 9998;
+  bottom: 0;
+  width: 100%;
+  overflow: auto;
+  transform: translateX(100%);
+  transition: 0.1s;
+  &.on {
+    transform: translateX(0);
+  }
+  .bg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .show-card {
+    position: relative;
+    margin: 54rpx auto 30rpx;
+  }
+  .save-card {
+    position: absolute;
+    opacity: 0;
+    transform: translate(-1000%, -1000%);
+  }
+  .btn {
+    position: relative;
+    margin: auto;
+    width: 556rpx;
+    height: 88rpx;
+    line-height: 88rpx;
+    text-align: center;
+    color: #fff;
+    background-color: $main-color;
+    border-radius: 44rpx;
+    &.school {
+      background-color: $school-main-color;
     }
   }
 }

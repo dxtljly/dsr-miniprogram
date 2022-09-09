@@ -62,8 +62,23 @@
         />
       </navigator>
     </block> -->
+
+    
     <gl-li :list="navList1"></gl-li>
+    
+    <!-- 客服 -->
+    <button class="li" open-type="contact" bindcontact="handleContact">
+      <image mode="widthFix" :src="btn_feedback.icon" class="icon" />
+      <view class="title">
+        {{btn_feedback.title}}
+        <view v-if="btn_feedback.num" class="sup">{{btn_feedback.num}}</view>
+      </view>
+      <image mode="widthFix" :src="imgHOST+'/icon/arrow.png'" class="arrow" />
+    </button>
+
     <gl-li :list="navList2"></gl-li>
+
+
     <view class="spa z-depth-1">
       <view class="title">有奖活动</view>
       <view class="list">
@@ -187,11 +202,6 @@ export default {
           url: "/pages/FAQ/FAQ"
         },
         {
-          icon: imgHOST + "/home/feedback.png",
-          title: "在线客服",
-          url: "/pages/feedback/feedback"
-        },
-        {
           icon: imgHOST + "/home/setting.png",
           title: "权限设置",
           isBtn: true,
@@ -201,12 +211,22 @@ export default {
       user: local.get("user"),
       publishNumber: 0,
       messageNo: 0,
+
       tip: null,
       config: {},
-      list:[]
+      list:[],
+      btn_feedback:{
+        icon: imgHOST + "/home/feedback.png",
+        title: "来撩小哩",
+        url: "/pages/feedback/feedback"
+      }
     };
   },
   methods: {
+    handleContact (e) {
+      console.log(e.detail.path)
+      console.log(e.detail.query)
+    },
     getConfig() {
       let url =
           "https://www.grecycle.com.cn/src/sli/config/sli-home-config.json",
@@ -450,6 +470,39 @@ $offset: 40rpx;
         height: 24px;
       }
     }
+  }
+}
+
+.li {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  font-size: 30rpx;
+  padding: 26rpx 40rpx;
+  border-bottom: 1px solid #f9f9f9;
+
+  .title {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    .sup {
+      font-size: 8px;
+      background: $red-color;
+      color: #fff;
+      margin-left: 10rpx;
+      padding:2rpx 8rpx;
+      border-radius: 16rpx;
+    }
+  }
+
+  .icon {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 26rpx;
+  }
+  .arrow {
+    width: 28rpx;
+    height: 28rpx;
   }
 }
 </style>

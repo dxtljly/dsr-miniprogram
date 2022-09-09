@@ -94,6 +94,7 @@ export default {
 
 .list {
   position: fixed;
+  z-index: 999;
   bottom: 0;
   width: 100%;
   transform: translateY(100%);

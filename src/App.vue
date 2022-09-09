@@ -193,6 +193,7 @@ page {
   height: 100%;
   font-size: 32rpx;
   user-select: text;
+  box-sizing: border-box;
 }
 // Z-levels
 .z-depth-0 {

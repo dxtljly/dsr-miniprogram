@@ -343,6 +343,7 @@ export default {
           icon: "none"
         });
       }
+      
       this.isShowShare = true;
       uni.$on("chooseActionSheet", data => {
         if (data.index == "save") {
