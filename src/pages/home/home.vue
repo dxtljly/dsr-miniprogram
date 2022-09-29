@@ -3,13 +3,49 @@
     <gl-navbar full text="我的" white textStyle="color:#fff;" bg="transparent"></gl-navbar>
     <view class="container">
       <view class="bg" :style="'background-image:url('+imgHOST+'/home/bg.png);'"></view>
-      <view class="userInfo z-depth-3">
-        <navigator hover-class="none" url="/pages/my/auth/login" class="avatar">
-          <image mode="widthFix" :src="user.avatarUrl ? user.avatarUrl : imgHOST+'/logo.jpg'" />
+
+      <!-- <view class="toLoveTab" @click="toLoveTab">
+        爱心足迹
+      </view> -->
+      
+      <view class="userInfo">
+        <navigator hover-class="none" url="/pages/my/auth/login" class="userMsg">
+          <view class="avatar">
+            <image mode="widthFix" :src="user.avatarUrl ? user.avatarUrl : imgHOST+'/logo.jpg'" />
+          </view>
+          <view class="userTxt">
+            <view class="nickname">
+              <span class="userName">{{user.nickName}}</span>
+              <view class="lvImg">
+                <image
+                  :src="imgHOST + '/task/level' + memberLevelId + '.png'"
+                  mode="widthFix"
+                />
+              </view>
+            </view>
+            <view class="userExp">
+              <!-- <canvas canvas-id="userExps" id="userExps" style="width:150rpx; height:10rpx;"></canvas> -->
+              <view class="userExps" :style="'width:'+( growth / growthPoint )*100+'%'"></view>
+            </view>
+          </view>
         </navigator>
-        <view class="nickname">{{user.nickName}}</view>
-        <view class="info">目前在售商品{{publishNumber>99?'99+':publishNumber}}件</view>
       </view>
+
+      <view class="showUserMsg  z-depth-3">
+        <view class="infoLft" @click="toMysend">
+          <view class="infoNum">{{publishNumber>99?'99+':publishNumber}}</view>
+          <view class="infoTxt">在赠商品</view>
+        </view>
+        <view style="height: 80rpx;border-right: 1rpx solid #666;"></view>
+        <view class="infoRht">
+          <navigator url="" 
+          hover-class="none" class="toPointMall" >
+            <view class="integration">{{integration}}</view>
+            <view class="infoTxt">我的哩豆</view>
+          </navigator>
+        </view>
+      </view>
+
     </view>
     <!-- <navigator
       hover-class="none"
@@ -24,6 +60,8 @@
         style="width:100%;height:0;margin-top:-20rpx;margin-bottom:20rpx;"
       />
     </navigator>-->
+
+<!-- 布告栏 -->
     <!-- <block v-if="config &&  config.banner && config.banner.length">
       <swiper
         class="banner"
@@ -53,7 +91,9 @@
         </block>
       </swiper>
     </block> -->
-    <!-- <block>
+
+  <!-- 签到打卡 -->
+    <block v-if="showTip">
       <navigator hover-class="none" url="/pages/clock/clock">
         <image
           mode="widthFix"
@@ -61,7 +101,7 @@
           style="margin-left:15rpx;width:96%;border-radius: 10rpx;"
         />
       </navigator>
-    </block> -->
+    </block>
 
     
     <gl-li :list="navList1"></gl-li>
@@ -124,7 +164,8 @@ import {
   xhr,
   allowTypes,
   local,
-  shareContent
+  shareContent,
+  request
 } from "@/common/util";
 export default {
   data() {
@@ -173,11 +214,13 @@ export default {
         //   title: "送出足迹",
         //   url: "/pages/my/goods/footprint/footprint"
         // }
+
         // {
         //   icon: imgHOST + "/icon/myFav.png",
-        //   title: "公益捐赠",
-        //   url: "/pages/donation/index"
+        //   title: "任务中心",
+        //   url: "/pages/task/task"
         // },
+
       ],
       navList2: [
         {
@@ -219,10 +262,22 @@ export default {
         icon: imgHOST + "/home/feedback.png",
         title: "来撩小哩",
         url: "/pages/feedback/feedback"
-      }
+      },
+      integration: 0, // 哩豆
+      growth: 0, //成长值
+      growthPoint: null,
+      memberLevelId: 1,//用户等级
+      levelData: {},
+      showTip: null
     };
   },
   methods: {
+    toMysend(){
+      uni.navigateTo({ url: '/pages/my/goods/publish/publish' })
+    },
+    toLoveTab(){
+      uni.navigateTo({ url: '/pages/donation/index' })
+    },
     handleContact (e) {
       console.log(e.detail.path)
       console.log(e.detail.query)
@@ -235,6 +290,8 @@ export default {
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.tip = res.data.tip;
+          this.showTip = res.data.showTip
+          console.log("this.showTip");
         }
       });
     },
@@ -286,7 +343,6 @@ export default {
             this.navList1[1].num = res.data.undelivered;
           }
         }
-
       });
     },
     scanSpa() {
@@ -317,6 +373,32 @@ export default {
           });
         }
       });
+    },
+    getUserInfo(){
+      let url = "/mall-portal/sso/info",
+      data = {}
+      request.get(url,data, res => {
+        console.log("积分商城信息",res);
+        if(res.code == 200){
+          this.integration = res.data.data.integration
+          this.growth = res.data.data.growth
+          this.memberLevelId = res.data.data.memberLevelId
+        }
+      })
+    },
+    getLevelList(){
+      let url = "/mall-portal/member/task/levelList",
+        data = {}
+      request.get( url,data, res => {
+        if(res.code == 200) {
+          let levelList = res.data.data
+          levelList.map((val,index) => {
+            if(this.memberLevelId == val.id){
+              this.growthPoint = val.growthPoint
+            }
+          })
+        }
+      })
     }
   },
   mounted() {
@@ -331,9 +413,18 @@ export default {
     this.getConfig();
   },
   onShow() {
+    this.getUserInfo()
+    this.getLevelList()
     this.user = local.get("user");
     this.getPublishNumber();
     this.getMessageNum();
+  },
+  onReady() {
+    var ctx = uni.createCanvasContext('firstCanvas')
+    ctx.rect(0,0,100,10)
+    ctx.fillStyle = "green"
+    ctx.fill()
+    console.log("ctx",ctx);
   },
   onShareAppMessage(res) {
     //res.from
@@ -366,45 +457,135 @@ $offset: 40rpx;
     background-size: cover;
   }
 
+  .toLoveTab{
+    position: absolute;
+    top: 180rpx;
+    right: 0;
+    line-height: 58rpx;
+    background: #fff;
+    font-size: 28rpx;
+    letter-spacing: 1rpx;
+    padding: 0 30rpx 0 40rpx;
+    border-top-left-radius: 30rpx;
+    border-bottom-left-radius: 30rpx;
+  }
+
   .userInfo {
     position: relative;
-    margin: 220rpx $page-offset 20rpx;
-    padding: 80rpx $content-offset 34rpx;
+    margin: 160rpx $page-offset 10rpx 40rpx;
+    width: 350rpx;
+    height: 100rpx;
+    box-sizing: border-box;
+    .userMsg{
+      display: flex;
+      align-items: center;
+      position: relative;
+      height: 100rpx;
+      z-index: 4;
+      .avatar {
+        margin: auto 0;
+        width: 100rpx;
+        height: 100rpx;
+        padding: 6rpx;
+        box-sizing: border-box;
+        border-radius: 50%;
+        image {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+      .userTxt{
+        max-width: 220rpx;
+        margin-left: 10rpx;
+        .nickname {
+          display: flex;
+          align-items: center;
+          height: 50rpx;
+          margin-bottom: 4rpx;
+          .userName{
+            max-width: 160rpx;
+            text-align: left;
+            font-size: 34rpx;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+          }
+          .lvImg{
+            margin-left: 4rpx;
+            margin-top: 4rpx;
+            image{
+              display: block;
+              position: relative;
+              max-width: 44rpx;
+              max-height: 44rpx;
+            }
+
+          }
+        }
+        .userExp, .userExps{
+          box-sizing: border-box;
+          margin: 10rpx 0;
+          width: 200rpx;
+          height: 10rpx;
+          background-color: #fff;
+          border-radius: 6rpx;
+        }
+        .userExps{
+          max-width: 200rpx !important;
+          margin: 0;
+          margin-left: 2rpx;
+          background-color: greenyellow;
+          z-index: 999;
+        }
+      }
+    }
+  }
+
+  .showUserMsg{
+    position: relative;
+    margin: 0 $page-offset 10rpx;
+    display: flex;
+    align-items: center;
+    height: 160rpx;
     border-radius: 16rpx;
     background-color: #fff;
     text-align: center;
+    box-sizing: border-box;
 
-    .avatar {
-      position: absolute;
-      top: -60rpx;
-      left: 0;
-      right: 0;
-      margin: 0 auto 20rpx;
-      width: 128rpx;
-      height: 128rpx;
-      padding: 6rpx;
-      box-sizing: border-box;
-      border-radius: 50%;
-      background-color: #fff;
-      image {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
+    .infoLft, .infoRht{
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      margin-top: 20rpx;
+      height: 120rpx;
+      .infoNum, .infoTxt, .integration{
+        font-size: 48rpx;
+        font-weight: 600;
+        text-align: center;
+        line-height: 58rpx;
+      }
+      .integration{
+        font-size: 42rpx;
+        color: #FFCC00;
+        font-family: "楷体";
+      }
+      .infoTxt{
+        font-weight: 500;
+        line-height: 44rpx;
+        font-size: 28rpx;
       }
     }
-
-    .nickname {
-      font-size: 30rpx;
-      margin-bottom: 4rpx;
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .info {
-      font-size: 26rpx;
-      color: #666;
+    .infoRht{
+      height: 100%;
+      margin-top: 0;
+      .toPointMall{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+      }
     }
   }
 }

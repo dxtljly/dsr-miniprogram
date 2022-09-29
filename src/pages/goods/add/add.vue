@@ -321,7 +321,8 @@ import {
   allowTypes,
   local,
   city,
-  shareContent
+  shareContent,
+  request
 } from "@/common/util";
 
 export default {
@@ -383,6 +384,20 @@ export default {
     };
   },
   methods: {
+    emitAdditemTask(){
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 30,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 12
+        }
+      request.post( url,data, res => {
+        if(res.code == 200){
+          return
+        }
+      })
+    },
     toGetConfig(){
       let url = "https://www.grecycle.com.cn/src/sli/config/sli-certification-config.json",
         data = {};
@@ -938,7 +953,6 @@ export default {
       this.isShowSuccess = false;
     },
     submit() {
-      
       if (local.get("user").role != "telUser") {
         return uni.showToast({
           title: "请先登录",
@@ -1091,6 +1105,7 @@ export default {
           if (String(res.statusCode)[0] == 2) {
             this.createId = res.data;
             this.isShowSuccess = true;
+            // this.emitAdditemTask()
             this.initEdit(true);
             uni.requestSubscribeMessage({
               tmplIds: [

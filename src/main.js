@@ -11,6 +11,7 @@ import actionSheet from "./components/actionSheet";
 import messageIcon from "./components/messageIcon";
 import slPPT from "./components/sl-ppt";
 import notification from "./components/notification";
+import tkList from "./components/taskList";
 
 import util from "./common/util";
 
@@ -32,6 +33,7 @@ Vue.component("action-sheet", actionSheet);
 Vue.component("message-icon", messageIcon);
 Vue.component("sl-ppt", slPPT);
 Vue.component("notification", notification);
+Vue.component("tk-li", tkList);
 
 App.mpType = "app";
 

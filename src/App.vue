@@ -1,5 +1,5 @@
 <script>
-import { imgHOST,  Host, xhr, allowTypes, local } from "@/common/util";
+import { imgHOST,  Host, xhr, allowTypes, local, request } from "@/common/util";
 export default {
   onLaunch(options) {
     if (
@@ -17,7 +17,7 @@ export default {
   onShow() {
     console.log("App Show");
     this.login();
-    this.reShowPost();
+    // this.reShowPost();
     uni.setStorageSync("isShowGifModal", true);
     const updateManager = uni.getUpdateManager();
     updateManager.onCheckForUpdate(function(res) {
@@ -60,7 +60,6 @@ export default {
   },
   methods: {
     login() {
-      this.initItAd();
       uni.getProvider({
         service: "oauth",
         success: res => {
@@ -75,55 +74,110 @@ export default {
                   local.set("user", res.data.user);
                   this.$mp.app.aldstat.sendOpenid(res.data.user.openId);
                   console.log("res.data.user",res.data.user);
+
                   if (res.data.user.ad_level > 0) {
                     this.globalData.checkAdLevel = false;
                     this.checkAdLevel(res.data.user.ad_level);
                   }
+
+                  // 积分商城登录注册
+                  this.addUserInfo();
                 }
               });
             },
             fail: err => {
               console.error(err);
+            },
+//  积分任务次控            
+            complete: res => {
+              // 本地日期，一天一次 针对开屏
+              let newJson = local.get("newJson") ? local.get("newJson") : {};
+              if(new Date(local.get("newJson").spread).getDate() != new Date().getDate()){
+                this.globalData.checkAdLevel = true;
+              /*
+                // 每日重置次数
+                let initDataTask = {}
+                initDataTask.seeIndex = 0
+                initDataTask.seeDetail = 0
+                initDataTask.shareDetail = 0
+                local.set("initDataTask",initDataTask)
+                // 登陆积分
+                setTimeout(()=>{
+                  let nowToken = local.get("integral_token")
+                  if(nowToken){
+                    this.emitLoginTask()
+                  }
+                },2000)
+              */
+              }
             }
           });
         }
       });
     },
-    reShowPost() {
-      let initData = local.get("initData") || {};
-      if (initData.post) {
-        delete initData.post;
-      }
-      local.set("initData", initData);
-    },
-    // 计算本地日期，一天一次 针对广告、开屏
-    initItAd(){
-      let initData = local.get("initData") || {};
-      // itAd  new Date()
-      if (initData.itAd) {
-        try {
-          let spreadDate = new Date(initData.itAd);
-          let spreadDateYear = spreadDate.getFullYear(),
-            spreadDateMonth = spreadDate.getMonth() + 1,
-            spreadDateDay = spreadDate.getDate();
-          let year = new Date().getFullYear(),
-            month = new Date().getMonth() + 1,
-            day = new Date().getDate();
-          if (
-            spreadDateYear != year ||
-            spreadDateMonth != month ||
-            spreadDateDay != day
-          ) {
-            this.globalData.checkAdLevel = false;
-          }else{
-            this.globalData.checkAdLevel = true;
-          }
-        } catch (err) {
-          this.globalData.checkAdLevel = false;
+    // 积分商城注册
+    addUserInfo(){
+      let user = local.get('user')
+      console.log("user",user);
+      if(user){
+        let url = "/mall-portal/sso/register",
+        data = {
+          "gender": 0,
+          "icon": user.avatarUrl,
+          "nickName": user.nickName,
+          "password": user.telephone,
+          "phone": user.telephone,
+          "sourceType": 3,
+          "unionid": user.unionId,
+          "username": user.telephone
         }
-      } else {
-        this.globalData.checkAdLevel = false;
+        console.log("data",data);
+        request.post( url,data, res=> {
+          if(res.code == 200 || res.code == 500 ){
+            this.toLoginInfo()
+          }
+        })
       }
+    },
+    // 登录
+    toLoginInfo(){
+      let url = "/mall-portal/sso/login",
+        user = local.get('user'),
+        data = {
+        "password": user.telephone,
+        "sourceType": 3,
+        "username": user.telephone
+      }
+      request.post(url,data, res => {
+        if(res.code == 200 ){
+          local.set("integral_token", res.data.data.token)
+        }
+      })
+    },
+    // reShowPost() {
+    //   let initData = local.get("initData") || {};
+    //   if (initData.post) {
+    //     delete initData.post;
+    //   }
+    //   local.set("initData", initData);
+    // },
+    emitLoginTask(){
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 5,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 2
+      }
+      request.post( url,data, res => {
+        console.log("emitTask",res);
+        if(res.code == 200 ){
+          console.log("OK");
+        }
+        else if(res.code == 500){
+          console.log("登陆任务已完成");
+        }
+      })
     },
     checkAdLevel(ad_level) {
       //ifdef MP-WEIXIN

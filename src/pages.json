@@ -128,6 +128,9 @@
 			"path": "pages/wish/detail"
 		},
 		{
+			"path": "pages/task/task"
+		},
+		{
 			"path": "pages/donation/index"
 		},
 		{

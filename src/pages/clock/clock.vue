@@ -254,8 +254,15 @@ export default {
       let url = "/assistprom/signup",
         data = {};
       xhr.get(url, data, res => {
+        console.log("res",res);
         if (res.statusCode == 200) {
           this.isSignup = res.data;
+          // if(!res.data){
+          //   uni.showToast({
+          //     title: "活动暂未开始",
+          //     icon: "none"
+          //   })
+          // }
         }
       });
     },
@@ -423,7 +430,6 @@ export default {
         data = {
           target_user: this.target_user.userId
         };
-      console.log(data);
       uni.showLoading();
       xhr.post(url, data, res => {
         uni.hideLoading();
@@ -451,7 +457,7 @@ export default {
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.topList = res.data;
-
+          console.log("this.topList",this.topList);
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].user.id === this.user.id) {
               this.myPoints = res.data[i].total_point;
@@ -693,6 +699,11 @@ export default {
     }
 
     this.getSaveImgPath();
+
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
   },
   onShow() {
     this.user = local.get("user");
@@ -710,11 +721,13 @@ export default {
 
   onShareTimeline(res) {
     //res.from
-    let path = `/pages/clock/clock?userId=${this.user.id}`;
+    let title = "小哩邀您签到赢好礼",
+    path = `/pages/clock/clock?userId=${this.user.id}`,
+    imageUrl = this.imgHOST + "/clock/share.jpg";
     return {
-      title: shareContent.title,
+      title,
       path,
-      imageUrl: this.imgHOST + "/clock/share.jpg"
+      imageUrl
     };
   }
 };
@@ -722,7 +735,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding: 0 40rpx 50rpx;
-  background: linear-gradient(#3cafff, #3cafff);
+  background: linear-gradient( to right ,#ec8c00, #f4b000);
   .card {
     position: relative;
     margin-bottom: 50rpx;

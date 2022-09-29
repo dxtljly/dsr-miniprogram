@@ -675,7 +675,8 @@ import {
   formatDate,
   navigateToMiniProgramAppIdList,
   getUrlParam,
-  shareContent
+  shareContent,
+  request
 } from "@/common/util";
 
 export default {
@@ -751,10 +752,42 @@ export default {
       orderList: [],
       imagesURL: "",
       // 卖家其他商品
-      same: []
+      same: [],
+      browseTime: 0
     };
   },
   methods: {
+    setTime() {
+      //定时奖励
+      this.clearTimeSet = setInterval(() => {
+        this.browseTime++;
+        if(this.browseTime > 9){
+          clearInterval(this.clearTimeSet);
+          let localNum = local.get("initDataTask").seeDetail ? local.get("initDataTask").seeDetail:0
+          if(this.browseTime > 9 && localNum < 3 ){
+            this.emitDetailTask();
+          }
+        }
+      }, 1000);
+      this.browseTime = 0
+    },
+    emitDetailTask(){
+      let url ="/mall-portal/member/task/add",
+        data = {
+          "changeCount": 15,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 8
+      }
+      request.post( url,data, res => {
+        console.log("emitDetail res",res);
+        if(res.code == 200 || res.code == 500){
+          let initDataTask = local.get("initDataTask")
+          initDataTask.seeDetail += 1
+          local.set("initDataTask",initDataTask)
+        }
+      })
+    },
     sameAddress() {
      let url = "/item/items_same_address/" + this.id,
         data = {};
@@ -852,6 +885,7 @@ export default {
         if (res.index == -1) {
           this.actionSheetListOn = false;
         } else {
+
           let status = this.actionSheetList[res.index].status;
           let url = "/item/" + this.id,
             data = {
@@ -875,11 +909,33 @@ export default {
           if (!this.finishCanvas) {
             this.getSaveImgPath();
           }
-
           this.showSaveContainer();
         }
+        // if(data.index == "save" || data.index == "share"){
+        //   localNum = local.get("initDataTask").shareDetail ? local.get("initDataTask").shareDetail : 0
+        //   if(localNum < 5){
+        //     this.emitShare()
+        //   }
+        // }
         this.isShowShare = false;
       });
+    },
+    emitShare(){
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 10,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 0
+        }
+      request.post( url,data, res => {
+        console.log("emitShare", res);
+        if(res.code == 200){
+          let initDataTask = local.get("initDataTask")
+          initDataTask.shareDetail += 1
+          local.set("initDataTask", initDataTask)
+        }
+      })
     },
     buy() {
       if (local.get("user").role != "telUser") {
@@ -1950,7 +2006,7 @@ export default {
         }
       }
       return hasSaleOut;
-    }
+    },
   },
   mounted() {
     uni.$on("backFn", data => {
@@ -2002,6 +2058,8 @@ export default {
     }
   },
   onShow() {
+    // clearInterval(this.clearTimeSet);
+    // this.setTime()
   },
   onShareAppMessage(res) {
     //res.from

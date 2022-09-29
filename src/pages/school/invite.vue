@@ -223,7 +223,8 @@ export default {
         avatarUrl: local.get("user").avatarUrl,
         qr: imgHOST + "/qr.jpg"
       },
-      tempImgs: {}
+      tempImgs: {},
+      saveImgPath: null
     };
   },
   methods: {
@@ -387,7 +388,7 @@ export default {
         let url = Host + "/tools/qrgen",
           data = {
             scene: `userId=${_this.user.id}`,
-            page: "pages/index/index"
+            page: "pages/school/invite"
           };
 
         xhr.post(url, data, res => {
@@ -527,13 +528,6 @@ export default {
       console.log("rpxRatio",rpxRatio);
       console.log("this.canvasW",this.canvasW);
       
-      // ctx.font = '38px 楷体'
-      // var gradient = ctx.createLinearGradient(0,0,500,0)
-      // gradient.addColorStop("0","#FFCC33")
-      // gradient.addColorStop("0.5","#990099")
-      // gradient.addColorStop("1","#ff0000")
-      // ctx.fillStyle = gradient
-
       ctx.setTextAlign("left");
       ctx.setFontSize(14 * scale);
       ctx.fillStyle 
@@ -569,6 +563,52 @@ export default {
         uni.hideLoading();
       }
     },
+    saveImg() {
+      let _this = this;
+      if (!this.finishCanvas) {
+        return uni.showToast({
+          title: "生成中",
+          icon: "none"
+        });
+      }
+      uni.showLoading();
+      uni.canvasToTempFilePath({
+        canvasId: "save-card",
+        success: res => {
+          this.saveImgPath = res.tempFilePath;
+          uni.saveImageToPhotosAlbum({
+            filePath: this.saveImgPath,
+            success: res => {
+              uni.showToast({
+                title: "保存成功"
+              });
+            },
+            fail: err => {
+              console.log(err);
+              if (
+                err.errMsg == "saveImageToPhotosAlbum:fail auth deny" ||
+                err.errMsg ==
+                  "saveImageToPhotosAlbum:fail authorize no response"
+              ) {
+                uni.showToast({
+                  title: "获取授权保存图片",
+                  icon: "none"
+                });
+                setTimeout(function() {
+                  uni.navigateTo({
+                    url: "/pages/my/auth/auth?scope=writePhotosAlbum"
+                  });
+                }, 1300);
+              }
+            },
+            complete: res => {
+              uni.hideLoading();
+              this.closeSaveContainer();
+            }
+          });
+        }
+      });
+    },
   },
   computed: {
     invitePercent() {
@@ -589,15 +629,15 @@ export default {
   },
   mounted() {},
   onLoad(options) {
-    console.log("options",options);
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")
       );
       options = scene;
     }
-    if (options.inviterId) {
-      local.set("inviter", { id: options.inviterId });
+    //  微信邀请 ||  二维码邀请
+    if (options.inviterId || options.userId) {
+      local.set("inviter", { id: options.inviterId || options.userId });
     }
   },
   onShow() {

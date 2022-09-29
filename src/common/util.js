@@ -1,6 +1,7 @@
 //let __URL = "https://dsrdev.grecycle.com.cn";
 let __URL = "https://dsrprd.grecycle.com.cn";
 let imgHOST = "https://www.grecycle.com.cn/src/sli/images";
+let __XML = "https://jfmall.grecycle.com.cn"
 
 let xhr = {
   get(url, data, func, awt) {
@@ -115,6 +116,104 @@ let xhr = {
     });
   },
 };
+
+// 积分任务
+let request = {
+  get(url, data, func, awt) {
+    this.send(url, data, func, awt, "GET");
+  },
+  post(url, data, func, awt) {
+    this.send(url, data, func, awt, "POST");
+  },
+  delete(url, data, func, awt) {
+    this.send(url, data, func, awt, "DELETE");
+  },
+  put(url, data, func, awt) {
+    this.send(url, data, func, awt, "PUT");
+  },
+  send(url, data, func, awt, tp) {
+    let header = {
+      "content-type": "application/json",
+    };
+    if (uni.getStorageSync("integral_token")) {
+      header.Authorization = "Bearer " + uni.getStorageSync("integral_token");
+      // header.cookie =
+      //   "access_token_cookie=" + uni.getStorageSync("access_token");
+    }
+    if (!url.match("^http")) {
+      url = __XML + url;
+    }
+    uni.request({
+      url,
+      header,
+      data,
+      method: tp,
+      success(res) {
+        function sendRes(res) {
+          if (String(res.code).match(/^5/) || res.code == 400) {
+            uni.showToast({
+              title: res.data.message ? res.data.message : "未知错误",
+              icon: "none",
+            });
+          }
+          func({
+            code: res.data.code,
+            data: res.data,
+          });
+        }
+        if (String(res.code).match(/^4/) && res.code != 400) {
+          uni.request({
+            url: __XML + "/mall-auth/oauth/token",
+            data: {
+              "client_id": "portal-app",
+              "client_secret": 123456,
+              "grant_type": "password",
+              "password": local.get("user").telephone,
+              "username": local.get("user").telephone
+            },
+            method: "POST",
+            success(res) {
+              if (res.code == 200) {
+                uni.setStorageSync(
+                  "integral_token",
+                  res.data.token
+                );
+                if (uni.getStorageSync("integral_token")) {
+                  header.Authorization =
+                    "Bearer " + uni.getStorageSync("integral_token");
+                  // header.cookie =
+                  //   "access_token_cookie=" +
+                  //   uni.getStorageSync("access_token");
+                }
+                uni.request({
+                  url,
+                  header,
+                  data,
+                  method: tp,
+                  success(res) {
+                    sendRes(res);
+                  },
+                });
+              }
+            },
+          });
+        } else {
+          sendRes(res);
+        }
+      },
+      fail(res) {
+        func(res);
+        console.log("请求失败");
+        console.log(res);
+        uni.showToast({
+          title: "请求超时",
+          icon: "none",
+        });
+      },
+    });
+  },
+};
+
 var local = {
   get: function(name) {
     var o = uni.getStorageSync(name) || "",
@@ -224,4 +323,5 @@ module.exports = {
   navigateToMiniProgramAppIdList,
   Qr,
   shareContent,
+  request
 };

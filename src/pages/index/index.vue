@@ -103,6 +103,7 @@
         <!-- ---tab-list--- -->
         <view style="height:20rpx;"></view>
       </view>
+
       <scroll-view
         scroll-x
         id="tab-list"
@@ -292,7 +293,9 @@ import {
   xhr,
   allowTypes,
   local,
-  shareContent
+  shareContent,
+  getUrlParam,
+  request
 } from "@/common/util";
 let animationTab = uni.createAnimation({
   duration: 200,
@@ -338,10 +341,40 @@ export default {
       isTouchSpread: false,
       isShowGifModal: false,
       user: local.get("user"),
-      s: true
+      browseTime: 0,  // 浏览时长初始值为 0
     };
   },
   methods: {
+    setTime() {
+      //定时奖励
+      this.clearTimeSet = setInterval(() => {
+        this.browseTime++;
+        if(this.browseTime > 9){
+          clearInterval(this.clearTimeSet);
+          let localNum = local.get("initDataTask").seeIndex?local.get("initDataTask").seeIndex:0
+          if(this.browseTime >= 10 && local.get("initDataTask").seeIndex == 0){
+            this.emitIndexTask();
+          }
+        }
+      }, 1000);
+      this.browseTime = 0
+    },
+    emitIndexTask(){
+      let url ="/mall-portal/member/task/add",
+        data = {
+          "changeCount": 5,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 5
+      }
+      request.post( url,data, res => {
+        if(res.code == 200 || res.code == 500){
+          let initDataTask = local.get("initDataTask")
+          initDataTask.seeIndex = 1
+          local.set("initDataTask",initDataTask)
+        }
+      })
+    },
     previewImgs(current, urls) {
       urls = urls || [current];
       uni.previewImage({
@@ -500,6 +533,7 @@ export default {
       }, 100);
     },
     changeType(e) {
+      console.log("e",e);
       if (!this.isLoadEnd) {
         return false;
       }
@@ -509,7 +543,9 @@ export default {
         return false;
       }
       this.typeIndex = index;
+      console.log("this.typeIndex",this.typeIndex);
       this.scrollTop = this.scrollTopFlag;
+      console.log("this.scrollTop",this.scrollTop);
       if (this.scrollTopFlag >= this.tabTypeTop) {
         setTimeout(() => {
           this.scrollTop = this.tabTypeTop + 5;
@@ -590,6 +626,8 @@ export default {
         && !this.searchTxt
       ) {
         data.cat = this.typeList[this.typeIndex].name;
+        console.log("this.typeList",this.typeList);
+        console.log(this.typeList[this.typeIndex].name);
       }
       xhr.get(url, data, res => {
         this.isLoadEnd = true;
@@ -776,7 +814,7 @@ export default {
     uni.hideTabBar();
   },
   onLoad(options) {
-    console.log(options);
+    console.log("options",options);
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")
@@ -809,6 +847,8 @@ export default {
     }
     this.getConfig();
     this.getMessageNum();
+    // clearInterval(this.clearTimeSet);
+    // this.setTime()
   },
   onShareAppMessage(res) {
     //res.from

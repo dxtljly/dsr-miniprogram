@@ -80,7 +80,7 @@ export default {
                             encryptedData: detail.encryptedData,
                             iv: detail.iv
                           };
-
+                        
                         // inviterId
                         if (local.get("user").role == "noAuth") {
                           if (local.get("inviter")) {
@@ -127,6 +127,7 @@ export default {
                         encryptedData: e.detail.encryptedData,
                         iv: e.detail.iv
                       };
+                    console.log("login data",data);
                     xhr.put(url, data, res => {
                       console.log(res);
                       if (String(res.statusCode)[0] == 2) {
