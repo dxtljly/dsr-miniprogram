@@ -16,7 +16,7 @@
 					</view>
 					
 					<ul class="registerImgs">
-						<block v-for="item in data" :key="item.index">
+						<block v-for="item in timeData" :key="item.index">
 							<li v-if="showSigned(item)" class="li">
 								<view class="li-box" >
 									<image :src="imgHOST + '/task/nowDayImg.png'" mode="widthFix"></image>
@@ -84,9 +84,7 @@ export default {
 			integration: 0,
 			nowRegister: 1,
 			RewardDay: 6,
-			data:[
-				'9-17','9-18','9-19','9-20','9-21','9-22','9-23'
-			],
+			timeData:[],
 			list1:[],
 			newUserTask:[],
 			showDailyAll: false,
@@ -97,8 +95,8 @@ export default {
 		showSigned(){
 			return function(item){
 				let a = item.split('-')
-				if( parseInt(a[1]) == parseInt(new Date().getDate()) || 
-				parseInt(a[1]) < parseInt(new Date().getDate())
+				if( parseInt(a[1]) <= parseInt(new Date().getDate()) 
+				&& parseInt(a[0]) <= parseInt(new Date().getMonth()+1)
 				){
 					return true
 				}else{
@@ -108,9 +106,19 @@ export default {
 		}
 	},
 	methods: {
+		fun_date(aa){
+			let date1 = new Date(),
+			time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+			for(let i=0;i<aa;i++){
+				let date2 = new Date(date1);
+				date2.setDate(date1.getDate()+i);
+				let timeData = (date2.getMonth()+1)+"-"+date2.getDate();
+				this.timeData.push(timeData)
+			}
+		},
 		getUserInfo(){
-		let url = "/mall-portal/sso/info",
-			data = {}
+			let url = "/mall-portal/sso/info",
+				data = {}
 			request.get(url,data, res => {
 				console.log("积分商城信息",res);
 				if(res.code == 200){
@@ -163,6 +171,7 @@ export default {
 	mounted() {},
 	onload() {},
 	onShow() {
+		this.fun_date(7)
 		this.getUserInfo()
 		this.getTaskList()
 	}

@@ -215,11 +215,11 @@ export default {
         //   url: "/pages/my/goods/footprint/footprint"
         // }
 
-        // {
-        //   icon: imgHOST + "/icon/myFav.png",
-        //   title: "任务中心",
-        //   url: "/pages/task/task"
-        // },
+        {
+          icon: imgHOST + "/icon/myFav.png",
+          title: "任务中心",
+          url: "/pages/task/task"
+        },
 
       ],
       navList2: [

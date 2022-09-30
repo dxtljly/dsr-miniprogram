@@ -157,7 +157,7 @@
 </template>
 <script>
 const app = getApp();
-import { imgHOST, xhr, allowTypes, local, shareContent } from "@/common/util";
+import { imgHOST, xhr, allowTypes, local, shareContent, request } from "@/common/util";
 export default {
   data() {
     return {
@@ -267,6 +267,7 @@ export default {
     },
     receive(v) {
       let id = v.currentTarget.dataset.id;
+      let buyerPh = v.currentTarget.dataset.buyer.telephone
       uni.showModal({
         title: "提示",
         content: "确定已收到货物了吗？",
@@ -291,11 +292,23 @@ export default {
                 });
               }
             });
+            // 卖家得积分
+            // this.emitBuyerTask(buyerPh);
           } else if (res.cancel) {
             console.log("用户点击取消");
           }
         }
       });
+    },
+    emitBuyerTask(userName){
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 20,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 0,
+          "userName": userName
+        }
     },
     del(v) {
       let id = v.currentTarget.dataset.id;

@@ -22,7 +22,8 @@
                                     :src="imgHOST + '/task/taskIcon/哩币.png'"
                                     mode="widthFix"
                                 />
-                                <span>{{item.memberTaskIntegration.integration}}</span>
+                                <span v-if="item.times != -1">{{item.memberTaskIntegration.integration * item.times}}</span>
+                                <span v-else>{{item.memberTaskIntegration.integration}}</span>
                             </view>
                             <view class="li-detail">
                                 {{item.description}}
@@ -91,7 +92,7 @@ export default {
         }
         .tk-title{
             margin-left: 10rpx;
-            font-size: 32rpx;
+            font-size: 36rpx;
             font-weight: 600;
         }
     }
@@ -135,7 +136,7 @@ export default {
                         height: 30rpx;
                     }
                     span{
-                        font-size: 30rpx;
+                        font-size: 26rpx;
                         color: #FAAD14;
                     }
                     .finishNum{
