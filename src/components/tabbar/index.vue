@@ -293,7 +293,6 @@ export default {
   background-color: #fff;
   background-clip: content-box;
   padding-top: 10rpx;
-  padding-bottom: 4rpx;
 
   .mid-add {
     position: absolute;

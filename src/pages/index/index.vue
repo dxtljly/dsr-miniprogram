@@ -384,7 +384,7 @@ export default {
     },
     tail() {
       uni.navigateTo({
-        url: "/pages/school/extension"
+        url: "/pages/clock/clock"
       });
       let newJson = local.get("newJson");
       newJson.spread = new Date();
