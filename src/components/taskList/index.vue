@@ -35,7 +35,7 @@
                             已完成
                         </view>
                         <view v-else class="tofinish">
-                            去完成
+                            待完成
                         </view>
                     </view>
                 </view>
@@ -121,13 +121,13 @@ export default {
             .li-txt{
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
+                justify-content: space-around;
                 height: 80rpx;
                 margin-left: 20rpx;
                 max-width: 400rpx;
                 .li-title{
                     display: flex;
-                    font-size: 32rpx;
+                    font-size: 30rpx;
                     line-height: 40rpx;
                     margin-right: 20rpx;
                     image{

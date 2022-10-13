@@ -817,7 +817,7 @@ export default {
   },
   onShareAppMessage(res) {
     //res.from
-    let inviterId = local.get("user").id;
+    let userId = local.get("user").id;
     console.log(res);
 
     return {

@@ -3,8 +3,11 @@ import App from "./App";
 
 import glNavbar from "./components/navbar";
 import tabBar from "./components/tabbar";
+
 import goodsList from "./components/goodsList";
 import goodsListSchool from "./components/goodsList/schoolIndex.vue";
+import donaList from "./components/goodsList/donaIndex.vue";
+
 import wishList from "./components/wish/list.vue";
 import glList from "./components/glList";
 import actionSheet from "./components/actionSheet";
@@ -27,6 +30,8 @@ Vue.component("gl-navbar", glNavbar);
 Vue.component("tab-bar", tabBar);
 Vue.component("goods-list", goodsList);
 Vue.component("goods-list-school", goodsListSchool);
+Vue.component("dona-list", donaList);
+
 Vue.component("wish-list", wishList);
 Vue.component("gl-li", glList);
 Vue.component("action-sheet", actionSheet);

@@ -131,10 +131,16 @@
 			"path": "pages/task/task"
 		},
 		{
+			"path": "pages/invite/invite"
+		},
+		{
 			"path": "pages/donation/index"
 		},
 		{
 			"path": "pages/donation/detail"
+		},
+		{
+			"path": "pages/donation/auth"
 		}
 	],
 	"globalStyle": {

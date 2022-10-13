@@ -147,7 +147,9 @@ export default {
     }
   },
   beforeMount() {},
-  onLoad(options) {},
+  onLoad(options) {
+    
+  },
   onShow() {},
   onShareAppMessage(res) {
     //res.from

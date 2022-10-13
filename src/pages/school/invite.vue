@@ -635,9 +635,9 @@ export default {
       );
       options = scene;
     }
-    //  微信邀请 ||  二维码邀请
-    if (options.inviterId || options.userId) {
-      local.set("inviter", { id: options.inviterId || options.userId });
+    //  邀请
+    if (options.userId && options.userId != this.user.id) {
+      local.set("inviter", { id: options.userId });
     }
   },
   onShow() {
@@ -646,20 +646,20 @@ export default {
   },
   onShareAppMessage(res) {
     //res.from
-    let inviterId = local.get("user").id;
+    let userId = local.get("user").id;
     return {
       title: "校园版块 - 让好物循环",
       imageUrl: shareContent.schoolImg,
-      path: "/pages/school/invite?inviterId=" + inviterId
+      path: "/pages/school/invite?userId=" + userId
     };
   },
   onShareTimeline(res) {
     //res.from
-    let inviterId = local.get("user").id;
+    let userId = local.get("user").id;
     return {
       title: "校园版块 - 让好物循环",
       imageUrl: shareContent.schoolImg,
-      path: "/pages/school/invite?inviterId=" + inviterId
+      path: "/pages/school/invite?userId=" + userId
     };
   }
 };

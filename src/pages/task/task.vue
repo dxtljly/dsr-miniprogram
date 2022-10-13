@@ -3,7 +3,7 @@
 		<gl-navbar back full text="哩豆任务" bg="#fff"></gl-navbar>
 		<view class="container" :style="{ 'margin-top': statusBarHeight + navigationHeight + 'px' }">
 			<view class="bg" :style="{ 'background-image': 'url(' + imgHOST + '/task/taskBg.png)' }">
-				<view class="detailed" @click="toDetailed">明细</view>
+				<!-- <view class="detailed" @click="toDetailed">明细</view> -->
 				<view class="integration">{{ integration }}</view>
 				<view class="toShopBtn" @click="toShopBtn">哩豆商城</view>
 				<view class="register z-depth-1">
@@ -50,7 +50,7 @@
 
 		<!-- 积分任务 -->
 		<view class="dailyTask" @click="openDailyView">
-			<tk-li :list="list1" title="日常任务" :showAll="showDailyAll"></tk-li>
+			<tk-li :list="dailyList" title="日常任务" :showAll="showDailyAll"></tk-li>
 			<viwe :class="showDailyAll?'off':'hidview'">
 				<image
 					:src="imgHOST + '/task/taskIcon/icon-bottom.png'"
@@ -85,7 +85,7 @@ export default {
 			nowRegister: 1,
 			RewardDay: 6,
 			timeData:[],
-			list1:[],
+			dailyList:[],
 			newUserTask:[],
 			showDailyAll: false,
 			showUserAll: false
@@ -107,8 +107,9 @@ export default {
 	},
 	methods: {
 		fun_date(aa){
+			this.timeData = []
 			let date1 = new Date(),
-			time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+			time1 = date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
 			for(let i=0;i<aa;i++){
 				let date2 = new Date(date1);
 				date2.setDate(date1.getDate()+i);
@@ -116,6 +117,7 @@ export default {
 				this.timeData.push(timeData)
 			}
 		},
+		/*
 		getUserInfo(){
 			let url = "/mall-portal/sso/info",
 				data = {}
@@ -127,28 +129,32 @@ export default {
 			})
 		},
 		getTaskList(){
+			this.newUserTask = []
+			this.dailyList = []
 			let url = "/mall-portal/member/task/queryMemberTaskParamList",
 				data = {
 					"pageNum": 1,
-					"pageSize": 5,
+					"pageSize": 20,
 					"platformType": 2
 				}
 			request.get(url,data, res => {
 				if(res.code == 200){
+					console.log("res List",res);
 					let list = res.data.data.list
 					console.log("list",list);
 					list.map((val,index) => {
 						if(val.taskType == 0){
 							this.newUserTask.push(val)
 						} else {
-							this.list1.push(val)
+							this.dailyList.push(val)
 						}
 					})
-					console.log("this.list1",this.list1);
+					console.log("this.dailyList",this.dailyList);
 					console.log("this.newUserTask", this.newUserTask);
 				}
 			})
 		},
+		*/
 		toDetailed() {
 			uni.navigateTo({ url: '/pages/donation/index' });
 		},
@@ -159,11 +165,9 @@ export default {
 			return
 		},
 		openDailyView(){
-			console.log(1111);
 			this.showDailyAll = true
 		},
 		openUserView(){
-			console.log(2222);
 			this.showUserAll = true
 		}
 
@@ -224,7 +228,7 @@ export default {
 		.register{
 			height: 210rpx;
 			width: 94%;
-			margin: 0 $page-offset 10rpx;
+			margin: 0 auto 10rpx;
 			padding: 20rpx 10rpx;
 			box-sizing: border-box;
 			position: absolute;
@@ -356,5 +360,6 @@ export default {
 }
 .newUserTask{
 	margin-top: 20rpx;
+	padding-bottom: 20rpx;
 }
 </style>

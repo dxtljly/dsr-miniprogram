@@ -345,6 +345,7 @@ export default {
     };
   },
   methods: {
+    /*
     setTime() {
       //定时奖励
       this.clearTimeSet = setInterval(() => {
@@ -360,12 +361,19 @@ export default {
       this.browseTime = 0
     },
     emitIndexTask(){
+      let dailyTask = local.get("dailyTask"),
+        taskId = "";
+      dailyTask.map((val,index) => {
+        if(val.name == "浏览首页"){
+          taskId = val.id
+        }
+      })
       let url ="/mall-portal/member/task/add",
         data = {
           "changeCount": 5,
           "changeType": 0,
           "platformType": 2,
-          "umsMemberTaskId": 5
+          "umsMemberTaskId": taskId
       }
       request.post( url,data, res => {
         if(res.code == 200 || res.code == 500){
@@ -375,6 +383,7 @@ export default {
         }
       })
     },
+    */
     previewImgs(current, urls) {
       urls = urls || [current];
       uni.previewImage({
@@ -629,6 +638,7 @@ export default {
         console.log("this.typeList",this.typeList);
         console.log(this.typeList[this.typeIndex].name);
       }
+      console.log("this.data",data);
       xhr.get(url, data, res => {
         this.isLoadEnd = true;
         if (res.statusCode == 200) {
@@ -847,8 +857,10 @@ export default {
     }
     this.getConfig();
     this.getMessageNum();
+
     // clearInterval(this.clearTimeSet);
     // this.setTime()
+
   },
   onShareAppMessage(res) {
     //res.from

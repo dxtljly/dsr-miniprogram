@@ -384,13 +384,21 @@ export default {
     };
   },
   methods: {
+    /*
     emitAdditemTask(){
+      let dailyTask = local.get("dailyTask"),
+        taskId = "";
+      dailyTask.map((val,index) => {
+        if(val.name == "上架闲置物品"){
+          taskId = val.id
+        }
+      })
       let url = "/mall-portal/member/task/add",
         data = {
           "changeCount": 30,
           "changeType": 0,
           "platformType": 2,
-          "umsMemberTaskId": 12
+          "umsMemberTaskId": taskId
         }
       request.post( url,data, res => {
         if(res.code == 200){
@@ -398,6 +406,28 @@ export default {
         }
       })
     },
+    emitOnceAddTask(){
+      let newUserTask = local.get("newUserTask"),
+        taskId = "";
+      newUserTask.map((val,index) => {
+        if(val.name == "首次上架闲置"){
+          taskId = val.id
+        }
+      })
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 60,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": taskId
+        }
+      request.post( url,data, res => {
+        if(res.code == 200){
+          return
+        }
+      })
+    },
+    */
     toGetConfig(){
       let url = "https://www.grecycle.com.cn/src/sli/config/sli-certification-config.json",
         data = {};
@@ -1105,7 +1135,10 @@ export default {
           if (String(res.statusCode)[0] == 2) {
             this.createId = res.data;
             this.isShowSuccess = true;
+            // 积分任务
             // this.emitAdditemTask()
+            // this.emitOnceAddTask()
+
             this.initEdit(true);
             uni.requestSubscribeMessage({
               tmplIds: [
@@ -1404,13 +1437,13 @@ export default {
   },
   onShareAppMessage(res) {
     //res.from
-    let inviterId = local.get("user").id;
+    let userId = local.get("user").id;
     console.log(res);
     if (res.from == "button") {
       if (res.target.dataset.type == "inviteSchool") {
         return {
           title: "让好物循环",
-          path: "/pages/school/index?inviterId=" + inviterId,
+          path: "/pages/school/index?userId=" + userId,
           imageUrl: this.imgHOST + "/share-school.png",
           success(res) {
             uni.showToast({

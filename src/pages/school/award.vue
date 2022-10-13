@@ -87,19 +87,19 @@ export default {
   },
   onShareAppMessage(res) {
     //res.from
-    let inviterId = local.get("user").id;
+    let userId = local.get("user").id;
     return {
       title: shareContent.schoolTitle,
       imageUrl: shareContent.schoolImg,
-      path: "/pages/school/index?inviterId=" + inviterId
+      path: "/pages/school/index?userId=" + userId
     };
   },
   onShareTimeline(res) {
-    let inviterId = local.get("user").id;
+    let userId = local.get("user").id;
     return {
       title: shareContent.schoolTitle,
       imageUrl: shareContent.schoolImg,
-      path: "/pages/school/index?inviterId=" + inviterId
+      path: "/pages/school/index?userId=" + userId
     };
   }
 };

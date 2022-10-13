@@ -4,9 +4,9 @@
     <view class="container">
       <view class="bg" :style="'background-image:url('+imgHOST+'/home/bg.png);'"></view>
 
-      <!-- <view class="toLoveTab" @click="toLoveTab">
+      <view class="toLoveTab" @click="toLoveTab">
         爱心足迹
-      </view> -->
+      </view>
       
       <view class="userInfo">
         <navigator hover-class="none" url="/pages/my/auth/login" class="userMsg">
@@ -215,11 +215,11 @@ export default {
         //   url: "/pages/my/goods/footprint/footprint"
         // }
 
-        {
-          icon: imgHOST + "/icon/myFav.png",
-          title: "任务中心",
-          url: "/pages/task/task"
-        },
+        // {
+        //   icon: imgHOST + "/icon/加入我们.png",
+        //   title: "邀新有哩",
+        //   url: "/pages/invite/invite"
+        // },
 
       ],
       navList2: [
@@ -265,13 +265,28 @@ export default {
       },
       integration: 0, // 哩豆
       growth: 0, //成长值
-      growthPoint: null,
+      growthPoint: 10000,
       memberLevelId: 1,//用户等级
       levelData: {},
-      showTip: null
+      showTip: null,
+      noAddTask: false
     };
   },
   methods: {
+    addNavList1(){
+      this.navList1.map((val,index) => {
+        if(val.title == "任务中心"){
+          this.noAddTask = true
+        }
+      })
+      if(local.get("integral_token") && !this.noAddTask){
+        this.navList1.push({
+          icon: imgHOST + "/icon/myFav.png",
+          title: "任务中心",
+          url: "/pages/task/task"
+        })
+      }
+    },
     toMysend(){
       uni.navigateTo({ url: '/pages/my/goods/publish/publish' })
     },
@@ -374,6 +389,7 @@ export default {
         }
       });
     },
+    /*
     getUserInfo(){
       let url = "/mall-portal/sso/info",
       data = {}
@@ -400,6 +416,7 @@ export default {
         }
       })
     }
+    */
   },
   mounted() {
     uni.hideTabBar();
@@ -413,8 +430,10 @@ export default {
     this.getConfig();
   },
   onShow() {
-    this.getUserInfo()
-    this.getLevelList()
+    // 任务相关
+    // this.getUserInfo()
+    // this.getLevelList()
+    // this.addNavList1()
     this.user = local.get("user");
     this.getPublishNumber();
     this.getMessageNum();

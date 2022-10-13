@@ -643,8 +643,8 @@ export default {
       );
       options = scene;
     }
-    if (options.inviterId) {
-      local.set("inviter", { id: options.inviterId });
+    if (options.userId && options.userId != this.user.id) {
+      local.set("inviter", { id: options.userId });
     }
     if (options.q) {
       this.searchTxt = options.q;

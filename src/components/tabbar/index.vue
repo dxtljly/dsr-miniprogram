@@ -13,7 +13,7 @@
               class="img"
               :src="imgHOST + (currentPage == item.pagePath?item.selectedIconPath:item.iconPath)"
             />
-            <view>{{item.text}}</view>
+            <view class="name">{{item.text}}</view>
             <view v-if="mytasksNum && item.pagePath==='/pages/home/home'" class="point"></view>
           </view>
         </block>
@@ -317,11 +317,12 @@ export default {
     flex-grow: 1;
     text-align: center;
     color: #999;
-    margin: 0 40rpx 0 0;
+    margin: 0 40rpx 18rpx 0;
     &.rig {
-      margin: 0 0 0 40rpx;
+      margin: 0 0 18rpx 40rpx;
     }
     &.on {
+      
       color: $main-color;
     }
     .img {

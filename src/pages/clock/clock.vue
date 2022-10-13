@@ -102,7 +102,7 @@
       </view>
       <navigator
         hover-class="none"
-        url="/pages/webviews/webviews?url=https://mp.weixin.qq.com/s/gDD3O775jRBUuontDLdXJQ"
+        url="/pages/webviews/webviews?url=https://mp.weixin.qq.com/s/i4uUuSedi1aa21WNBGNJHA"
       >
         <image mode="widthFix" :src="imgHOST+'/clock/奖品.png'" style="width:100%;" />
       </navigator>
@@ -713,7 +713,7 @@ export default {
     let path = `/pages/clock/clock?userId=${this.user.id}`;
     console.log(path);
     return {
-      title: shareContent.title,
+      title: "小哩邀您签到赢好礼",
       imageUrl: this.imgHOST + "/clock/share.jpg",
       path
     };
@@ -726,8 +726,8 @@ export default {
     imageUrl = this.imgHOST + "/clock/share.jpg";
     return {
       title,
-      path,
-      imageUrl
+      imageUrl,
+      path
     };
   }
 };

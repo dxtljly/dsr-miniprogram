@@ -757,6 +757,7 @@ export default {
     };
   },
   methods: {
+    /*
     setTime() {
       //定时奖励
       this.clearTimeSet = setInterval(() => {
@@ -765,22 +766,28 @@ export default {
           clearInterval(this.clearTimeSet);
           let localNum = local.get("initDataTask").seeDetail ? local.get("initDataTask").seeDetail:0
           if(this.browseTime > 9 && localNum < 3 ){
-            this.emitDetailTask();
+            // this.emitDetailTask();
           }
         }
       }, 1000);
       this.browseTime = 0
     },
     emitDetailTask(){
+      let dailyTask = local.get("dailyTask"),
+        taskId = "";
+      dailyTask.map((val,index) => {
+        if(val.name == "浏览单件商品"){
+          taskId = val.id
+        }
+      })
       let url ="/mall-portal/member/task/add",
         data = {
           "changeCount": 15,
           "changeType": 0,
           "platformType": 2,
-          "umsMemberTaskId": 8
+          "umsMemberTaskId": taskId
       }
       request.post( url,data, res => {
-        console.log("emitDetail res",res);
         if(res.code == 200 || res.code == 500){
           let initDataTask = local.get("initDataTask")
           initDataTask.seeDetail += 1
@@ -788,6 +795,7 @@ export default {
         }
       })
     },
+    */
     sameAddress() {
      let url = "/item/items_same_address/" + this.id,
         data = {};
@@ -911,25 +919,34 @@ export default {
           }
           this.showSaveContainer();
         }
-        // if(data.index == "save" || data.index == "share"){
-        //   localNum = local.get("initDataTask").shareDetail ? local.get("initDataTask").shareDetail : 0
-        //   if(localNum < 5){
-        //     this.emitShare()
-        //   }
-        // }
+        if(data.index == "save" || data.index == "share"){
+          console.log(111);
+          let localNum = local.get("initDataTask").shareDetail ? local.get("initDataTask").shareDetail : 0
+          if(localNum < 5){
+            // this.emitShare()
+            // this.emitOnceShare()
+          }
+        }
         this.isShowShare = false;
       });
     },
+    /*
     emitShare(){
+      let dailyTask = local.get("dailyTask"),
+        taskId = "";
+      dailyTask.map((val,index) => {
+        if(val.name == "分享"){
+          taskId = val.id
+        }
+      })
       let url = "/mall-portal/member/task/add",
         data = {
           "changeCount": 10,
           "changeType": 0,
           "platformType": 2,
-          "umsMemberTaskId": 0
+          "umsMemberTaskId": taskId
         }
       request.post( url,data, res => {
-        console.log("emitShare", res);
         if(res.code == 200){
           let initDataTask = local.get("initDataTask")
           initDataTask.shareDetail += 1
@@ -937,6 +954,27 @@ export default {
         }
       })
     },
+    emitOnceShare(){
+      let newUserTask= local.get("newUserTask"),
+        taskId = "";
+      newUserTask.map((val,index) => {
+        if(val.name == "首次分享"){
+          taskId = val.id
+        }
+      })
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 20,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": taskId
+        }
+      request.post( url,data, res => {
+        if(res.code == 200){
+        }
+      })
+    },
+    */
     buy() {
       if (local.get("user").role != "telUser") {
         return uni.showToast({

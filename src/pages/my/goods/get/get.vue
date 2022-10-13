@@ -62,14 +62,14 @@
                   <view class="flx">
                     <view
                       class="btn-reject"
-                      style="margin-left:20rpx;transform:translateX(360%);"
+                      style="margin-left:10rpx;transform:translateX(360%);"
                       @click.stop="close"
                       :data-oid="order.id"
                       :data-index="index"
                     >取消订单</view>
                     <view
                       class="btn-accept"
-                      style="transform:translateX(430%);"
+                      style="transform:translateX(430%);margin-left:10rpx;"
                       @click.stop="toPay"
                       :data-oid="order.id"
                       :data-index="index"
@@ -107,6 +107,7 @@
                       style="transform:translateX(360%);"
                       @click.stop="receive"
                       :data-id="order.id"
+                      :data-sellerId="order.seller_address.telephone"
                     >确认收货</view>
                   </view>
                 </block>
@@ -267,7 +268,7 @@ export default {
     },
     receive(v) {
       let id = v.currentTarget.dataset.id;
-      let buyerPh = v.currentTarget.dataset.buyer.telephone
+      let sellerPh = v.currentTarget.dataset.sellerid
       uni.showModal({
         title: "提示",
         content: "确定已收到货物了吗？",
@@ -293,23 +294,62 @@ export default {
               }
             });
             // 卖家得积分
-            // this.emitBuyerTask(buyerPh);
+            // this.emitSellerTask(sellerPh)
+            // // 收货卖家首次积分
+            // this.emitOnceSellerTask(sellerPh)
           } else if (res.cancel) {
             console.log("用户点击取消");
           }
         }
       });
     },
-    emitBuyerTask(userName){
+    /*
+    emitSellerTask(sellerPh){
+      let dailyTask = local.get("dailyTask"),
+        taskId = "";
+      dailyTask.map((val,index) => {
+        if(val.name == "捐赠闲置物品"){
+          taskId = val.id
+        }
+      })
       let url = "/mall-portal/member/task/add",
         data = {
           "changeCount": 20,
           "changeType": 0,
           "platformType": 2,
-          "umsMemberTaskId": 0,
-          "userName": userName
+          "umsMemberTaskId": taskId,
+          "userName": sellerPh
+      }
+      request.post( url,data, res => {
+        console.log("emitOrederinTask res",res);
+        if(res.code == 200 || res.code == 500){
+          console.log("res code",res);
         }
+      })
     },
+    emitOnceSellerTask(sellerPh){
+      let newUserTask = local.get("newUserTask"),
+        taskId = "";
+      newUserTask.map((val,index) => {
+        if(val.name == "首次捐赠商品"){
+          taskId = val.id
+        }
+      })
+      let url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 40,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": taskId,
+          "userName": sellerPh
+      }
+      request.post( url,data, res => {
+        if(res.code == 200 || res.code == 500){
+          console.log("已完成首次订单",res);
+        }
+      })
+    },
+    */
     del(v) {
       let id = v.currentTarget.dataset.id;
       uni.showModal({

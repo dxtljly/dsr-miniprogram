@@ -80,6 +80,7 @@
               />
             </block>
             <view>{{item1.studentcard}}</view>
+            <view class="id-img-tips">(带入学时间)</view>
           </view>
           <view class="id-img" v-if="item1.page">
             <block v-if="identify_id.temp">
@@ -126,6 +127,7 @@
               />
             </block>
             <view>{{item1.identitycard}}</view>
+            <view class="id-img-tips">(带头像照片)</view>
           </view>
         </view>
         <view class="tip" v-for="(item2,index2) in config.school" :key="index2">
@@ -511,6 +513,9 @@ export default {
       height: 50rpx;
       top: -20rpx;
       right: -20rpx;
+    }
+    .id-img-tips{
+      font-size: 22rpx;
     }
   }
 }

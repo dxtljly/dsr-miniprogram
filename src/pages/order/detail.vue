@@ -137,7 +137,8 @@ import {
   xhr,
   allowTypes,
   local,
-  shareContent
+  shareContent,
+  request
 } from "@/common/util";
 export default {
   data() {
@@ -214,7 +215,6 @@ export default {
       });
       xhr.get(url, data, res => {
         uni.hideLoading();
-        console.log(res);
         if (res.statusCode == 200) {
           this.detail = res.data;
           console.log(this.detail,'this.detail');
@@ -245,6 +245,9 @@ export default {
               uni.hideLoading();
               if (String(res.statusCode)[0] == 2) {
                 this.detail.status = 4;
+                // this.emitOrederinTask()
+                // // 首次
+                // this.emitOnceSellerTask()
               }
             });
           } else if (res.cancel) {
@@ -253,6 +256,55 @@ export default {
         }
       });
     },
+    /*
+    emitOrederinTask(){
+      let dailyTask = local.get("dailyTask"),
+        taskId = "";
+      dailyTask.map((val,index) => {
+        if(val.name == "捐赠闲置物品"){
+          taskId = val.id
+        }
+      })
+      let sellerId = this.detail.seller.telephone,
+        url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 20,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": taskId,
+          "userName": sellerId
+      }
+      request.post( url,data, res => {
+        console.log("emitOrederinTask res",res);
+        if(res.code == 200 || res.code == 500){
+          console.log("res code",res);
+        }
+      })
+    },
+    emitOnceSellerTask(){
+      let newUserTask = local.get("newUserTask"),
+        taskId = "";
+      newUserTask.map((val,index) => {
+        if(val.name == "首次捐赠商品"){
+          taskId = val.id
+        }
+      })
+      let sellerId = this.detail.seller.telephone,
+        url = "/mall-portal/member/task/add",
+        data = {
+          "changeCount": 40,
+          "changeType": 0,
+          "platformType": 2,
+          "umsMemberTaskId": 22,
+          "userName": sellerId
+      }
+      request.post( url,data, res => {
+        if(res.code == 200 || res.code == 500){
+          console.log("已完成首次订单",res);
+        }
+      })
+    },
+    */
     close() {
       uni.showModal({
         title: "提示",
