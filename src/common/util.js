@@ -1,7 +1,8 @@
 //let __URL = "https://dsrdev.grecycle.com.cn";
 let __URL = "https://dsrprd.grecycle.com.cn";
 let imgHOST = "https://www.grecycle.com.cn/src/sli/images";
-// let __XML = "https://jfmall.grecycle.com.cn"
+
+let __XML = "https://jfmall.grecycle.com.cn"
 
 let xhr = {
   get(url, data, func, awt) {
@@ -15,7 +16,7 @@ let xhr = {
   },
   put(url, data, func, awt) {
     this.send(url, data, func, awt, "PUT");
-  },
+  },  
   send(url, data, func, awt, tp) {
     let header = {
       "content-type": "application/json",

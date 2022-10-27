@@ -757,7 +757,6 @@ export default {
     };
   },
   methods: {
-    /*
     setTime() {
       //定时奖励
       this.clearTimeSet = setInterval(() => {
@@ -795,7 +794,6 @@ export default {
         }
       })
     },
-    */
     sameAddress() {
      let url = "/item/items_same_address/" + this.id,
         data = {};
@@ -930,7 +928,6 @@ export default {
         this.isShowShare = false;
       });
     },
-    /*
     emitShare(){
       let dailyTask = local.get("dailyTask"),
         taskId = "";
@@ -974,7 +971,6 @@ export default {
         }
       })
     },
-    */
     buy() {
       if (local.get("user").role != "telUser") {
         return uni.showToast({
@@ -2096,8 +2092,8 @@ export default {
     }
   },
   onShow() {
-    // clearInterval(this.clearTimeSet);
-    // this.setTime()
+    clearInterval(this.clearTimeSet);
+    this.setTime()
   },
   onShareAppMessage(res) {
     //res.from

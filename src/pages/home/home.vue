@@ -4,9 +4,9 @@
     <view class="container">
       <view class="bg" :style="'background-image:url('+imgHOST+'/home/bg.png);'"></view>
 
-      <view class="toLoveTab" @click="toLoveTab">
+      <!-- <view class="toLoveTab" @click="toLoveTab">
         爱心足迹
-      </view>
+      </view> -->
       
       <view class="userInfo">
         <navigator hover-class="none" url="/pages/my/auth/login" class="userMsg">
@@ -93,7 +93,7 @@
     </block> -->
 
   <!-- 签到打卡 -->
-    <block v-if="showTip">
+    <!-- <block v-if="showTip">
       <navigator hover-class="none" url="/pages/clock/clock">
         <image
           mode="widthFix"
@@ -101,7 +101,7 @@
           style="margin-left:15rpx;width:96%;border-radius: 10rpx;"
         />
       </navigator>
-    </block>
+    </block> -->
 
     
     <gl-li :list="navList1"></gl-li>
@@ -389,7 +389,7 @@ export default {
         }
       });
     },
-    /*
+    
     getUserInfo(){
       let url = "/mall-portal/sso/info",
       data = {}
@@ -416,7 +416,6 @@ export default {
         }
       })
     }
-    */
   },
   mounted() {
     uni.hideTabBar();
@@ -431,9 +430,11 @@ export default {
   },
   onShow() {
     // 任务相关
-    // this.getUserInfo()
-    // this.getLevelList()
-    // this.addNavList1()
+    this.getUserInfo()
+    this.getLevelList()
+    this.addNavList1()
+
+
     this.user = local.get("user");
     this.getPublishNumber();
     this.getMessageNum();

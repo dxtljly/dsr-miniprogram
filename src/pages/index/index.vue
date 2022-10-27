@@ -345,7 +345,7 @@ export default {
     };
   },
   methods: {
-    /*
+    
     setTime() {
       //定时奖励
       this.clearTimeSet = setInterval(() => {
@@ -383,7 +383,7 @@ export default {
         }
       })
     },
-    */
+    
     previewImgs(current, urls) {
       urls = urls || [current];
       uni.previewImage({
@@ -393,7 +393,7 @@ export default {
     },
     tail() {
       uni.navigateTo({
-        url: "/pages/clock/clock"
+        url: "/pages/school/extension"
       });
       let newJson = local.get("newJson");
       newJson.spread = new Date();
@@ -858,8 +858,9 @@ export default {
     this.getConfig();
     this.getMessageNum();
 
-    // clearInterval(this.clearTimeSet);
-    // this.setTime()
+    
+    clearInterval(this.clearTimeSet);
+    this.setTime()
 
   },
   onShareAppMessage(res) {

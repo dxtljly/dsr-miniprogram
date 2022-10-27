@@ -5,79 +5,99 @@
 			<view></view>
 			<image mode="widthFix" :src="imgHOST + '/donation/auth/head.png'" class="head-bg" />
 			<view style="width: 100%;padding: 0 20rpx;box-sizing: border-box;">
-                <block v-for="(item, index) in config.donation" :key="index">
-                    <view class="container flx fx-column" v-if="item.page">
-                        <view class="form">
-                            <view class="li">
-                                <view class="label">{{ item.labelname }}</view>
-                                <input v-model="authen.name" placeholder="请输入姓名" placeholder-class="place-holder" class="input" />
-                            </view>
-                            <view class="li">
-                                <view class="label">{{ item.labelphone }}</view>
-                                <input type="number" maxlength="11" v-model="authen.phone" placeholder="请输入手机号" placeholder-class="place-holder" class="input" />
-                            </view>
-                            <view class="li">
-                                <view class="label">{{ item.labelidentity }}</view>
-                                <input type="idcard" maxlength="18" v-model="authen.identity" placeholder="请输入身份证号" placeholder-class="place-holder" class="input input1"/>
-                            </view>
-                        </view>
-                        <view class="id-img-content">
-                            <view class="id-img">
-                                <block v-if="student_id.temp">
-                                    <image mode="aspectFill" :src="student_id.temp" data-key="student_id" @click="previewImg" />
-                                    <image mode="aspectFill" :src="imgHOST + '/icon/loadding-bubbles-grey.svg'" class="loadding" />
-                                    <image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close" data-key="student_id" @click.stop="deleteImg" />
-                                </block>
-                                <block v-else-if="student_id.upload">
-                                    <image mode="aspectFill" :src="student_id.upload" data-key="student_id" @click="previewImg" />
-                                    <image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close" data-key="student_id" @click.stop="deleteImg" />
-                                </block>
-                                <block v-else><image mode="aspectFill" :src="imgHOST + '/donation/auth/id-0.png'" data-key="student_id" @click="chooseImg" /></block>
-                                <view>身份证正面照片</view>
-                            </view>
-                            <view class="id-img">
-                                <block v-if="identify_id.temp">
-                                    <image mode="aspectFill" :src="identify_id.temp" data-key="identify_id" @click="previewImg" />
-                                    <image mode="aspectFill" :src="imgHOST + '/icon/loadding-bubbles-grey.svg'" class="loadding" />
-                                    <image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close" data-key="identify_id" @click.stop="deleteImg" />
-                                </block>
-                                <block v-else-if="identify_id.upload">
-                                    <image mode="aspectFill" :src="identify_id.upload" data-key="identify_id" @click="previewImg" />
-                                    <image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close" data-key="identify_id" @click.stop="deleteImg" />
-                                </block>
-                                <block v-else><image mode="aspectFill" :src="imgHOST + '/donation/auth/id-1.png'" data-key="identify_id" @click="chooseImg" /></block>
-                                <view>身份证反面照片</view>
-                            </view>
-                        </view>
-                        
-                        <view class="form-btm">
-                            <view class="li">
-                                <view class="label">{{item.labeltoname}}</view>
-                                <input v-model="authen.proveName" :placeholder="item.toname" placeholder-class="place-holder" class="input" />
-                            </view>
-                            <view class="li">
-                                <view class="label">{{item.labeltoprove}}</view>
-                                <view class="input input1">{{item.toprove}}</view>
-                            </view>
-                        </view>
+				<block v-for="(item, index) in config.donation" :key="index">
+					<view class="container flx fx-column" v-if="item.page">
+						<view class="form">
+							<view class="li">
+								<view class="label">{{ item.labelname }}</view>
+								<input v-model="authen.name" placeholder="请输入姓名" placeholder-class="place-holder"
+									class="input" />
+							</view>
+							<view class="li">
+								<view class="label">{{ item.labelphone }}</view>
+								<input type="number" maxlength="11" v-model="authen.phone" placeholder="请输入手机号"
+									placeholder-class="place-holder" class="input" />
+							</view>
+							<view class="li">
+								<view class="label">{{ item.labelidentity }}</view>
+								<input type="idcard" maxlength="18" v-model="authen.identity" placeholder="请输入身份证号"
+									placeholder-class="place-holder" class="input input1" />
+							</view>
+						</view>
+						<view class="id-img-content">
+							<view class="id-img">
+								<block v-if="student_id.temp">
+									<image mode="aspectFill" :src="student_id.temp" data-key="student_id"
+										@click="previewImg" />
+									<image mode="aspectFill" :src="imgHOST + '/icon/loadding-bubbles-grey.svg'"
+										class="loadding" />
+									<image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close"
+										data-key="student_id" @click.stop="deleteImg" />
+								</block>
+								<block v-else-if="student_id.upload">
+									<image mode="aspectFill" :src="student_id.upload" data-key="student_id"
+										@click="previewImg" />
+									<image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close"
+										data-key="student_id" @click.stop="deleteImg" />
+								</block>
+								<block v-else>
+									<image mode="aspectFill" :src="imgHOST + '/donation/auth/id-0.png'"
+										data-key="student_id" @click="chooseImg" />
+								</block>
+								<view>身份证正面照片</view>
+							</view>
+							<view class="id-img">
+								<block v-if="identify_id.temp">
+									<image mode="aspectFill" :src="identify_id.temp" data-key="identify_id"
+										@click="previewImg" />
+									<image mode="aspectFill" :src="imgHOST + '/icon/loadding-bubbles-grey.svg'"
+										class="loadding" />
+									<image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close"
+										data-key="identify_id" @click.stop="deleteImg" />
+								</block>
+								<block v-else-if="identify_id.upload">
+									<image mode="aspectFill" :src="identify_id.upload" data-key="identify_id"
+										@click="previewImg" />
+									<image mode="aspectFill" :src="imgHOST + '/icon/delete-close.png'" class="close"
+										data-key="identify_id" @click.stop="deleteImg" />
+								</block>
+								<block v-else>
+									<image mode="aspectFill" :src="imgHOST + '/donation/auth/id-1.png'"
+										data-key="identify_id" @click="chooseImg" />
+								</block>
+								<view>身份证反面照片</view>
+							</view>
+						</view>
 
-                        <view class="wrap">
-                            <view class="img-wrap">
-                                <view class="imglist flx fx-wrap">
-                                    <view class="img-item" v-for="(imgItm,imgIndex) in imgs" :key="imgIndex">
-                                        <image :src="imgItm" mode="aspectFill" />
-                                        <view class='img-delete' @click='deleteImgs' data-index="imgIndex">
-                                            <image :src="imgHOST + '/donation/auth/delete.png'" />
-                                        </view>
-                                    </view>
-                                    <view class="last-item" v-if="imgs.length >= 9 ? false : true" @click="bindUpload">
-                                        <text class="sign">+</text>
-                                    </view>
-                                </view>
-                            </view>
-                        </view>
-                    </view>
-                </block>
+						<view class="form-btm">
+							<view class="li">
+								<view class="label">{{ item.labeltoname }}</view>
+								<input v-model="authen.proveName" :placeholder="item.toname"
+									placeholder-class="place-holder" class="input" />
+							</view>
+							<view class="li">
+								<view class="label">{{ item.labeltoprove }}</view>
+								<view class="input input1">{{ item.toprove }}</view>
+							</view>
+						</view>
+
+						<view class="wrap">
+							<view class="img-wrap">
+								<view class="imglist flx fx-wrap">
+									<view class="img-item" v-for="(imgItm, imgIndex) in imgs" :key="imgIndex">
+										<image :src="imgItm" mode="aspectFill" />
+										<view class='img-delete' @click='deleteImgs' data-index="imgIndex">
+											<image :src="imgHOST + '/donation/auth/delete.png'" />
+										</view>
+									</view>
+									<view class="last-item" v-if="imgs.length >= 9 ? false : true" @click="bindUpload">
+										<text class="sign">+</text>
+									</view>
+								</view>
+							</view>
+						</view>
+					</view>
+				</block>
 			</view>
 			<!-- <view style="height:180rpx;background:#fff;"></view> -->
 			<view class="submit-btn" @click.stop="submit">提交</view>
@@ -100,12 +120,12 @@ export default {
 			config: {},
 			college_name: '',
 			authen: {
-                name:"",
-                phone: "",
-                identity:"",
-                proveName:"",
-                stuff:null
-            },
+				name: "",
+				phone: "",
+				identity: "",
+				proveName: "",
+				stuff: null
+			},
 			student_id: {
 				temp: '',
 				upload: ''
@@ -118,7 +138,7 @@ export default {
 				student_id: null,
 				identify_id: null
 			},
-			imgs:[],
+			imgs: [],
 			count: 9
 		};
 	},
@@ -187,7 +207,7 @@ export default {
 									signature: ossJson['signature'],
 									callback: ossJson['callback']
 								},
-								success: res => {},
+								success: res => { },
 								fail: err => {
 									uni.showToast({
 										title: '放置失败',
@@ -252,7 +272,7 @@ export default {
 					}
 				}
 			})
-			},
+		},
 		submit() {
 			if (!this.user || this.user.role != 'telUser') {
 				return uni.navigateTo({
@@ -274,7 +294,7 @@ export default {
 
 			let url = '',
 				data = {
-					
+
 				};
 
 			uni.showLoading();
@@ -295,9 +315,9 @@ export default {
 		}
 	},
 	watch: {
-		
+
 	},
-	mounted() {},
+	mounted() { },
 	onLoad(options) {
 		if (options.scene) {
 			let scene = getUrlParam(decodeURIComponent(options.scene).replace(/^\?/, ''));
@@ -330,6 +350,7 @@ export default {
 .head-bg {
 	width: 100%;
 }
+
 .container {
 	width: 100%;
 	box-sizing: border-box;
@@ -339,17 +360,20 @@ export default {
 	border-radius: 30rpx;
 	top: -100px;
 
-	.form, .form-btm {
+	.form,
+	.form-btm {
 		.li {
 			display: flex;
 			align-items: center;
 			margin-bottom: 20rpx;
+
 			.label {
 				flex-shrink: 0;
 				margin-right: 20rpx;
 				font-size: 14px;
 				font-weight: 500;
 			}
+
 			.input {
 				flex-grow: 1;
 				font-size: 13px;
@@ -360,34 +384,40 @@ export default {
 				white-space: nowrap;
 				color: #6d9cf8;
 			}
-            .input1{
-                color: #ccc;
-                white-space: pre-wrap;
-            }
+
+			.input1 {
+				color: #ccc;
+				white-space: pre-wrap;
+			}
 		}
 	}
+
 	.id-img-content {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		background: #fff;
-        margin-top: 40rpx;
+		margin-top: 40rpx;
+
 		.id-img {
 			position: relative;
 			width: 300rpx;
 			height: 200rpx;
 			font-size: 14px;
 			text-align: center;
+
 			image {
 				width: 100%;
 				height: 100%;
 				border-radius: 12rpx;
 			}
+
 			.loadding {
 				position: absolute;
 				top: 0;
 				left: 0;
 			}
+
 			.close {
 				position: absolute;
 				width: 50rpx;
@@ -397,47 +427,55 @@ export default {
 			}
 		}
 	}
-    .form-btm{
-        margin-top: 100rpx;
-    }
-    .wrap{
-        width: 100%;
-        padding: 0 30rpx;
-        box-sizing: border-box;
-        .img-wrap{
-            font-size: 30rpx;
-            color: #33373E;
-            margin-bottom: 10rpx;
-            .img-item{
-                width: 150rpx;
-                height: 150rpx;
-                margin-right: 22rpx;
-                margin-bottom: 10rpx;
-                position: relative;
-                image{
-                    width: 100%;
-                    height: 100%;
-                }
-                .img-delete{
-                    width: 30rpx;
-                    height: 30rpx;
-                    position: absolute;
-                    top: -14rpx;
-                    right: -12rpx;
-                }
-            }
-            .last-item{
-                width: 150rpx;
-                height: 150rpx;
-                text-align: center;
-                line-height: 146rpx;
-                border: 2rpx dashed #8B97A9;
-                box-sizing: border-box;
-            }
-        }
-    }
+
+	.form-btm {
+		margin-top: 100rpx;
+	}
+
+	.wrap {
+		width: 100%;
+		padding: 0 30rpx;
+		box-sizing: border-box;
+
+		.img-wrap {
+			font-size: 30rpx;
+			color: #33373E;
+			margin-bottom: 10rpx;
+
+			.img-item {
+				width: 150rpx;
+				height: 150rpx;
+				margin-right: 22rpx;
+				margin-bottom: 10rpx;
+				position: relative;
+
+				image {
+					width: 100%;
+					height: 100%;
+				}
+
+				.img-delete {
+					width: 30rpx;
+					height: 30rpx;
+					position: absolute;
+					top: -14rpx;
+					right: -12rpx;
+				}
+			}
+
+			.last-item {
+				width: 150rpx;
+				height: 150rpx;
+				text-align: center;
+				line-height: 146rpx;
+				border: 2rpx dashed #8B97A9;
+				box-sizing: border-box;
+			}
+		}
+	}
 
 }
+
 .submit-btn {
 	position: fixed;
 	margin: auto;

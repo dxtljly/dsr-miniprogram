@@ -310,7 +310,7 @@ export default {
         .txt {
           padding: $content-offset;
           .title {
-            max-height: 88rpx;
+            height: 88rpx;
             line-height: 44rpx;
             display: -webkit-box;
             -webkit-line-clamp: 2;

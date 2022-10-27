@@ -34,7 +34,6 @@
     "@dcloudio/uni-mp-weixin": "^2.0.0-24220191115006",
     "@dcloudio/uni-stat": "^2.0.0-24220191115006",
     "flyio": "^0.6.2",
-    "node-sass": "^4.14.1",
     "regenerator-runtime": "^0.12.1",
     "vue": "^2.6.10",
     "vuex": "^3.0.1"
@@ -55,6 +54,7 @@
     "mini-types": "*",
     "miniprogram-api-typings": "^2.9.2",
     "postcss-comment": "^2.0.0",
+    "sass": "^1.55.0",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10"
   },

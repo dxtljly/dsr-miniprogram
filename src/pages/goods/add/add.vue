@@ -384,7 +384,7 @@ export default {
     };
   },
   methods: {
-    /*
+   
     emitAdditemTask(){
       let dailyTask = local.get("dailyTask"),
         taskId = "";
@@ -427,7 +427,7 @@ export default {
         }
       })
     },
-    */
+    
     toGetConfig(){
       let url = "https://www.grecycle.com.cn/src/sli/config/sli-certification-config.json",
         data = {};

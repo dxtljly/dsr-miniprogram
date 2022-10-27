@@ -37,7 +37,7 @@
         <image mode="widthFix" class="add-img" :src="imgHOST +'/icon/add-b.png'" />
       </view>
       <view
-        style="position:absolute;margin:auto;bottom:20rpx;left:0;right:0;font-size:22rpx;color:#666;text-align:center;"
+        style="position:absolute;margin:auto;bottom:22rpx;left:0;right:0;font-size:22rpx;color:#666;text-align:center;"
       >发布</view>
     </view>
 
@@ -299,7 +299,7 @@ export default {
     margin: auto;
     left: 0;
     right: 0;
-    top: -30rpx;
+    top: -46rpx;
     width: 120rpx;
     height: 120rpx;
     border-radius: 50%;

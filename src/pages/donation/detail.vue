@@ -157,6 +157,27 @@ export default {
 		};
 	},
 	methods: {
+		countTime(date) {
+			let countTime = date;
+
+			try {
+				let subTime = Date.now() - new Date(date).getTime();
+				if (subTime < 60 * 1000) {
+				countTime = "刚刚";
+				} else if (subTime < 60 * 60 * 1000) {
+				countTime = Math.ceil(subTime / (60 * 1000)) + "分钟前";
+				} else if (subTime <= 24 * 60 * 60 * 1000) {
+				countTime = Math.ceil(subTime / (60 * 60 * 1000)) + "小时前";
+				} else if (subTime < 7 * 24 * 60 * 60 * 1000) {
+				countTime = Math.ceil(subTime / (24 * 60 * 60 * 1000)) + "天前";
+				} else {
+				countTime = date.replace(/\s+/, " ").split(" ")[0];
+				}
+			} catch (err) {
+				countTime = date.replace(/\s+/, " ").split(" ")[0];
+			}
+			return countTime;
+		},
 		getList(e) {
 			if (!this.isLoadEnd || this.isLastPage) {
 				return false;

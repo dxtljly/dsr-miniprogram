@@ -1,7 +1,7 @@
 <template>
   <view style="height:100%;">
     <gl-navbar back home></gl-navbar>
-    <web-view :src="url" text="推广大使"></web-view>
+    <web-view :src="url"></web-view>
   </view>
 </template>
 <script>
