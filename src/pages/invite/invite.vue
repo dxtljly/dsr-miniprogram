@@ -137,7 +137,7 @@ export default {
 					});
 				} else {
 					this.redpacketListIndex = index;
-					this.emitInvitePacket();
+					// this.emitInvitePacket();
 				}
 			}
 		},

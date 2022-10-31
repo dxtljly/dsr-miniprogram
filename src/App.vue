@@ -79,11 +79,11 @@ export default {
                     this.checkAdLevel(res.data.user.ad_level);
                   }
 
-                  if(res.data.user.role == "telUser" && res.data.user.telephone){
-                    console.log("授权手机用户注册积分商城");
+                  // if(res.data.user.role == "telUser" && res.data.user.telephone){
+                  //   console.log("授权手机用户注册积分商城");
                     // 积分商城登录注册
-                    this.addUserInfo();
-                  }
+                    // this.addUserInfo();
+                  // }
                 }
               });
             },
@@ -97,25 +97,25 @@ export default {
               if(new Date(local.get("newJson").spread).getDate() != new Date().getDate()){
                 this.globalData.checkAdLevel = true;
                 
-                每日重置次数
-                let initDataTask = {
-                  seeIndex: 0,
-                  seeDetail: 0,
-                  shareDetail: 0
-                }
-                local.set("initDataTask",initDataTask)
+                // 每日重置次数
+                // let initDataTask = {
+                //   seeIndex: 0,
+                //   seeDetail: 0,
+                //   shareDetail: 0
+                // }
+                // local.set("initDataTask",initDataTask)
 
-                // 登陆积分
-                setTimeout(()=>{
-                  let nowToken = local.get("integral_token")
-                  let dailyTask = local.get("dailyTask")
-                  let newUserTask = local.get("newUserTask")
-                  if(nowToken && dailyTask && newUserTask){
-                    this.emitLoginTask()
-                    this.emitOnceLoginTask()
-                    this.emitOncePhTask()
-                  }
-                },3000);
+                // // 登陆积分
+                // setTimeout(()=>{
+                //   let nowToken = local.get("integral_token")
+                //   let dailyTask = local.get("dailyTask")
+                //   let newUserTask = local.get("newUserTask")
+                //   if(nowToken && dailyTask && newUserTask){
+                //     this.emitLoginTask()
+                //     this.emitOnceLoginTask()
+                //     this.emitOncePhTask()
+                //   }
+                // },3000);
               }
             }
           });
@@ -123,7 +123,7 @@ export default {
       });
     },
 
-    
+    /*
     // 积分商城注册
     addUserInfo(){
       let user = local.get('user')
@@ -237,39 +237,39 @@ export default {
           console.log("首次授权已完成 30");
         }
       })
-    }, 
-    reShowPost() {
-      let initData = local.get("initData") || {};
-      if (initData.post) {
-        delete initData.post;
-      }
-      local.set("initData", initData);
-    },
+    }, */
+    // reShowPost() {
+    //   let initData = local.get("initData") || {};
+    //   if (initData.post) {
+    //     delete initData.post;
+    //   }
+    //   local.set("initData", initData);
+    // },
 
-    emitLoginTask(){
-      let dailyTask = local.get("dailyTask"),
-        taskId = "";
-      dailyTask.map((val,index) => {
-        if(val.name == "签到"){
-          taskId = val.id
-        }
-      })
-      let url = "/mall-portal/member/task/add",
-        data = {
-          "changeCount": 5,
-          "changeType": 0,
-          "platformType": 2,
-          "umsMemberTaskId": taskId
-      }
-      request.post( url,data, res => {
-        if(res.code == 200 ){
-          console.log("每日签到OK 5");
-        }
-        else if(res.code == 500){
-          console.log("登录任务已完成 5");
-        }
-      })
-    },
+    // emitLoginTask(){
+    //   let dailyTask = local.get("dailyTask"),
+    //     taskId = "";
+    //   dailyTask.map((val,index) => {
+    //     if(val.name == "签到"){
+    //       taskId = val.id
+    //     }
+    //   })
+    //   let url = "/mall-portal/member/task/add",
+    //     data = {
+    //       "changeCount": 5,
+    //       "changeType": 0,
+    //       "platformType": 2,
+    //       "umsMemberTaskId": taskId
+    //   }
+    //   request.post( url,data, res => {
+    //     if(res.code == 200 ){
+    //       console.log("每日签到OK 5");
+    //     }
+    //     else if(res.code == 500){
+    //       console.log("登录任务已完成 5");
+    //     }
+    //   })
+    // },
 
     checkAdLevel(ad_level) {
       //ifdef MP-WEIXIN

@@ -1,4 +1,4 @@
-//let __URL = "https://dsrdev.grecycle.com.cn";
+// let __URL = "https://dsrdev.grecycle.com.cn";
 let __URL = "https://dsrprd.grecycle.com.cn";
 let imgHOST = "https://www.grecycle.com.cn/src/sli/images";
 

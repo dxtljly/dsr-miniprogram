@@ -93,7 +93,7 @@
     </block> -->
 
   <!-- 签到打卡 -->
-    <!-- <block v-if="showTip">
+    <block v-if="showTip">
       <navigator hover-class="none" url="/pages/clock/clock">
         <image
           mode="widthFix"
@@ -101,7 +101,7 @@
           style="margin-left:15rpx;width:96%;border-radius: 10rpx;"
         />
       </navigator>
-    </block> -->
+    </block>
 
     
     <gl-li :list="navList1"></gl-li>
@@ -430,9 +430,9 @@ export default {
   },
   onShow() {
     // 任务相关
-    this.getUserInfo()
-    this.getLevelList()
-    this.addNavList1()
+    // this.getUserInfo()
+    // this.getLevelList()
+    // this.addNavList1()
 
 
     this.user = local.get("user");

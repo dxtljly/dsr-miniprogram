@@ -301,15 +301,15 @@
                                     >复制手机</view>
                                   </view>
                                   <!-- <view class="audit-btns" :class="{'school':isSchool}">
-                                <view v-if="isOwner && item.status == 1 && !hasAudit" class="btns">
-                                  <view class="on" @click="auditOn(item._id,index)">审核通过</view>
-                                  <view class="off" @click="auditOff(item._id,index)">审核不通过</view>
-                                </view>
-                                <view class="audit-txt">
-                                  <view v-if="item.status == 1 && !isOwner" class="on">等待审核</view>
-                                  <view v-if="item.status == 2" class="on">审核通过</view>
-                                  <view v-if="item.status == 3" class="off">审核不通过</view>
-                                </view>
+                                    <view v-if="isOwner && item.status == 1 && !hasAudit" class="btns">
+                                      <view class="on" @click="auditOn(item._id,index)">审核通过</view>
+                                      <view class="off" @click="auditOff(item._id,index)">审核不通过</view>
+                                    </view>
+                                    <view class="audit-txt">
+                                      <view v-if="item.status == 1 && !isOwner" class="on">等待审核</view>
+                                      <view v-if="item.status == 2" class="on">审核通过</view>
+                                      <view v-if="item.status == 3" class="off">审核不通过</view>
+                                    </view>
                                   </view>-->
                                 </view>
                               </view>
@@ -451,8 +451,6 @@
                 >{{detail.only_pickup ? '马上申领' : '马上领'}}</view>
               </block>
               <block v-else>
-                <!-- 之前   path: = "pages/details/details?id=" -->
-                <!-- 修改     path: "/page_details/details?id=", -->
                 <navigator
                   class="btn"
                   :class="[isSchool ? 'school' : '']"
@@ -757,6 +755,7 @@ export default {
     };
   },
   methods: {
+    /*
     setTime() {
       //定时奖励
       this.clearTimeSet = setInterval(() => {
@@ -794,6 +793,7 @@ export default {
         }
       })
     },
+    */
     sameAddress() {
      let url = "/item/items_same_address/" + this.id,
         data = {};
@@ -824,10 +824,9 @@ export default {
     },
     // 商品数据
     getDetail() {
-      // /item/unauth/   无授权获取
       // /item/     授权获取
       console.log("getDetail this.id",this.id);
-      let url = "/item/unauth/" + this.id,
+      let url = "/item/" + this.id,
         data = {};
       uni.showLoading({
         mask: true
@@ -841,6 +840,7 @@ export default {
           this.detail = res.data;
           console.log("this.detail",this.detail);
           this.checkOwner();
+
         // 是否存在申领
           if (this.detail.applications) {
             this.pickupList = this.detail.applications;
@@ -928,6 +928,7 @@ export default {
         this.isShowShare = false;
       });
     },
+    /*
     emitShare(){
       let dailyTask = local.get("dailyTask"),
         taskId = "";
@@ -971,6 +972,7 @@ export default {
         }
       })
     },
+    */
     buy() {
       if (local.get("user").role != "telUser") {
         return uni.showToast({
@@ -2092,8 +2094,8 @@ export default {
     }
   },
   onShow() {
-    clearInterval(this.clearTimeSet);
-    this.setTime()
+    // clearInterval(this.clearTimeSet);
+    // this.setTime()
   },
   onShareAppMessage(res) {
     //res.from

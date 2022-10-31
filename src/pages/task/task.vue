@@ -117,6 +117,7 @@ export default {
 				this.timeData.push(timeData)
 			}
 		},
+		/*
 		getUserInfo(){
 			let url = "/mall-portal/sso/info",
 				data = {}
@@ -153,6 +154,7 @@ export default {
 				}
 			})
 		},
+		*/
 		toDetailed() {
 			uni.navigateTo({ url: '/pages/donation/index' });
 		},

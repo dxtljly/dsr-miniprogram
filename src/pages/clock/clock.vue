@@ -714,7 +714,7 @@ export default {
     console.log(path);
     return {
       title: "小哩邀您签到赢好礼",
-      imageUrl: this.imgHOST + "/clock/share.jpg",
+      imageUrl: this.imgHOST + "/clock/head.jpg",
       path
     };
   },
@@ -723,7 +723,7 @@ export default {
     //res.from
     let title = "小哩邀您签到赢好礼",
     path = `/pages/clock/clock?userId=${this.user.id}`,
-    imageUrl = this.imgHOST + "/clock/share.jpg";
+    imageUrl = this.imgHOST + "/clock/head.jpg";
     return {
       title,
       imageUrl,
@@ -735,7 +735,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding: 0 40rpx 50rpx;
-  background: linear-gradient( to right ,#ec8c00, #f4b000);
+  background: linear-gradient( to bottom ,#db4b64, #d73741);
   .card {
     position: relative;
     margin-bottom: 50rpx;
