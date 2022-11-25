@@ -71,6 +71,12 @@ export default {
               xhr.get(url, data, res => {
                 if (res.statusCode == 200) {
                   uni.setStorageSync("access_token", res.data.access_token);
+                  if( !res.data.user.nickName || res.data.user.nickName == "微信用户"){
+                    uni.navigateTo({
+                      url: "/pages/my/auth/emit"
+                    })
+                    return
+                  }
                   local.set("user", res.data.user);
                   this.$mp.app.aldstat.sendOpenid(res.data.user.openId);
 

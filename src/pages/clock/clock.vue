@@ -100,12 +100,14 @@
           >查看全部排名>></navigator>
         </block>
       </view>
+<!-- 公众号相关文章 -->
       <navigator
         hover-class="none"
-        url="/pages/webviews/webviews?url=https://mp.weixin.qq.com/s/i4uUuSedi1aa21WNBGNJHA"
+        :url="'/pages/webviews/webviews?url='+ clockLink"
       >
         <image mode="widthFix" :src="imgHOST+'/clock/奖品.png'" style="width:100%;" />
       </navigator>
+
     </view>
 
     <!-- share -->
@@ -198,15 +200,35 @@ export default {
         avatarUrl: local.get("user").avatarUrl,
         qr: ""
       },
-      tempImgs: {}
+      tempImgs: {},
+      clockLink: null
     };
   },
   methods: {
+    getConfig() {
+      let url =
+          "https://www.grecycle.com.cn/src/sli/config/sli-home-config.json",
+        data = {};
+
+      xhr.get(url, data, res => {
+        if (res.statusCode == 200) {
+          console.log("res",res);
+          this.clockLink = res.data.clockLink
+          console.log("this.clockLink",this.clockLink);
+        }
+      });
+    },
     checkUser() {
       let url = "/user/",
         data = {};
       xhr.get(url, data, res => {
         if (String(res.statusCode)[0] == 2) {
+          if( !res.data.nickName || res.data.nickName == "微信用户"){
+            uni.navigateTo({
+              url: "/pages/my/auth/emit"
+            })
+            return
+          }
           local.set("user", res.data);
           this.user = res.data;
         }
@@ -690,6 +712,8 @@ export default {
       );
       options = scene;
     }
+    this.getConfig()
+
     this.checkUser();
     this.checkSignup();
     this.getMyAssist();

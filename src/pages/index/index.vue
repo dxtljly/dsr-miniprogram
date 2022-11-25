@@ -392,9 +392,16 @@ export default {
       });
     },
     tail() {
+      // 校园推广
+      // uni.navigateTo({
+      //   url: "/pages/school/extension"
+      // });
+
+      // 打卡
       uni.navigateTo({
-        url: "/pages/school/extension"
+        url: "/pages/clock/clock"
       });
+
       let newJson = local.get("newJson");
       newJson.spread = new Date();
       this.spreadTime = 0;

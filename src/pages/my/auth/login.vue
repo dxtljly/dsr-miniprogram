@@ -9,7 +9,8 @@
         <image mode="widthFix" :src="imgHOST+'/logo.png'" class="logo" />
         <block v-if="user.role == 'noAuth'">
           <button @click="getUserProfile">
-            <image mode="widthFix" :src="imgHOST+'/icon/wechat.png'" />获取头像、昵称
+            <!-- 头像昵称已无效，授权后可进行修改 -->
+            <image mode="widthFix" :src="imgHOST+'/icon/wechat.png'" />授权创建账号
           </button>
         </block>
         <block v-if="user.role == 'authUser'">
@@ -18,8 +19,8 @@
           </button>
         </block>
         <block v-if="user.role == 'telUser'">
-          <button class="outline" @click="getUserProfile">
-            <image mode="widthFix" :src="imgHOST+'/icon/wechat-on.png'" />更新头像、昵称
+          <button class="outline" @click="toUpdateUser">
+            <image mode="widthFix" :src="imgHOST+'/icon/wechat-on.png'" />修改头像、昵称
           </button>
         </block>
       </view>
@@ -39,12 +40,24 @@ export default {
     };
   },
   methods: {
+    toUpdateUser(){
+      uni.navigateTo({
+        url: "/pages/my/auth/emit"
+      })
+    },
     checkUser() {
       let url = "/user/",
         data = {};
       xhr.get(url, data, res => {
         console.log(res);
         if (String(res.statusCode)[0] == 2) {
+          console.log('user.data',res.data);
+          if( !res.data.nickName || res.data.nickName == "微信用户"){
+            uni.navigateTo({
+              url: "/pages/my/auth/emit"
+            })
+            return
+          }
           local.set("user", res.data);
           this.user = res.data;
           if (local.get("user").role == "telUser") {
@@ -80,7 +93,7 @@ export default {
                             encryptedData: detail.encryptedData,
                             iv: detail.iv
                           };
-                        
+                        console.log('data',data);
                         // inviterId
                         if (local.get("user").role == "noAuth") {
                           if (local.get("inviter")) {

@@ -26,6 +26,9 @@
 			"path": "pages/my/auth/login"
 		},
 		{
+			"path": "pages/my/auth/emit"
+		},
+		{
 			"path": "pages/my/address/list/list"
 		},
 		{

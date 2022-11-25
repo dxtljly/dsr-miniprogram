@@ -12,6 +12,7 @@
         <navigator hover-class="none" url="/pages/my/auth/login" class="userMsg">
           <view class="avatar">
             <image mode="widthFix" :src="user.avatarUrl ? user.avatarUrl : imgHOST+'/logo.jpg'" />
+            <image class="icn" mode="aspectFit" :src="imgHOST + '/icon/emit.png'"></image>
           </view>
           <view class="userTxt">
             <view class="nickname">
@@ -503,6 +504,7 @@ $offset: 40rpx;
       height: 100rpx;
       z-index: 4;
       .avatar {
+        position: relative;
         margin: auto 0;
         width: 100rpx;
         height: 100rpx;
@@ -514,6 +516,14 @@ $offset: 40rpx;
           height: 100%;
           border-radius: 50%;
         }
+        .icn{
+          width: 36rpx;
+          height: 36rpx;
+          position: absolute;
+          right: -10rpx;
+          bottom: 0;
+          z-index: 100;
+        }
       }
       .userTxt{
         max-width: 220rpx;
@@ -524,7 +534,7 @@ $offset: 40rpx;
           height: 50rpx;
           margin-bottom: 4rpx;
           .userName{
-            max-width: 160rpx;
+            max-width: 180rpx;
             text-align: left;
             font-size: 34rpx;
             white-space: nowrap;
@@ -538,8 +548,8 @@ $offset: 40rpx;
             image{
               display: block;
               position: relative;
-              max-width: 44rpx;
-              max-height: 44rpx;
+              max-width: 42rpx;
+              max-height: 42rpx;
             }
 
           }
