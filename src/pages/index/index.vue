@@ -1,77 +1,81 @@
 <template>
-  <view
-    :style="'position:relative;height:calc(100% - ' + (statusBarHeight + navigationHeight) +'px);'"
-  >
+  <view :style="'position:relative;height:calc(100% - ' + (statusBarHeight + navigationHeight) + 'px);'">
     <gl-navbar isMessage :messageNo="messageNo" id="gl-navbar"></gl-navbar>
     <view class="search-bar flx fx-middle">
       <view class="input-content flx fx-middle fx-center fx1" @click="toFocusSearch">
-        <image mode="widthFix" class="search" :src="imgHOST+'/icon/search.png'" />
-        <input
-          type="text"
-          placeholder="找好物"
-          placeholder-class="fcbbb"
-          data-key="searchTxt"
-          v-model="searchTxt"
-          :focus="startSearchFlag"
-          @focus="focusSearch"
-          @blur="blurSearch"
-          @confirm="search"
-          :class="{'on':startSearchFlag}"
-        />
-        <image
-          v-if="searchTxt"
-          mode="widthFix"
-          class="clean"
-          :src="imgHOST+'/icon/clean.png'"
-          @click.stop="clear"
-          data-key="searchTxt"
-        />
+        <image mode="widthFix" class="search" :src="imgHOST + '/icon/search.png'" />
+        <input type="text" placeholder="找好物" placeholder-class="fcbbb" data-key="searchTxt" v-model="searchTxt"
+          :focus="startSearchFlag" @focus="focusSearch" @blur="blurSearch" @confirm="search"
+          :class="{ 'on': startSearchFlag }" />
+        <image v-if="searchTxt" mode="widthFix" class="clean" :src="imgHOST + '/icon/clean.png'" @click.stop="clear"
+          data-key="searchTxt" />
       </view>
-      <!-- <navigator hover-class="none" url="/pages/my/message/message" class="category">
-        <image mode="widthFix" :src="imgHOST+'/icon/message-icon.png'" />
-        <view v-if="messageNo" class="number">
-          <view>{{messageNo > 9 ? '9+' : messageNo}}</view>
+      <view class="category" @click="showControl">
+        <image mode="widthFix" :src="imgHOST + '/icon/select-icon.png'" />
+      </view>
+    </view>
+    <block v-if="showSelect">
+      <view class="selectBtn z-depth-3">
+        <view class="select-city">
+          <view class="labels">发货地区：</view>
+          <view class="pickers flx">
+            <picker mode="region" @change="regionChange" 
+             level="province" :value="regions"
+             >
+              <view class="select-city-btn flx fx-center fx-middle">
+                <view class="fx1">
+                  <block v-if="regions.length">
+                    <view>{{String(regions)}}</view>
+                  </block>
+                  <block v-else>
+                    <view>选择省份</view>
+                  </block>
+                </view>
+              </view>
+            </picker>
+            <span style="margin: 0 10rpx;color: #BBB;padding-top: 10rpx;">or</span>
+            <picker mode="region" @change="cityChange" level="city" :value="citys">
+              <view class="select-city-btn flx fx-center fx-middle">
+                <view class="fx1">
+                  <block v-if="citys.length">
+                    <view >{{String(citys)}}</view>
+                  </block>
+                  <block v-else>
+                    <view>选择城市</view>
+                  </block>
+                </view>
+              </view>
+            </picker>
+          </view>
         </view>
-      </navigator>-->
+        <view class="btn-tip">
+          <view class="labels">选择分类：</view>
+          <view class="isSelf-btn" :class="{ 'on': brand_new }" @click.stop="checkNewgoods">全新</view>
+          <view class="isSelf-btn" :class="{ 'on': only_pickup }" @click.stop="checkSelfgoods">自提</view>
+        </view>
+        <view class="confirmBtn">
+          <view class="init-btn" @click.stop="initBtn">重置</view>
+          <view class="confirm-btn" @click.stop="confirmBtn">确定</view>
+        </view>
+      </view>
+    </block>
+
+    <view class="refresh" :class="{ 'on': isRefresh }">
+      <image mode="widthFix" :src="imgHOST + '/icon/loadding-bubbles-grey.svg'" />
     </view>
-    <view class="refresh" :class="{'on':isRefresh}">
-      <image mode="widthFix" :src="imgHOST+'/icon/loadding-bubbles-grey.svg'" />
-    </view>
-    <scroll-view
-      class="container"
-      scroll-y="!isRefresh"
-      enable-back-to-top
-      :scroll-top="scrollTop"
-      @scrolltolower="getList"
-      upper-threshold="-50"
-      @scrolltoupper="refresh"
-      @scroll="scroll"
-    >
+    <scroll-view class="container" scroll-y="!isRefresh" enable-back-to-top :scroll-top="scrollTop"
+      @scrolltolower="getList" upper-threshold="-50" @scrolltoupper="refresh" @scroll="scroll">
       <view id="banner-top">
-        <button
-          hover-class="none"
-          @click="previewImgs(imgHOST+'/公众号-save.jpg')"
-          style="padding:0;border:none;border-radius:0;line-height:normal;"
-        >
-          <image
-            mode="widthFix"
-            :src="imgHOST+'/关注公众号.jpg'"
-            style="display:block;width:100%;height:0;"
-          />
+        <button hover-class="none" @click="previewImgs(imgHOST + '/公众号-save.jpg')"
+          style="padding:0;border:none;border-radius:0;line-height:normal;">
+          <image mode="widthFix" :src="imgHOST + '/关注公众号.jpg'" style="display:block;width:100%;height:0;" />
         </button>
         <view class="banner-top">
           <swiper indicator-dots autoplay circular>
             <block v-if="config && config.list">
-              <swiper-item v-for="(item,index) in config.list" :key="index">
-                <navigator
-                  hover-class="none"
-                  v-if="item.url || item.path"
-                  :target="item.target?'miniProgram':'self'"
-                  :url="item.url"
-                  :open-type="item.openType"
-                  :appId="item.appId"
-                  :path="item.path"
-                >
+              <swiper-item v-for="(item, index) in config.list" :key="index">
+                <navigator hover-class="none" v-if="item.url || item.path" :target="item.target ? 'miniProgram' : 'self'"
+                  :url="item.url" :open-type="item.openType" :appId="item.appId" :path="item.path">
                   <image mode="aspectFill" :src="item.img" class="z-depth-1" />
                 </navigator>
                 <image v-else :src="item.img" mode="aspectFill" class="z-depth-1" />
@@ -93,34 +97,23 @@
           </navigator>-->
           <!-- 打卡 -->
           <navigator hover-class="none" url="/pages/wish/list">
-            <image mode="widthFix" :src="imgHOST+'/icon/心愿.png'" />
+            <image mode="widthFix" :src="imgHOST + '/icon/心愿.png'" />
           </navigator>
           <!-- 毕业季 -->
           <navigator hover-class="none" url="/pages/school/index">
-            <image mode="widthFix" :src="imgHOST+'/icon/校园.png'" />
+            <image mode="widthFix" :src="imgHOST + '/icon/校园.png'" />
           </navigator>
         </view>
         <!-- ---tab-list--- -->
         <view style="height:20rpx;"></view>
       </view>
 
-      <scroll-view
-        scroll-x
-        id="tab-list"
-        :class="{'on':isTabTypeFixed}"
-        :style="isTabTypeFixed?'top:'+tabTypeFixedTop+'px;':''"
-      >
-        <view class="tab-list" :class="{'on':isTabTypeFixed}">
-          <view
-            v-for="(item,index) in typeList"
-            :key="index"
-            class="tab-li"
-            :class="{'on':index == typeIndex}"
-            @click="changeType"
-            :data-index="index"
-            :id="'tabList-'+index"
-          >
-            <view>{{item.name}}</view>
+      <scroll-view scroll-x id="tab-list" :class="{ 'on': isTabTypeFixed }"
+        :style="isTabTypeFixed ? 'top:' + tabTypeFixedTop + 'px;' : ''">
+        <view class="tab-list" :class="{ 'on': isTabTypeFixed }">
+          <view v-for="(item, index) in typeList" :key="index" class="tab-li" :class="{ 'on': index == typeIndex }"
+            @click="changeType" :data-index="index" :id="'tabList-' + index">
+            <view>{{ item.name }}</view>
           </view>
           <view class="line" :animation="animationDataTab"></view>
         </view>
@@ -134,7 +127,7 @@
         <block v-if="isLoading">
           <view class="null" style="height:400rpx;">
             <view>
-              <image mode="widthFix" :src="imgHOST+'/icon/loading.gif'" />
+              <image mode="widthFix" :src="imgHOST + '/icon/loading.gif'" />
               <view class="txt">
                 <text>加载中···</text>
               </view>
@@ -176,33 +169,23 @@
     <!-- 开屏广告 -->
     <!-- @touchstart="touchSpread" @longtap="saveSpread" -->
     <view v-if="isShowSpread && config && config.spread" class="spread" @touchstart="touchSpread">
-        <view class="content">
-          <!-- <view
+      <view class="content">
+        <!-- <view
             @touchstart="()=>isTouchSpread=true"
             @longtap="saveImgs(imgHOST + '/上海加油.jpg')"
           >
             <image mode="widthFix" :src="imgHOST+'/上海加油.jpg'" />
           </view> -->
-          <view
-            @touchstart="()=>isTouchSpread=true"
-            @click="tail"
-          >
-            <image mode="widthFix" :src="imgHOST+'/clock/开屏.jpg'" />
-          </view>
+        <view @touchstart="() => isTouchSpread = true" @click="tail">
+          <image mode="widthFix" :src="config.spread.img" />
         </view>
-      <view
-        class="content"
-        :class="{'flx fx-middle':config.spread.isFlx}"
-        @touchstart="()=>isTouchSpread=true"
-        @longtap="saveImgs(config.spread.downloadImg)"
-      >
+      </view>
+      <view class="content" :class="{ 'flx fx-middle': config.spread.isFlx }" @touchstart="() => isTouchSpread = true"
+        @longtap="saveImgs(config.spread.downloadImg)">
         <image mode="widthFix" :src="config.spread.img" @click="spreadNav" />
       </view>
-      <view
-        class="close-btn"
-        :style="'top:'+(statusBarHeight + navigationHeight + 20) +'px;'"
-        @click="closeSpread"
-      >关闭</view>
+      <view class="close-btn" :style="'top:' + (statusBarHeight + navigationHeight + 20) + 'px;'" @click="closeSpread">关闭
+      </view>
       <!-- ({{spreadTime}}s) -->
       <!-- <view v-if="!isTouchSpread" class="save-tips">长按保存</view> -->
     </view>
@@ -231,28 +214,33 @@
         </view>
       </view>
     </block> -->
-    <view class="pay fx-center" v-if="false">
-      <view class="content flx fx-center">
-        <image mode="widthFix" :src="imgHOST + '/difference/弹窗.png'" />
-        <ul class="text">
-          <li class="t1">您有<span>12{{}}</span>元欠款</li>
-          <li class="t3">订单编号: <span>1234567890{{}}</span></li>
-          <li class="t4">预付邮费: <span>33{{}}</span>元</li>
-          <li class="t5">实际邮费: <span>21{{}}</span>元</li>
-          <li class="t6">欠款: <span>12{{}}</span>元</li>
-        </ul>
-        <!-- @click="pay" -->
-        <view class="image flx fx-center">
-          <image class="img fst" @click="toMyOrder" mode="widthFix" :src="imgHOST + '/difference/查看订单.png'"/>
-          <image class="img" @click="pay" mode="widthFix" :src="imgHOST + '/difference/去支付.png'"/>
+
+    <!-- 补差价 -->
+    <!-- <block  v-if="false"> -->
+    <block  v-if="user.balance < 0">
+      <view class="pay fx-center">
+        <view class="content flx fx-center">
+          <image mode="widthFix" :src="imgHOST + '/difference/弹窗.png'" />
+          <ul class="text">
+            <li class="t1">您有<span>{{ ((to_pay_orders.actual_pay - to_pay_orders.pre_pay)/100).toFixed(2) }}</span>元欠款</li>
+            <li class="t3">订单编号:</li>
+            <li class="t2">{{ to_pay_orders.id }}</li>
+            <li class="t4">应付价格: <span>{{ (to_pay_orders.actual_pay/100).toFixed(2) }}</span>元</li>
+            <li class="t5">实际支付: <span>{{ (to_pay_orders.pre_pay/100).toFixed(2) }}</span>元</li>
+            <li class="t6">欠款: <span>{{ (to_pay_orders.balance/100).toFixed(2) }}</span>&nbsp;元</li>
+          </ul>
+          <!-- @click="pay" -->
+          <view class="image flx fx-center">
+            <image class="img fst" @click="toMyOrder" mode="widthFix" :src="imgHOST + '/difference/查看订单.png'" />
+            <image class="img" @click="payOrder" mode="widthFix" :src="imgHOST + '/difference/去支付.png'" />
+          </view>
         </view>
       </view>
-    </view>
+    </block>
 
-
-    <view v-if="isShowGifModal" class="gif-modal"> 
+    <view v-if="isShowGifModal" class="gif-modal">
       <view class="bg" @click="closeGifModal"></view>
-      <image mode="widthFix" :src="imgHOST+'/addWX.png'" class="z-index-1 card" @click="copyWX" />
+      <image mode="widthFix" :src="imgHOST + '/addWX.png'" class="z-index-1 card" @click="copyWX" />
     </view>
     <!-- <view v-if="isShowGifModal" class="gif-modal">
       <view class="bg" @click="closeGifModal"></view>
@@ -335,16 +323,115 @@ export default {
       isShowFocusModal: false,
       isShowGuide:
         !local.get("newJson").guide && local.get("newJson").isFinishCourse,
-      
+
       isShowSpread: false,
       spreadTime: 5,
       isTouchSpread: false,
       isShowGifModal: false,
       user: local.get("user"),
       browseTime: 0,  // 浏览时长初始值为 0
+      showSelect: false,
+      brand_new: 0,  //全新   （100 | 0）
+      only_pickup: 0,  //自提 （1 | 0）
+      to_pay_orders: {
+        actual_pay:0
+      },  //补款订单
+      regions:"",   //省份
+      citys:"",   //城市
+      province: null,
+      city: null
     };
   },
   methods: {
+    regionChange(e){
+      let region = [...e.detail.value]
+      if(region.length > 1){
+        this.regions = region[0]
+      }else {
+        this.regions = region
+      }
+    },
+    cityChange(e){
+      let city = [...e.detail.value]
+      if(this.regions){
+        if(this.regions != city[0]){
+          this.citys = ""
+        }else{
+          this.citys = city[1]
+        }
+      }else{
+        this.citys = city[1]
+      }
+    },
+    payOrder() {
+      if (local.get("user").role != "telUser") {
+        return uni.showToast({
+          title: "无权限领取好物，请先授权手机登录",
+          icon: "none",
+          success: res => {
+            setTimeout(() => {
+              uni.navigateTo({
+                url: "/pages/my/auth/login"
+              });
+            }, 1500);
+          }
+        });
+      }
+      let url = "/order/post_pay/" + this.to_pay_orders.id,
+        data = {};
+      xhr.get(url, data, res => {
+        uni.hideLoading();
+        if (String(res.statusCode)[0] == 2) {
+          let orderInfo = res.data;
+          uni.requestPayment({
+            provider: "weixin",
+            orderInfo: "",
+            timeStamp: String(orderInfo.time_stamp),//时间戳
+            nonceStr: orderInfo.nonce_str,//随机字符串
+            package: "prepay_id=" + orderInfo.prepay_id,
+            signType: "MD5",//默认值
+            paySign: orderInfo.sign,//签名
+            success(res) {
+              console.log(res);
+              this.checkUser()
+            },
+            fail(err) {
+              uni.redirectTo({
+                url: "/pages/my/goods/get/get"
+              });
+            }
+          });
+        } else if (String(res.statusCode)[0] == 4) {
+          uni.showToast({
+            title: res.data.message ? res.data.message : "未知错误",
+            icon: "none"
+          });
+        }
+      });
+    },
+    confirmBtn() {
+      this.initList();
+      this.getList();
+      this.showControl()
+    },
+    initBtn() {
+      this.regions = ""
+      this.citys = ""
+      this.brand_new = 0
+      this.only_pickup = 0
+      this.initList();
+      this.getList();
+      this.showControl()
+    },
+    checkNewgoods() {
+      this.brand_new = (this.brand_new == 100 ? 0 : 100)
+    },
+    checkSelfgoods() {
+      this.only_pickup = (this.only_pickup == 1 ? 0 : 1)
+    },
+    showControl() {
+      this.showSelect = !this.showSelect
+    },
     /*
     setTime() {
       //定时奖励
@@ -399,7 +486,7 @@ export default {
 
       // 打卡
       uni.navigateTo({
-        url: "/pages/clock/clock"
+        url: this.config.spread.url
       });
 
       let newJson = local.get("newJson");
@@ -423,12 +510,12 @@ export default {
     },
     getConfig() {
       let url =
-          "https://www.grecycle.com.cn/src/sli/config/wx-index-config.json",
+        "https://www.grecycle.com.cn/src/sli/config/wx-index-config.json",
         data = {};
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.config = res.data;
-          console.log("this.config.list",this.config.list);
+          console.log("this.config.list", this.config.list);
         }
       });
     },
@@ -456,7 +543,7 @@ export default {
                     if (
                       err.errMsg == "saveImageToPhotosAlbum:fail auth deny" ||
                       err.errMsg ==
-                        "saveImageToPhotosAlbum:fail authorize no response"
+                      "saveImageToPhotosAlbum:fail authorize no response"
                     ) {
                       uni.showToast({
                         title: "获取授权「保存到相册」",
@@ -525,7 +612,7 @@ export default {
       xhr.get(url, data, res => {
         if (res.statusCode == 200) {
           this.typeList = this.typeList.concat(res.data);
-          console.log(this.typeList,"this.typeList");
+          console.log(this.typeList, "this.typeList");
           this.initTabType();
         }
       });
@@ -549,7 +636,7 @@ export default {
       }, 100);
     },
     changeType(e) {
-      console.log("e",e);
+      console.log("e", e);
       if (!this.isLoadEnd) {
         return false;
       }
@@ -559,9 +646,9 @@ export default {
         return false;
       }
       this.typeIndex = index;
-      console.log("this.typeIndex",this.typeIndex);
+      console.log("this.typeIndex", this.typeIndex);
       this.scrollTop = this.scrollTopFlag;
-      console.log("this.scrollTop",this.scrollTop);
+      console.log("this.scrollTop", this.scrollTop);
       if (this.scrollTopFlag >= this.tabTypeTop) {
         setTimeout(() => {
           this.scrollTop = this.tabTypeTop + 5;
@@ -631,8 +718,16 @@ export default {
         data = {
           skip: this.skip,
           waterfall: 1,
-          sp: 0
+          sp: 0,
+          brand_new: this.brand_new,
+          only_pickup: this.only_pickup
         };
+      if(this.regions && this.regions.length != 0){
+        data.province = this.regions
+      }
+      if(this.citys && this.citys.length != 0){
+        data.city = this.citys
+      }
       if (this.searchTxt) {
         data.q = this.searchTxt;
       }
@@ -642,14 +737,14 @@ export default {
         && !this.searchTxt
       ) {
         data.cat = this.typeList[this.typeIndex].name;
-        console.log("this.typeList",this.typeList);
+        console.log("this.typeList", this.typeList);
         console.log(this.typeList[this.typeIndex].name);
       }
-      console.log("this.data",data);
+      console.log("this.data", data);
       xhr.get(url, data, res => {
         this.isLoadEnd = true;
         if (res.statusCode == 200) {
-          console.log(res.data,"res.data");
+          console.log(res.data, "res.data");
           res.data.items.forEach(v => {
             if (this.itemIdList.indexOf(v.id) < 0) {
               this.list.push(v);
@@ -714,13 +809,13 @@ export default {
                     if (
                       err.errMsg == "saveImageToPhotosAlbum:fail auth deny" ||
                       err.errMsg ==
-                        "saveImageToPhotosAlbum:fail authorize no response"
+                      "saveImageToPhotosAlbum:fail authorize no response"
                     ) {
                       uni.showToast({
                         title: "获取授权保存图片",
                         icon: "none"
                       });
-                      setTimeout(function() {
+                      setTimeout(function () {
                         uni.navigateTo({
                           url: "/pages/my/auth/auth?scope=writePhotosAlbum"
                         });
@@ -761,13 +856,13 @@ export default {
                     if (
                       err.errMsg == "saveImageToPhotosAlbum:fail auth deny" ||
                       err.errMsg ==
-                        "saveImageToPhotosAlbum:fail authorize no response"
+                      "saveImageToPhotosAlbum:fail authorize no response"
                     ) {
                       uni.showToast({
                         title: "获取授权保存图片",
                         icon: "none"
                       });
-                      setTimeout(function() {
+                      setTimeout(function () {
                         uni.navigateTo({
                           url: "/pages/my/auth/auth?scope=writePhotosAlbum"
                         });
@@ -804,14 +899,37 @@ export default {
       this.isShowGifModal = false;
       uni.removeStorageSync("isShowGifModal");
     },
+    // 查是否要补差价
     checkUser() {
       let url = "/user/",
         data = {};
       xhr.get(url, data, res => {
-        console.log(res);
+        console.log("res>>>>", res.data);
         if (String(res.statusCode)[0] == 2) {
           local.set("user", res.data);
           this.user = res.data;
+          if (res.data.balance < 0) {
+            this.getPayInfo(res.data.to_pay_order)
+          }
+        }
+      });
+    },
+    getPayInfo(id) {
+      let url = "/order/order_detail/" + id,
+        data = {}
+      uni.showLoading({
+        mask: true
+      });
+      xhr.get(url, data, res => {
+        uni.hideLoading();
+        if (res.statusCode == 200) {
+          this.to_pay_orders = res.data;
+          console.log("this.to_pay_orders", this.to_pay_orders);
+        } else {
+          uni.showToast({
+            title: "网络错误",
+            icon: "none"
+          });
         }
       });
     },
@@ -821,7 +939,7 @@ export default {
       });
       this.closeGifModal();
     },
-    toMyOrder(){
+    toMyOrder() {
       uni.redirectTo({
         url: "/pages/my/goods/get/get"
       });
@@ -831,13 +949,13 @@ export default {
     uni.hideTabBar();
   },
   onLoad(options) {
-    console.log("options",options);
+    console.log("options", options);
     if (options.scene) {
       let scene = getUrlParam(
         decodeURIComponent(options.scene).replace(/^\?/, "")
       );
       options = scene;
-      console.log("index options",options);
+      console.log("index options", options);
     }
     this.animationTab = animationTab;
     if (options.q) {
@@ -865,6 +983,7 @@ export default {
     this.getConfig();
     this.getMessageNum();
 
+    this.checkUser()
     // clearInterval(this.clearTimeSet);
     // this.setTime()
 
@@ -890,6 +1009,7 @@ export default {
 <style lang="scss" scoped>
 $search-bar-height: 104rpx;
 $tab-list-height: 60rpx;
+
 .search-bar {
   position: fixed;
   width: 100%;
@@ -908,14 +1028,17 @@ $tab-list-height: 60rpx;
       height: 38rpx;
       margin-right: 20rpx;
     }
+
     input {
       font-size: 28rpx;
       width: 100rpx;
       transition: 0.3s;
+
       &.on {
         width: 500rpx;
       }
     }
+
     image.clean {
       width: 30rpx;
       height: 30rpx;
@@ -927,11 +1050,13 @@ $tab-list-height: 60rpx;
     text-align: center;
     color: $main-color;
     font-size: 20rpx;
-    margin-left: 30rpx;
+    margin-left: 20rpx;
+
     image {
-      width: 40rpx;
+      width: 90rpx;
       height: 40rpx;
     }
+
     .number {
       display: flex;
       align-items: center;
@@ -948,6 +1073,112 @@ $tab-list-height: 60rpx;
     }
   }
 }
+
+.selectBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  position: fixed;
+  width: 100%;
+  height: 260rpx;
+  padding: 16rpx 20rpx;
+  background-color: #fff;
+  box-sizing: border-box;
+  margin-top: $search-bar-height;
+  z-index: 1000;
+  border-bottom-left-radius: 24rpx;
+  border-bottom-right-radius: 24rpx;
+  .select-city, .btn-tip{
+    width: 100%;
+    height: 70rpx;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    .labels {
+      font-size: 28rpx;
+      font-weight: 600;
+      padding: 4rpx 20rpx 4rpx 10rpx;
+    }
+    .pickers{
+      display: flex;
+      flex-wrap: nowrap;
+      .select-city-btn {
+        max-width: 300rpx;
+        line-height: 60rpx;
+        padding: 0 30rpx;
+        text-align: center;
+        font-size: 30rpx;
+        border-radius: 50rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background-color: #F3F3F3;
+        color: #BBB;
+      }
+    }
+  }
+  
+  .btn-tip,
+  .confirmBtn {
+    width: 100%;
+    height: 70rpx;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    .isSelf-btn {
+      height: 40rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rpx 28rpx;
+      border-radius: 28rpx;
+      font-size: 28rpx;
+      background-color: #F3F3F3;
+      color: #BBB;
+
+      &.on {
+        background-color: #91BBAF;
+        color: #24775f;
+      }
+    }
+  }
+  .btn-tip{
+    height: 60rpx;
+    
+    :nth-child(2){
+      margin-right: 20rpx;
+    }
+  }
+
+  .confirmBtn {
+    justify-content: space-around;
+    align-items: center;
+
+    .init-btn,
+    .confirm-btn {
+      width: 45%;
+      height: 70rpx;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 34rpx;
+      background-color: #B2B2B2;
+      border-radius: 40rpx;
+    }
+
+    .confirm-btn {
+      background-color: #24775F;
+    }
+
+    :first-child {
+      margin-right: 20rpx;
+    }
+  }
+}
+
 .refresh {
   margin-top: $search-bar-height;
   width: 100%;
@@ -955,14 +1186,17 @@ $tab-list-height: 60rpx;
   text-align: center;
   overflow: hidden;
   transition: 0.1s;
+
   image {
     width: 100rpx;
     height: 100rpx;
   }
+
   &.on {
     height: 100rpx;
   }
 }
+
 scroll-view.container {
   position: relative;
   height: calc(100% - #{$search-bar-height + $tabbar-height});
@@ -971,6 +1205,7 @@ scroll-view.container {
 // 960*334
 .banner-top {
   margin-top: $page-offset;
+
   swiper {
     width: 100%;
     height: 248rpx;
@@ -981,11 +1216,13 @@ scroll-view.container {
       height: 100%;
       box-sizing: border-box;
       overflow: hidden;
+
       navigator {
         width: 100%;
         height: 100%;
         border-radius: 12rpx;
       }
+
       image {
         width: 100%;
         height: 100%;
@@ -999,12 +1236,14 @@ scroll-view.container {
 .tab-list-on {
   height: $tab-list-height;
 }
+
 #tab-list {
   &.on {
     position: fixed;
     z-index: 999;
   }
 }
+
 .tab-list {
   position: relative;
   display: flex;
@@ -1020,11 +1259,12 @@ scroll-view.container {
     .line {
       bottom: 0rpx;
     }
+
     .tab-li {
       background-color: #fff;
     }
   }
-  
+
   .tab-li {
     display: flex;
     align-items: center;
@@ -1085,6 +1325,7 @@ scroll-view.container {
   padding: 0 20rpx;
   transform: translateX(100%);
   transition: transform 0.1s;
+
   &.on {
     transform: translateX(0);
   }
@@ -1095,6 +1336,7 @@ scroll-view.container {
     border-radius: 8rpx;
     margin-bottom: 20rpx;
     font-size: 28rpx;
+
     image {
       width: 40rpx;
       height: 40rpx;
@@ -1103,12 +1345,14 @@ scroll-view.container {
     }
   }
 }
+
 .focus-modal {
   position: fixed;
   top: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(51, 51, 51, 0.3);
+
   image {
     position: relative;
     width: 80%;
@@ -1124,6 +1368,7 @@ scroll-view.container {
   width: 100%;
   height: 100%;
   background: rgba(30, 30, 30, 0.3);
+
   .content-1 {
     position: absolute;
     right: 30px;
@@ -1134,6 +1379,7 @@ scroll-view.container {
     background: rgba(255, 255, 255, 0.3);
   }
 }
+
 .pay {
   display: flex;
   position: fixed;
@@ -1142,82 +1388,108 @@ scroll-view.container {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.3);
-  .content { 
+  background: rgba(0, 0, 0, 0.3);
+
+  .content {
     position: relative;
     margin: auto;
-    image{
+
+    image {
       z-index: 9997;
     }
+
     .text {
       position: absolute;
       top: 12%;
       z-index: 9998;
-      li{
-        margin: 10rpx 0;
+
+      li {
+        margin: 8rpx 0;
       }
-      .t3, .t4, .t5, .t6{
+
+      .t2,
+      .t3,
+      .t4,
+      .t5,
+      .t6 {
         font-size: 30rpx;
         margin-left: 10%;
+        overflow: hidden;
+        text-overflow: ellipsis; //用省略号显示
+        white-space: nowrap;
+        span {
+          margin-left: 10rpx;
+          margin-right: 2rpx;
+        }
       }
-      .t3>span, .t4>span, .t5>span, .t6>span{
-        margin-left: 10rpx;
-        margin-right: 2rpx;
-      }
-      .t4>span, .t5>span{
-        font-size: 32rpx;
-      }
+
       .t1 {
-        font-size: 50rpx;
+        font-size: 44rpx;
         font-weight: 600;
         letter-spacing: 4rpx;
         text-align: center;
         color: red;
-        span{
+
+        span {
           margin: 0 2rpx;
           font-size: 58rpx;
         }
       }
-      .t3{
+
+      .t3 {
         margin-top: 20rpx;
       }
+
+      .t4>span,
+      .t5>span {
+        margin-left: 10rpx;
+        font-size: 32rpx;
+        font-weight: 600;
+      }
+
       .t6 {
-        span{
+        span {
           font-size: 38rpx;
           color: red;
         }
       }
     }
+
     .image {
       z-index: 9998;
       width: 100%;
       position: absolute;
-      bottom: 50rpx;
-      .fst{
+      bottom: 70rpx;
+
+      .fst {
         margin-right: 5%;
       }
+
       .img {
-        width: 36%;
-        /* height: 90rpx; */
+        width: 33%;
       }
     }
   }
 }
+
 .spread {
   position: fixed;
   z-index: 999999;
   top: 0;
   width: 100%;
   height: 100%;
+
   .content {
     width: 100%;
     height: 100%;
     overflow: auto;
+
     image {
       display: block;
       width: 100%;
     }
   }
+
   .close-btn {
     position: fixed;
     right: 30rpx;
@@ -1227,7 +1499,8 @@ scroll-view.container {
     background-color: rgba(51, 51, 51, 0.7);
     font-size: 36rpx;
   }
-    .close {
+
+  .close {
     position: fixed;
     right: 40rpx;
     font-size: 12px;
@@ -1236,6 +1509,7 @@ scroll-view.container {
     color: #fff;
     background-color: rgba(51, 51, 51, 0.6);
   }
+
   .save-tips {
     position: fixed;
     box-sizing: border-box;
@@ -1247,6 +1521,7 @@ scroll-view.container {
     text-align: center;
     background-color: rgba(51, 51, 51, 0.3);
   }
+
   .save-tip {
     position: fixed;
     padding: 20rpx;
@@ -1264,10 +1539,11 @@ scroll-view.container {
   align-items: center;
   justify-content: center;
   position: fixed;
-  z-index: 999;
+  z-index: 1001;
   width: 100%;
   height: 100%;
   top: 0;
+
   .bg {
     position: absolute;
     z-index: 9991;
@@ -1276,6 +1552,7 @@ scroll-view.container {
     height: 100%;
     background: rgba(30, 30, 30, 0.3);
   }
+
   image {
     z-index: 9999;
     width: 560rpx;
@@ -1290,26 +1567,31 @@ scroll-view.container {
   right: 0;
   width: 150rpx;
   height: 150rpx;
+
   image {
     width: 100%;
     height: 0;
   }
 }
+
 .nav-btn {
   display: flex;
   justify-content: space-around;
   padding: 20rpx $page-offset 10rpx;
   width: 100%;
   box-sizing: border-box;
+
   navigator {
     width: calc(50% - 15rpx);
+
     image {
       display: block;
       width: 100%;
     }
   }
 }
+
 input::-webkit-input-placeholder {
-        color: #999999;
-    }
+  color: #999999;
+}
 </style>

@@ -15,8 +15,9 @@ export default {
     uni.hideTabBar();
   },
   onShow() {
-    console.log("App Show");
-    this.login();
+    if(this.$options.globalData.runLogin){
+      this.login();
+    }
     // this.reShowPost();
     uni.setStorageSync("isShowGifModal", true);
     const updateManager = uni.getUpdateManager();
@@ -56,7 +57,8 @@ export default {
       : 48,
     screenWidth: uni.getSystemInfoSync().screenWidth,
     screenHeight: uni.getSystemInfoSync().screenHeigh,
-    checkAdLevel: true
+    checkAdLevel: true,
+    runLogin: true
   },
   methods: {
     login() {
@@ -71,13 +73,12 @@ export default {
               xhr.get(url, data, res => {
                 if (res.statusCode == 200) {
                   uni.setStorageSync("access_token", res.data.access_token);
+                  local.set("user", res.data.user);
                   if( !res.data.user.nickName || res.data.user.nickName == "微信用户"){
                     uni.navigateTo({
                       url: "/pages/my/auth/emit"
                     })
-                    return
                   }
-                  local.set("user", res.data.user);
                   this.$mp.app.aldstat.sendOpenid(res.data.user.openId);
 
                   if (res.data.user.ad_level > 0) {

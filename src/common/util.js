@@ -1,5 +1,5 @@
-let __URL = "https://dsrdev.grecycle.com.cn";
-// let __URL = "https://dsrprd.grecycle.com.cn";       //开发
+let __URL = "https://dsrdev.grecycle.com.cn";     //测试
+// let __URL = "https://dsrprd.grecycle.com.cn";       //线上
 let imgHOST = "https://www.grecycle.com.cn/src/sli/images";
 
 // let __XML = "https://jfmall.grecycle.com.cn"

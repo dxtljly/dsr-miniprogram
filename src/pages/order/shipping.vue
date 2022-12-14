@@ -65,11 +65,11 @@
         <view class="detail-info">
           <view class="li">
             <block v-if="isOwner">
-              <view>买家昵称</view>
+              <view>领取者昵称</view>
               <view style="max-width:500rpx;">{{detail.buyer.nickName}}</view>
             </block>
             <block v-else>
-              <view>卖家昵称</view>
+              <view>赠送者昵称</view>
               <view style="max-width:500rpx;">{{detail.seller.nickName}}</view>
             </block>
           </view>

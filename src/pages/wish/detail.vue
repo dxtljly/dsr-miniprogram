@@ -29,7 +29,7 @@
                     <view>
                       <view
                         class="nickname"
-                      >{{detail.int_id ? detail.seller.nickName : detail.seller.nickName[0] + '**'}}</view>
+                      >{{detail.int_id ? detail.seller.nickName : detail.seller.nickName}}</view>
                       <view class="info">
                         <text>{{update_time}}</text>
                       </view>
@@ -152,7 +152,7 @@
                     <swiper-item>
                       <block v-if="!message.length">
                         <view class="empty">
-                          <text>快来询问卖家更多关于好物的细节呀~</text>
+                          <text>快来询问赠送者更多关于好物的细节呀~</text>
                         </view>
                       </block>
                       <block v-else>
@@ -175,7 +175,7 @@
                                     <navigator
                                       hover-class="none"
                                       :url="'/pages/my/goods/publish/publish?id='+item.sender.id+'&nickName='+item.sender.nickName+'&avatarUrl='+item.sender.avatarUrl"
-                                    >{{item.sender.nickName[0]}}**</navigator>
+                                    >{{item.sender.nickName}}</navigator>
                                     <text>{{$common.util.formatDate(new Date(item.create_time),true)}}</text>
                                   </view>
                                   <view
@@ -193,7 +193,7 @@
                                         <navigator
                                           hover-class="none"
                                           :url="'/pages/my/goods/publish/publish?id='+item.sender.id+'&nickName='+item.sender.nickName+'&avatarUrl='+item.sender.avatarUrl"
-                                        >{{res.sender.nickName[0]}}**</navigator>
+                                        >{{res.sender.nickName}}</navigator>
                                         <text>{{$common.util.formatDate(new Date(res.create_time),true)}}</text>
                                       </view>
                                       <view class="mb">
@@ -203,7 +203,7 @@
                                           :url="'/pages/my/goods/publish/publish?id='+item.receiver.id+'&nickName='+item.receiver.nickName+'&avatarUrl='+item.receiver.avatarUrl"
                                           class="nickname"
                                           style="display:inline-block"
-                                        >@{{res.receiver.nickName[0]}}** ：</navigator>
+                                        >@{{res.receiver.nickName}} ：</navigator>
                                         <text
                                           class="pre-wrap"
                                           @click="openMessage"
@@ -249,7 +249,7 @@
                                     <navigator
                                       hover-class="none"
                                       :url="'/pages/my/goods/publish/publish?id='+item.user.id+'&nickName='+item.user.nickName+'&avatarUrl='+item.user.avatarUrl"
-                                    >{{isOwner ? item.user.nickName : item.user.nickName[0]+'**'}}</navigator>
+                                    >{{isOwner ? item.user.nickName : item.user.nickName}}</navigator>
                                     <!-- <text>{{$common.util.formatDate(new Date(item.create_time),true)}}</text> -->
                                   </view>
                                   <view class="message-1">
@@ -1117,7 +1117,7 @@ export default {
     auditOn(apply_id, index) {
       uni.showModal({
         title: "提示",
-        content: "是否已经与买家建立联系？",
+        content: "是否已经与领取者建立联系？",
         success: res => {
           if (res.confirm) {
             console.log("用户点击确定");

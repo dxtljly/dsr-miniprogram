@@ -48,7 +48,7 @@
                   <view class="number">数量:1</view>
                   <view class="flx">
                   <block v-if="order.status == 54">
-                    <view class="fcmain" style="font-size:10px;">买家取消订单,商品已重新上架</view>
+                    <view class="fcmain" style="font-size:10px;">领取者取消订单,商品已重新上架</view>
                   </block>
                   <block v-if="order.status == 51 && itemIdList == false">
                     <view
@@ -185,8 +185,8 @@ export default {
       navigationHeight: app.globalData.navigationHeight,
       statusList: [
         // { name: "已卖出，取消订单", status:"2-1" },
-        // { name: "卖家取消", status:"2-2" },
-        // { name: "买家取消", status:"2-3" },
+        // { name: "赠送者取消", status:"2-2" },
+        // { name: "领取者取消", status:"2-3" },
         // { name: "待付款", status:3 },
         // { name: "待发货", status:"3-5" },
         // { name: "已发货", status:4 },
@@ -197,8 +197,8 @@ export default {
         { name: "已签收", status:4 },
         { name: "付款超时,订单关闭", status:51 },
         { name: "超时未发货,订单关闭", status:52 },
-        { name: "卖家关闭订单", status:53 },
-        { name: "买家关闭订单", status:54 },
+        { name: "赠送者关闭订单", status:53 },
+        { name: "领取者关闭订单", status:54 },
         { name: "自提订单", status:6 }
       ],
       itemIdList:[],
@@ -215,9 +215,9 @@ export default {
   },
   methods: { 
     toDetail(order) {
-       if (["53","54"].indexOf(order.status) >= 0) {
-        return false;
-      }
+      // if (["53","54"].indexOf(order.status) >= 0) {
+      //   return false;
+      // }
       let url =
         (order.items[0].only_pickup
           ? "/pages/goods/detail/detail?id="

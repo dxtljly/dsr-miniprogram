@@ -8,7 +8,7 @@
 			
 			<form @submit="formSubmit">
 				<button class="updateImg" open-type="chooseAvatar" 
-					@chooseavatar="onChooseAvatar">
+					@chooseavatar="onChooseAvatar" @click="changeApp">
 					<image :src="setData.avatarUrl" mode="widthFix" />
 				</button>
 				<view class="Tips">
@@ -54,14 +54,15 @@ export default {
 		}
 	},
 	methods: {
+		changeApp(){
+			app.globalData.runLogin = false
+		},
 		onChooseAvatar(e){
-			console.log('e,e',e) 
 			const { avatarUrl } = e.detail
 			this.updataImg = avatarUrl
 			this.setData.avatarUrl = avatarUrl
 		},
 		formSubmit(e){
-			console.log("e",e);
 			let userName = e.detail.value.input
 			if(!userName || userName == "微信用户"){
 				this.setData.nickName = ""
@@ -78,17 +79,11 @@ export default {
 						data = {};
 					xhr.get(url,data, res=> {
 						if (res.statusCode == 200) {
-							console.log("res.data",res.data);
 							let ossJson = res.data;
 							  ossJson["host"] = ossJson["host"].replace(/^http:/, "https:");
 							let file = this.setData.avatarUrl.replace(/^http:\/\/tmp\//, "");
-							console.log('file',file);
-							console.log("this.setData.avatarUrl",this.setData.avatarUrl);
 							let key = ossJson["dir"] + file,
 								filename = ossJson["host"] + "/" + key;
-							console.log("key",key);
-							console.log("ossJson",ossJson);
-							console.log("filename",filename);
 							uni.uploadFile({
 								header: {},
 								url: ossJson["host"],
@@ -103,16 +98,15 @@ export default {
 									callback: ossJson["callback"]
 								},
 								success: res => {
-									console.log("res",res);
 									this.setData.avatarUrl = filename
 									let updataUrl = "/user/update_user_profile",
 										data = this.setData
-									console.log("data",data);
 									xhr.post(updataUrl,data, res => {
 										if(res.statusCode == 200 ){
 											this.user.nickName = this.setData.nickName
 											this.user.avatarUrl = this.setData.avatarUrl
 											local.set('user',this.user)
+											app.globalData.runLogin = true
 											uni.switchTab({
 												url: "/pages/home/home"
 											})
@@ -133,12 +127,12 @@ export default {
 				} else {
 					let updataUrl = "/user/update_user_profile",
 						data = this.setData
-					console.log("data",data);
 					xhr.post(updataUrl,data, res => {
 						if(res.statusCode == 200 ){
 							this.user.nickName = this.setData.nickName
 							this.user.avatarUrl = this.setData.avatarUrl
 							local.set('user',this.user)
+							app.globalData.runLogin = true
 							uni.switchTab({
 								url: "/pages/home/home"
 							})
@@ -146,14 +140,13 @@ export default {
 					})
 				}
 			}
-			console.log("setData",this.setData);
 		},
 		initImg(){
-			this.setData.avatarUrl = this.user.avatarUrl
 			if(this.user.nickName == "微信用户"){
 				this.setData.nickName = ""
 			} else {
 				this.setData.nickName = this.user.nickName
+				this.setData.avatarUrl = this.user.avatarUrl
 			}
 		}
 	},

@@ -167,8 +167,8 @@ export default {
       navigationHeight: app.globalData.navigationHeight,
       statusList: [
         // { name: "已卖出，取消订单", status:"2-1" },
-        // { name: "卖家取消", status:"2-2" },
-        // { name: "买家取消", status:"2-3" },
+        // { name: "赠送者取消", status:"2-2" },
+        // { name: "领取者取消", status:"2-3" },
         // { name: "待付款", status:3 },
         // { name: "待发货", status:"3-5" },
         // { name: "已发货", status:4 },
@@ -179,8 +179,8 @@ export default {
         { name: "已签收", status:4 },
         { name: "付款超时,订单关闭", status:51 },
         { name: "超时未发货,订单关闭", status:52 },
-        { name: "卖家关闭订单", status:53 },
-        { name: "买家关闭订单", status:54 },
+        { name: "赠送者关闭订单", status:53 },
+        { name: "领取者关闭订单", status:54 },
         { name: "自提订单", status:6 }
       ],
       rows: 10,
@@ -195,9 +195,9 @@ export default {
   },
   methods: {
     toDetail(order) {
-      if (["53","54"].indexOf(order.status) >= 0) {
-        return false;
-      }
+      // if (["53","54"].indexOf(order.status) >= 0) {
+      //   return false;
+      // }
       let url =
         (order.items[0].only_pickup
           ? "/pages/goods/detail/detail?id="
@@ -293,9 +293,9 @@ export default {
                 });
               }
             });
-            // 卖家得积分
+            // 赠送者得积分
             // this.emitSellerTask(sellerPh)
-            // // 收货卖家首次积分
+            // // 收货赠送者首次积分
             // this.emitOnceSellerTask(sellerPh)
           } else if (res.cancel) {
             console.log("用户点击取消");
@@ -384,7 +384,7 @@ export default {
         data = {};
       uni.showModal({
         title: "提示",
-        content: "若卖家72小时内不发货，系统会自动原路退回邮费",
+        content: "若赠送者120小时内不发货，系统会自动原路退回邮费",
         confirmText: "马上领",
         success: res => {
           if (res.confirm) {

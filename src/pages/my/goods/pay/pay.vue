@@ -16,7 +16,7 @@
 					</block>
 					<block v-else>
 						<view class="table-tr" v-for="(item, index) in tableList" :key="index">
-							<view class="item item-1">{{ item.id }}</view>
+							<view class="item item-1">{{ substrOrder(item.id)}}</view>
 							<view class="item item-2">{{ item.name }}</view>
 							<view class="item item-3">{{ item.age }}</view>
 							<block v-if="item.hobby < 0">
@@ -38,7 +38,7 @@ export default {
 		return {
 			tableList: [
 				{
-					id: 123456890,
+					id: '638eaaaed42a1bf94ea42f47',
 					name: '20',
 					age: '19',
 					hobby: '2'
@@ -82,6 +82,12 @@ export default {
 			],
 			length: 1
 		};
+	},
+	methods: {
+		substrOrder(id){
+			id = id.toString()
+			return "...."+id.substr(-6)
+		}
 	}
 };
 </script>
@@ -128,6 +134,9 @@ export default {
 		.item-1 {
 			flex: 25%;
 			height: 105rpx;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		.item-2 {

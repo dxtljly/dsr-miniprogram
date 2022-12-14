@@ -297,7 +297,7 @@
         <!-- <view class="modal-title">售卖须知</view>
         <view class="modal-info">
           <view>1.在断舍哩只用上架您最想送的闲置物品就好了，所以售价都是0。</view>
-          <view>2.买家拍下后会直接付邮费，所以请您务必认真填写“预估重量”和“所在城市”，以免售后造成不必要的纠纷</view>
+          <view>2.领取者拍下后会直接付邮费，所以请您务必认真填写“预估重量”和“所在城市”，以免售后造成不必要的纠纷</view>
         </view>
         <view class="modal-btns flx fx-justify">
           <view class="btn cancel" @click="closeModal">关闭</view>

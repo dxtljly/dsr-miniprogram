@@ -79,11 +79,11 @@
         <view class="detail-info">
           <view class="li">
             <block v-if="isOwner">
-              <view>买家昵称</view>
-              <view style="max-width:500rpx;">{{user.nickName}}</view>
+              <view>领取者</view>
+              <view style="max-width:500rpx;">{{detail.buyer.nickName}}</view>
             </block>
             <block v-else>
-              <view>卖家昵称</view>
+              <view>赠送者</view>
               <view style="max-width:500rpx;">{{detail.seller.nickName}}</view>
             </block>
           </view>
@@ -99,7 +99,7 @@
           <view style="font-size:12px;" class="btn reject" @click.stop="close">取消订单</view>
           <view style="font-size:12px;" class="btn submit" @click.stop="toExpress">
             预约快递
-            <text>（快递费已由买家支付）</text>
+            <text>（快递费已由领取者支付）</text>
           </view>
         </view>
         <view v-if="detail.status == 3" class="bot-btns">

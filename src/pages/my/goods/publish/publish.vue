@@ -36,7 +36,7 @@
               :src="otherUser?(otherUser.avatarUrl ? otherUser.avatarUrl : imgHOST+'/logo.jpg') : (user.avatarUrl ? user.avatarUrl : imgHOST+'/logo.jpg')"
             />
           </view>
-          <view class="nickname">{{otherUser ? otherUser.nickName[0]+'**' : user.nickName}}</view>
+          <view class="nickname">{{otherUser ? otherUser.nickName : user.nickName}}</view>
           <view class="info">目前在售商品{{list.length}}件</view>
         </view>
       </view>

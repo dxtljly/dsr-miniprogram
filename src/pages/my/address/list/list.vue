@@ -9,7 +9,7 @@
     >
       <!-- <view class="warning-tip">
         <image mode="widthFix" :src="imgHOST+'/icon/icon-warning.png'"/>
-        <view>温馨提示：因不同地区运费金额不同，请确保该件商品的所在地区填写无误；如买家拍下该件商品，则所在地区将无法修改。</view>
+        <view>温馨提示：因不同地区运费金额不同，请确保该件商品的所在地区填写无误；如领取者拍下该件商品，则所在地区将无法修改。</view>
       </view>-->
 
       <view class="load" v-if="isLoading">

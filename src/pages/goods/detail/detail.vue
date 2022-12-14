@@ -23,7 +23,7 @@
                     <view>
                       <view
                         class="nickname"
-                      >{{detail.int_id ? detail.seller.nickName : detail.seller.nickName[0] + '**'}}</view>
+                      >{{detail.int_id ? detail.seller.nickName : detail.seller.nickName}}</view>
                       <view class="info">
                         <text>{{update_time}}</text>
                       </view>
@@ -210,7 +210,7 @@
                                     <navigator
                                       hover-class="none"
                                       :url="'/pages/my/goods/publish/publish?id='+item.sender.id+'&nickName='+item.sender.nickName+'&avatarUrl='+item.sender.avatarUrl"
-                                    >{{item.sender.nickName[0]}}**</navigator>
+                                    >{{item.sender.nickName}}</navigator>
                                     <text>{{$common.util.formatDate(new Date(item.create_time),true)}}</text>
                                   </view>
                                   <view
@@ -228,7 +228,7 @@
                                         <navigator
                                           hover-class="none"
                                           :url="'/pages/my/goods/publish/publish?id='+item.sender.id+'&nickName='+item.sender.nickName+'&avatarUrl='+item.sender.avatarUrl"
-                                        >{{res.sender.nickName[0]}}**</navigator>
+                                        >{{res.sender.nickName}}</navigator>
                                         <text>{{$common.util.formatDate(new Date(res.create_time),true)}}</text>
                                       </view>
                                       <view class="mb">
@@ -239,7 +239,7 @@
                                           class="nickname"
                                           :class="{'school':isSchool}"
                                           style="display:inline-block"
-                                        >@{{res.receiver.nickName[0]}}** ：</navigator>
+                                        >@{{res.receiver.nickName}} ：</navigator>
                                         <text
                                           class="pre-wrap"
                                           @click="openMessage"
@@ -286,7 +286,7 @@
                                     <navigator
                                       hover-class="none"
                                       :url="'/pages/my/goods/publish/publish?id='+item.user.id+'&nickName='+item.user.nickName+'&avatarUrl='+item.user.avatarUrl"
-                                    >{{isOwner ? item.user.nickName : item.user.nickName[0]+'**'}}</navigator>
+                                    >{{isOwner ? item.user.nickName : item.user.nickName}}</navigator>
                                     <!-- <text>{{$common.util.formatDate(new Date(item.create_time),true)}}</text> -->
                                   </view>
                                   <view class="message-1">
@@ -568,7 +568,7 @@
         <view class="label">联系方式</view>
         <textarea
           v-model="auditData.contact"
-          placeholder="请填写您的微信号或手机号等，方便卖家联系到您哩~"
+          placeholder="请填写您的微信号或手机号等，方便赠送者联系到您哩~"
           style="height:120rpx;"
         ></textarea>
         <view class="btns" :class="{'school':isSchool}">
@@ -749,7 +749,7 @@ export default {
       detailList: [],
       orderList: [],
       imagesURL: "",
-      // 卖家其他商品
+      // 赠送者其他商品
       same: [],
       browseTime: 0
     };
@@ -1534,7 +1534,7 @@ export default {
     auditOn(apply_id, index) {
       uni.showModal({
         title: "提示",
-        content: "是否已经与买家建立联系？",
+        content: "是否已经与领取者建立联系？",
         success: res => {
           if (res.confirm) {
             console.log("用户点击确定");

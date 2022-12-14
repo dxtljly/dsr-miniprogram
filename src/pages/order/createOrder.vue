@@ -342,7 +342,7 @@ export default {
         console.log(this.itemIdList,"this.goods.ids");
       uni.showModal({
         title: "提示",
-        content: "若卖家120小时内不发货，系统会自动原路退回邮费",
+        content: "若赠送者120小时内不发货，系统会自动原路退回邮费",
         confirmText: "马上领",
         success: res => {
           if (res.confirm) {
