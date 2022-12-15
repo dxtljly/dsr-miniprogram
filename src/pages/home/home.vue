@@ -205,11 +205,12 @@ export default {
           title: "我的收藏",
           url: "/pages/my/goods/fav/fav"
         },
-        {
-          icon: imgHOST + "/home/支付记录.png",
-          title: "我的支付",
-          url: "/pages/my/goods/pay/pay"
-        },
+        // {
+        //   icon: imgHOST + "/home/支付记录.png",
+        //   title: "我的支付",
+        //   url: "/pages/my/goods/pay/pay"
+        // },
+        
         // {
         //   icon: imgHOST + "/icon/myFav.png",
         //   title: "送出足迹",

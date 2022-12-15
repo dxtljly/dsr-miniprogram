@@ -19,26 +19,11 @@
         <view class="select-city">
           <view class="labels">发货地区：</view>
           <view class="pickers flx">
-            <picker mode="region" @change="regionChange" 
-             level="province" :value="regions"
-             >
-              <view class="select-city-btn flx fx-center fx-middle">
-                <view class="fx1">
-                  <block v-if="regions.length">
-                    <view>{{String(regions)}}</view>
-                  </block>
-                  <block v-else>
-                    <view>选择省份</view>
-                  </block>
-                </view>
-              </view>
-            </picker>
-            <span style="margin: 0 10rpx;color: #BBB;padding-top: 10rpx;">or</span>
             <picker mode="region" @change="cityChange" level="city" :value="citys">
               <view class="select-city-btn flx fx-center fx-middle">
                 <view class="fx1">
                   <block v-if="citys.length">
-                    <view >{{String(citys)}}</view>
+                    <view :class="{'on':regions && citys}">{{String(regions)}}—{{String(citys)}}</view>
                   </block>
                   <block v-else>
                     <view>选择城市</view>
@@ -49,9 +34,14 @@
           </view>
         </view>
         <view class="btn-tip">
-          <view class="labels">选择分类：</view>
-          <view class="isSelf-btn" :class="{ 'on': brand_new }" @click.stop="checkNewgoods">全新</view>
-          <view class="isSelf-btn" :class="{ 'on': only_pickup }" @click.stop="checkSelfgoods">自提</view>
+          <view class="labels">选择新旧：</view>
+          <view class="isSelf-btn" :class="{ 'on': brand_new_new }" @click.stop="checkNewgoods">全新</view>
+          <view class="isSelf-btn" :class="{ 'on': brand_new_old }" @click.stop="checkOldgoods">非全新</view>
+        </view>
+        <view class="btn-tip">
+          <view style="width: 164rpx;"></view>
+          <view class="isSelf-btn" :class="{ 'on': only_pickup_self }" @click.stop="checkSelfgoods">自提</view>
+          <view class="isSelf-btn" :class="{ 'on': only_pickup_no }" @click.stop="checkNoSelfgoods">非自提</view>
         </view>
         <view class="confirmBtn">
           <view class="init-btn" @click.stop="initBtn">重置</view>
@@ -331,8 +321,10 @@ export default {
       user: local.get("user"),
       browseTime: 0,  // 浏览时长初始值为 0
       showSelect: false,
-      brand_new: 0,  //全新   （100 | 0）
-      only_pickup: 0,  //自提 （1 | 0）
+      brand_new_new: false,
+      brand_new_old: false,
+      only_pickup_self: false,
+      only_pickup_no: false,
       to_pay_orders: {
         actual_pay:0
       },  //补款订单
@@ -343,25 +335,10 @@ export default {
     };
   },
   methods: {
-    regionChange(e){
-      let region = [...e.detail.value]
-      if(region.length > 1){
-        this.regions = region[0]
-      }else {
-        this.regions = region
-      }
-    },
     cityChange(e){
-      let city = [...e.detail.value]
-      if(this.regions){
-        if(this.regions != city[0]){
-          this.citys = ""
-        }else{
-          this.citys = city[1]
-        }
-      }else{
-        this.citys = city[1]
-      }
+      let values = [...e.detail.value]
+      this.regions = values[0]
+      this.citys = values[1]
     },
     payOrder() {
       if (local.get("user").role != "telUser") {
@@ -415,19 +392,28 @@ export default {
       this.showControl()
     },
     initBtn() {
+      this.hasSelect = false
       this.regions = ""
       this.citys = ""
-      this.brand_new = 0
-      this.only_pickup = 0
+      this.brand_new_new = false
+      this.brand_new_old = false
+      this.only_pickup_self = false
+      this.only_pickup_no = false
       this.initList();
       this.getList();
       this.showControl()
     },
     checkNewgoods() {
-      this.brand_new = (this.brand_new == 100 ? 0 : 100)
+      this.brand_new_new = !this.brand_new_new
+    },
+    checkOldgoods() {
+      this.brand_new_old = !this.brand_new_old
     },
     checkSelfgoods() {
-      this.only_pickup = (this.only_pickup == 1 ? 0 : 1)
+      this.only_pickup_self = !this.only_pickup_self
+    },
+    checkNoSelfgoods() {
+      this.only_pickup_no = !this.only_pickup_no
     },
     showControl() {
       this.showSelect = !this.showSelect
@@ -718,10 +704,14 @@ export default {
         data = {
           skip: this.skip,
           waterfall: 1,
-          sp: 0,
-          brand_new: this.brand_new,
-          only_pickup: this.only_pickup
+          sp: 0
         };
+      if(this.brand_new_new || this.brand_new_old){
+        data.brand_new = this.brand_new_new ? 100 : 0
+      }
+      if(this.only_pickup_self || this.only_pickup_no){
+        data.only_pickup = this.only_pickup_self ? 1 : 0
+      }
       if(this.regions && this.regions.length != 0){
         data.province = this.regions
       }
@@ -1035,7 +1025,7 @@ $tab-list-height: 60rpx;
       transition: 0.3s;
 
       &.on {
-        width: 500rpx;
+        width: 450rpx;
       }
     }
 
@@ -1081,7 +1071,7 @@ $tab-list-height: 60rpx;
   flex-wrap: nowrap;
   position: fixed;
   width: 100%;
-  height: 260rpx;
+  height: 300rpx;
   padding: 16rpx 20rpx;
   background-color: #fff;
   box-sizing: border-box;
@@ -1105,7 +1095,8 @@ $tab-list-height: 60rpx;
       display: flex;
       flex-wrap: nowrap;
       .select-city-btn {
-        max-width: 300rpx;
+        min-width: 300rpx;
+        max-width: 600rpx;
         line-height: 60rpx;
         padding: 0 30rpx;
         text-align: center;
@@ -1116,6 +1107,9 @@ $tab-list-height: 60rpx;
         white-space: nowrap;
         background-color: #F3F3F3;
         color: #BBB;
+        .on{
+          color: #000;
+        }
       }
     }
   }
