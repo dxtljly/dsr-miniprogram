@@ -287,7 +287,7 @@
                                       hover-class="none"
                                       :url="'/pages/my/goods/publish/publish?id='+item.user.id+'&nickName='+item.user.nickName+'&avatarUrl='+item.user.avatarUrl"
                                     >{{isOwner ? item.user.nickName : item.user.nickName}}</navigator>
-                                    <!-- <text>{{$common.util.formatDate(new Date(item.create_time),true)}}</text> -->
+                                    <text>{{$common.util.formatDate(new Date(item.create_time),true)}}</text>
                                   </view>
                                   <view class="message-1">
                                     <text class="pre-wrap">{{item.reason}}</text>
@@ -844,6 +844,7 @@ export default {
         // 是否存在申领
           if (this.detail.applications) {
             this.pickupList = this.detail.applications;
+            this.pickupList = this.pickupList.reverse()
             console.log("this.pickupList",this.pickupList);
           }
           this.getList();
@@ -2349,8 +2350,8 @@ view {
           font-weight: bold;
           text {
             margin-left: 20rpx;
-            color: #bbb;
-            font-size: 20rpx;
+            color: #666;
+            font-size: 22rpx;
             font-weight: normal;
           }
         }

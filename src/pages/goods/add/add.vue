@@ -120,7 +120,7 @@
       <block v-else>
         <view class="flx fx-end fx-middle brand_new" @click="tooglePickup">
           <view class="radio" :class="{'on':only_pickup}"></view>
-          <view>仅限自提</view>
+          <view>大件自提</view>
         </view>
       </block>
       <view class="ul">
@@ -282,13 +282,13 @@
           <text class="strong">0</text>。<text class="strong">寄送时您无需打包物品，直接给到快递小哥即可</text>;
         </view>
         <view class="txt-info">
-          2、领物人拍下后会直接付邮费，所以请您务必认真填写“
+          2、领取者拍下后会直接付邮费，所以请您务必认真填写“
           <text class="strong">预估重量</text>”和“
-          <text class="strong">所在城市</text>”，以免售后造成不必要的纠纷;
+          <text class="strong">所在城市</text>”，以免送后造成不必要的纠纷;
         </view>
         <view class="txt-info">
           3、
-          <text class="strong">关注微信公众号，第一时间获得领物人的消息提醒</text>。
+          <text class="strong">关注微信公众号，第一时间获得领取者的消息提醒</text>。
         </view>
         <view class="btns-content">
           <view class="btn reject" @click="closeModal" :data-key="true">不再提醒</view>

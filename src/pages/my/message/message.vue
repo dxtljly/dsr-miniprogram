@@ -232,7 +232,7 @@ export default {
   }
   .time {
     color: #bbb;
-    font-size: 20rpx;
+    font-size: 22rpx;
   }
   .img {
     width: 136rpx;

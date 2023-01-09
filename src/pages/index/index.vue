@@ -34,12 +34,12 @@
           </view>
         </view>
         <view class="btn-tip">
-          <view class="labels">选择新旧：</view>
+          <view class="labels">物品偏好：</view>
           <view class="isSelf-btn" :class="{ 'on': brand_new_new }" @click.stop="checkNewgoods">全新</view>
           <view class="isSelf-btn" :class="{ 'on': brand_new_old }" @click.stop="checkOldgoods">非全新</view>
         </view>
         <view class="btn-tip">
-          <view style="width: 164rpx;"></view>
+          <view style="width: 166rpx;"></view>
           <view class="isSelf-btn" :class="{ 'on': only_pickup_self }" @click.stop="checkSelfgoods">自提</view>
           <view class="isSelf-btn" :class="{ 'on': only_pickup_no }" @click.stop="checkNoSelfgoods">非自提</view>
         </view>
@@ -101,7 +101,7 @@
       <scroll-view scroll-x id="tab-list" :class="{ 'on': isTabTypeFixed }"
         :style="isTabTypeFixed ? 'top:' + tabTypeFixedTop + 'px;' : ''">
         <view class="tab-list" :class="{ 'on': isTabTypeFixed }">
-          <view v-for="(item, index) in typeList" :key="index" class="tab-li" :class="{ 'on': index == typeIndex }"
+          <view v-for="(item, index) in typeList" :key="index" class="tab-li" :class="{ 'on': index == typeIndex,'li-fy':(item.name === '防疫物资')}"
             @click="changeType" :data-index="index" :id="'tabList-' + index">
             <view>{{ item.name }}</view>
           </view>
@@ -206,22 +206,23 @@
     </block> -->
 
     <!-- 补差价 -->
-    <!-- <block  v-if="false"> -->
+    <!-- <block  v-if="true"> -->
     <block  v-if="user.balance < 0">
       <view class="pay fx-center">
         <view class="content flx fx-center">
           <image mode="widthFix" :src="imgHOST + '/difference/弹窗.png'" />
           <ul class="text">
             <li class="t1">您有<span>{{ ((to_pay_orders.actual_pay - to_pay_orders.pre_pay)/100).toFixed(2) }}</span>元欠款</li>
-            <li class="t3">订单编号:</li>
-            <li class="t2">{{ to_pay_orders.id }}</li>
             <li class="t4">应付价格: <span>{{ (to_pay_orders.actual_pay/100).toFixed(2) }}</span>元</li>
             <li class="t5">实际支付: <span>{{ (to_pay_orders.pre_pay/100).toFixed(2) }}</span>元</li>
             <li class="t6">欠款: <span>{{ (to_pay_orders.balance/100).toFixed(2) }}</span>&nbsp;元</li>
+            <!-- <li class="t1">您有<span>4.50</span>元欠款</li>
+            <li class="t4">应付价格: <span>22.60</span>元</li>
+            <li class="t5">实际支付: <span>18.10</span>元</li>
+            <li class="t6">欠款: <span>4.50</span>&nbsp;元</li> -->
           </ul>
-          <!-- @click="pay" -->
           <view class="image flx fx-center">
-            <image class="img fst" @click="toMyOrder" mode="widthFix" :src="imgHOST + '/difference/查看订单.png'" />
+            <image class="img fst" @click="toMyOrder(to_pay_orders.id)" mode="widthFix" :src="imgHOST + '/difference/查看订单.png'" />
             <image class="img" @click="payOrder" mode="widthFix" :src="imgHOST + '/difference/去支付.png'" />
           </view>
         </view>
@@ -929,9 +930,10 @@ export default {
       });
       this.closeGifModal();
     },
-    toMyOrder() {
+    toMyOrder(id) {
+      console.log("id>>>>>",id)
       uni.redirectTo({
-        url: "/pages/my/goods/get/get"
+        url: "/pages/order/makeOrder?id=" + id
       });
     }
   },
@@ -1071,7 +1073,7 @@ $tab-list-height: 60rpx;
   flex-wrap: nowrap;
   position: fixed;
   width: 100%;
-  height: 300rpx;
+  height: 310rpx;
   padding: 16rpx 20rpx;
   background-color: #fff;
   box-sizing: border-box;
@@ -1122,12 +1124,12 @@ $tab-list-height: 60rpx;
     align-items: center;
     flex-wrap: nowrap;
     .isSelf-btn {
-      height: 40rpx;
+      line-height: 60rpx;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 4rpx 28rpx;
-      border-radius: 28rpx;
+      border-radius: 40rpx;
       font-size: 28rpx;
       background-color: #F3F3F3;
       color: #BBB;
@@ -1274,8 +1276,11 @@ scroll-view.container {
 
     &.on {
       color: #333;
-      font-size: 30rpx;
+      font-size: 36rpx;
       font-weight: bold;
+    }
+    &.li-fy{
+      color: #E4393c !important;
     }
   }
 
@@ -1401,22 +1406,6 @@ scroll-view.container {
         margin: 8rpx 0;
       }
 
-      .t2,
-      .t3,
-      .t4,
-      .t5,
-      .t6 {
-        font-size: 30rpx;
-        margin-left: 10%;
-        overflow: hidden;
-        text-overflow: ellipsis; //用省略号显示
-        white-space: nowrap;
-        span {
-          margin-left: 10rpx;
-          margin-right: 2rpx;
-        }
-      }
-
       .t1 {
         font-size: 44rpx;
         font-weight: 600;
@@ -1430,8 +1419,23 @@ scroll-view.container {
         }
       }
 
-      .t3 {
-        margin-top: 20rpx;
+      .t4,
+      .t5,
+      .t6 {
+        font-size: 30rpx;
+        margin-left: 15%;
+        min-height: 46rpx;
+        overflow: hidden;
+        text-overflow: ellipsis; //用省略号显示
+        white-space: nowrap;
+        span {
+          margin-left: 10rpx;
+          margin-right: 2rpx;
+        }
+      }
+
+      .t4{
+        margin-top: 30rpx;
       }
 
       .t4>span,

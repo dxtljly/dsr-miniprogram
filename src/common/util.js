@@ -1,5 +1,5 @@
-let __URL = "https://dsrdev.grecycle.com.cn";     //测试
-// let __URL = "https://dsrprd.grecycle.com.cn";       //线上
+// let __URL = "https://dsrdev.grecycle.com.cn";     //测试
+let __URL = "https://dsrprd.grecycle.com.cn";       //线上
 let imgHOST = "https://www.grecycle.com.cn/src/sli/images";
 
 // let __XML = "https://jfmall.grecycle.com.cn"
@@ -297,8 +297,9 @@ let navigateToMiniProgramAppIdList = [
   {
     name: "咕哩",
     appId: "wx3d47228a9de3c21a" /* 咕哩闲置母婴  int_id = 1*/,
-    path: "/page_details/details?id=",
-  },
+    // path: "/page_details/details?id=",
+    path: "/page_orders/dsrOrder?id=",
+  }
 ];
 
 let Qr = require("./qrCode/weapp-qrcode");

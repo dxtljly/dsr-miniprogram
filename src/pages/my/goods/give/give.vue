@@ -48,7 +48,7 @@
                   <view class="number">数量:1</view>
                   <view class="flx">
                   <block v-if="order.status == 54">
-                    <view class="fcmain" style="font-size:10px;">领取者取消订单,商品已重新上架</view>
+                    <view class="fcmain" style="font-size:11px;">领取者取消订单,商品已重新上架</view>
                   </block>
                   <block v-if="order.status == 51 && itemIdList == false">
                     <view
@@ -118,10 +118,10 @@
             </view>
           </view>
         </block>
-        <view class="content flx">
+        <view v-if="order.status == 2 || order.status == 3 || order.status == 4" class="content flx">
           <view class="txt fx1 flx fx-column fx-justify">
             <view class="flx fx-justify fx-bot">
-              <view class="flx">
+              <view class="flx" style="padding-right: 20rpx;">
                   <block v-if="order.status == 2">
                     <view
                       class="btn-reject"
@@ -428,7 +428,7 @@ export default {
     }
   }
   .status {
-    font-size: 26rpx;
+    font-size: 28rpx;
     color: $main-color;
   }
   .content {
@@ -459,7 +459,7 @@ export default {
       }
 
       .btn {
-        padding: 8rpx 22rpx;
+        padding: 10rpx 22rpx;
         font-size: 10px;
         border-radius: 22rpx;
         white-space: nowrap;

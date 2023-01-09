@@ -21,7 +21,7 @@
 					</view>
 						<input name="input" type="nickname" :value="setData.nickName"
 						 class="update-input" 
-						 placeholder="请输入昵称" maxlength="20" />
+						 placeholder="请输入昵称" minlength="2" maxlength="20" />
 				</view>
 				<button class="update-btn" 	form-type="submit">提 交</button>
 			</form>
@@ -50,7 +50,7 @@ export default {
 				nickName: "",
 				avatarUrl: "https://guli-dsr.oss-cn-shanghai.aliyuncs.com/img/WechatIMG1.png"
 			},
-			updataImg: ""
+			updataImg: "https://guli-dsr.oss-cn-shanghai.aliyuncs.com/img/WechatIMG1.png"
 		}
 	},
 	methods: {
@@ -59,7 +59,6 @@ export default {
 		},
 		onChooseAvatar(e){
 			const { avatarUrl } = e.detail
-			this.updataImg = avatarUrl
 			this.setData.avatarUrl = avatarUrl
 		},
 		formSubmit(e){
@@ -73,8 +72,8 @@ export default {
 				return false
 			}else {
 				this.setData.nickName = userName
-				if(this.updataImg){
-					this.setData.avatarUrl = this.updataImg
+				if(this.updataImg != this.setData.avatarUrl){
+					// this.setData.avatarUrl = this.updataImg
 					let url = "/tools/uploadtoken",
 						data = {};
 					xhr.get(url,data, res=> {
@@ -142,11 +141,14 @@ export default {
 			}
 		},
 		initImg(){
-			if(this.user.nickName == "微信用户"){
-				this.setData.nickName = ""
-			} else {
-				this.setData.nickName = this.user.nickName
+			if(this.user.nickName){
 				this.setData.avatarUrl = this.user.avatarUrl
+				this.updataImg = this.user.avatarUrl
+				if(this.user.nickName == "微信用户"){
+					this.setData.nickName = ""
+				} else {
+					this.setData.nickName = this.user.nickName
+				}
 			}
 		}
 	},
@@ -170,6 +172,7 @@ export default {
     .updateImg{
         width: 150rpx;
         height: 150rpx;
+		border: 1rpx solid #666;
 		overflow: hidden;
 		border-radius: 50%;
         margin: 100rpx auto 20rpx;

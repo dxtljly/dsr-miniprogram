@@ -62,6 +62,9 @@
 			"path": "pages/order/createOrder"
 		},
 		{
+			"path": "pages/order/makeOrder"
+		},
+		{
 			"path": "pages/order/detail"
 		},
 		{
@@ -111,6 +114,9 @@
 		},
 		{
 			"path": "pages/clock/cooperation"
+		},
+		{
+			"path": "pages/clock/togethers"
 		},
 		{
 			"path": "pages/clock/independentStores"
